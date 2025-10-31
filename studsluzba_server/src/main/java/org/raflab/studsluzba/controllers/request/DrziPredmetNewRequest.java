@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 public class DrziPredmetNewRequest {
-
+private int proba;
     private Long predmetId;
     @NotEmpty
     private String predmetNaziv;
