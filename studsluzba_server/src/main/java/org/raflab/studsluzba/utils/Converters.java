@@ -2,6 +2,7 @@ package org.raflab.studsluzba.utils;
 
 import org.raflab.studsluzba.controllers.request.*;
 import org.raflab.studsluzba.controllers.response.NastavnikResponse;
+import org.raflab.studsluzba.controllers.response.SkolskaGodinaResponse;
 import org.raflab.studsluzba.model.*;
 
 import java.util.ArrayList;
@@ -81,5 +82,28 @@ public class Converters {
         studentIndeks.setAktivan(studentIndeksRequest.isAktivan());
         studentIndeks.setVaziOd(studentIndeksRequest.getVaziOd());
         return studentIndeks;
+    }
+
+    public static SkolskaGodina toSkolskaGodina(SkolskaGodinaRequest request) {
+        SkolskaGodina skolskaGodina = new SkolskaGodina();
+        System.out.println(request.getAktivan());
+        skolskaGodina.setAktivan(request.getAktivan());
+
+        return skolskaGodina;
+    }
+
+    public static SkolskaGodinaResponse toSkolskaGodinaResponse(SkolskaGodina skolskaGodina) {
+        SkolskaGodinaResponse skolskaGodinaResponse = new SkolskaGodinaResponse();
+        skolskaGodinaResponse.setId(skolskaGodina.getId());
+        skolskaGodinaResponse.setAktivan(skolskaGodina.getAktivan());
+        return skolskaGodinaResponse;
+    }
+
+    public static List<SkolskaGodinaResponse> toSkolskaGodinaResponseList(Iterable<SkolskaGodina> skolskaGodinaIterable) {
+        List<SkolskaGodinaResponse> skolskaGodinaResponses = new ArrayList<>();
+        skolskaGodinaIterable.forEach((skolskaGodina) -> {
+            skolskaGodinaResponses.add(toSkolskaGodinaResponse(skolskaGodina));
+        });
+        return skolskaGodinaResponses;
     }
 }

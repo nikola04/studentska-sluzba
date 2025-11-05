@@ -12,7 +12,7 @@ public class SkolskaGodina {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean aktivan;
+    private Boolean aktivan;
 
     @OneToMany(mappedBy = "skolskaGodina")
     private List<DrziPredmet> nastavnikPredmeti;
