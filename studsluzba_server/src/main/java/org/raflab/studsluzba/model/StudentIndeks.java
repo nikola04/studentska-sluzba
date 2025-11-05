@@ -1,6 +1,7 @@
 package org.raflab.studsluzba.model;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
 
@@ -25,4 +26,9 @@ public class StudentIndeks {
 	private StudijskiProgram studijskiProgram;   // na koji studijski program je upisan
 	private Integer ostvarenoEspb;
 
+    @OneToMany(mappedBy="studentIndeks")
+    private List<SlusaPredmet> slusaPredmeti;
+
+    @OneToMany(mappedBy="studentIndeks")
+    private List<PolozenPredmet> polozeniPredmeti;
 }
