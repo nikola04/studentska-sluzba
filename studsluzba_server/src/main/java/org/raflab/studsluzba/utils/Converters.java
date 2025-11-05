@@ -73,7 +73,20 @@ public class Converters {
         studentPodaci.setAdresaStanovanja(request.getAdresaStanovanja());
         return studentPodaci;
     }
-
+    public static Predmet toPredmet(PredmetRequest request) {
+        Predmet predmet = new Predmet();
+        predmet.setEspb(request.getEspb());
+        predmet.setNaziv(request.getNaziv());
+        predmet.setOpis(request.getOpis());
+        predmet.setObavezan(request.isObavezan());
+        predmet.setSifra(request.getSifra());
+        if (request.getStudijskiProgramId() != null) {
+            StudijskiProgram studProgram = new StudijskiProgram();
+            studProgram.setId(request.getStudijskiProgramId());
+            predmet.setStudProgram(studProgram);
+        }
+        return  predmet;
+    }
     public static StudentIndeks toStudentIndeks(StudentIndeksRequest studentIndeksRequest) {
         StudentIndeks studentIndeks = new StudentIndeks();
         studentIndeks.setGodina(studentIndeksRequest.getGodina());
@@ -105,5 +118,13 @@ public class Converters {
             skolskaGodinaResponses.add(toSkolskaGodinaResponse(skolskaGodina));
         });
         return skolskaGodinaResponses;
+    }
+
+    public static Iterable<Predmet> toPredmetResponseList(Iterable<Predmet> predmeti) {
+        List<Predmet> predmetiList = new ArrayList<>();
+        predmeti.forEach((predmet) -> {
+            predmetiList.add(predmet);
+        });
+        return predmetiList;
     }
 }
