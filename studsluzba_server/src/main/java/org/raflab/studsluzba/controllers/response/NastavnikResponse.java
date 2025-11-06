@@ -21,7 +21,7 @@ public class NastavnikResponse {
     private String email;
     private String brojTelefona;
     private String adresa;
-    private Set<NastavnikZvanje> zvanja;
+    private Set<NastavnikZvanjeResponse> zvanja;
 
     private LocalDate datumRodjenja;
     private Character pol;

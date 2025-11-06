@@ -20,9 +20,9 @@ public class Predmet {
 	private String naziv;
 	private String opis;
 	private Integer espb;
-	@ManyToOne
+    private Boolean obavezan;
+    @ManyToOne
 	private StudijskiProgram studProgram;
-	private boolean obavezan;
 
     @OneToMany(mappedBy="predmet")
     private List<PolozenPredmet> polozeni;

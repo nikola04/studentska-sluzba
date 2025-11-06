@@ -2,21 +2,18 @@ package org.raflab.studsluzba.controllers;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.raflab.studsluzba.controllers.request.NastavnikRequest;
 import org.raflab.studsluzba.controllers.response.NastavnikResponse;
+import org.raflab.studsluzba.mappers.NastavnikMapper;
+import org.raflab.studsluzba.mappers.NastavnikZvanjeMapper;
 import org.raflab.studsluzba.model.Nastavnik;
+import org.raflab.studsluzba.model.NastavnikZvanje;
 import org.raflab.studsluzba.services.NastavnikService;
 import org.raflab.studsluzba.utils.Converters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -24,40 +21,49 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = "/api/nastavnik")
 public class NastavnikController {
-
+    @Autowired
+    NastavnikMapper nastavnikMapper;
+    @Autowired
+    NastavnikZvanjeMapper nastavnikZvanjeMapper;
 	@Autowired
 	NastavnikService nastavnikService;
 	
-	@PostMapping(path = "/add")
-	public Long addNewNastavnik(@RequestBody @Valid NastavnikRequest nastavnikRequest) {
-		Nastavnik nastavnik = nastavnikService.save(Converters.toNastavnik(nastavnikRequest));
+	@PostMapping(path = "/")
+	public Long addNewNastavnik(@RequestBody NastavnikRequest nastavnikRequest) {
+        Set<NastavnikZvanje> zvanja = nastavnikZvanjeMapper.toEntitySet(nastavnikRequest.getZvanja());
+        Nastavnik nastavnik = nastavnikService.saveNastavnik(nastavnikMapper.toEntity(nastavnikRequest), zvanja);
+
 		return nastavnik.getId();
 	}
 	
-	@GetMapping(path = "/all")
+	@GetMapping(path = "/")
 	public List<NastavnikResponse> getAllNastavnik() {
-		return Converters.toNastavnikResponseList(nastavnikService.findAll());
+		return nastavnikMapper.toResponseList(nastavnikService.getAllNastavnik());
 	}
 
 	@GetMapping(path = "/{id}")
 	public NastavnikResponse getNastavnikById(@PathVariable Long id) {
-		Optional<Nastavnik> rez = nastavnikService.findById(id);
-
-		return rez.map(Converters::toNastavnikResponse).orElse(null);
+		Nastavnik nastavnik = nastavnikService.getNastavnik(id);
+		return nastavnikMapper.toResponse(nastavnik);
 	}
-	
-	@GetMapping(path = "path/{id}")
-	public NastavnikResponse getNastavnikPath(@PathVariable Long id) {
-		//TODO
-		return null;
+
+    @DeleteMapping(path = "/{id}")
+    public boolean deleteNastavnik(@PathVariable Long id) {
+        nastavnikService.deleteNastavnik(id);
+        return true;
+    }
+
+    @PatchMapping(path = "/{id}")
+    public NastavnikResponse updateNastavnik(@PathVariable Long id, @RequestBody NastavnikRequest request){
+        Nastavnik nastavnik = nastavnikMapper.toEntity(request);
+        Set<NastavnikZvanje> zvanja = nastavnikZvanjeMapper.toEntitySet(request.getZvanja());
+        Nastavnik updated = nastavnikService.updateNastavnik(id, nastavnik, zvanja);
+        return nastavnikMapper.toResponse(updated);
     }
 	
 	@GetMapping(path = "/search")
-	public List<NastavnikResponse> search(
-			@RequestParam(required = false) String ime,
-			@RequestParam(required = false) String prezime){
-
-        return Converters.toNastavnikResponseList(nastavnikService.findByImeAndPrezime(ime, prezime));
+	public List<NastavnikResponse> search(@RequestParam(required = false) String ime, @RequestParam(required = false) String prezime){
+        return nastavnikMapper.toResponseList(nastavnikService.findByImeAndPrezime(ime, prezime));
 	}
 	
 }

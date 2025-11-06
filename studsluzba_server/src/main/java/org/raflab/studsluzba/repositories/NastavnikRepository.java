@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface NastavnikRepository extends JpaRepository<Nastavnik, Long> {	//	nasljedjene implementacije poput findById i findByAll
+public interface NastavnikRepository extends JpaRepository<Nastavnik, Long> {
 	
 	@Query("select sp from Nastavnik sp where "
 			+ "(:ime is null or lower(sp.ime) like :ime) and "

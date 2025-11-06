@@ -1,4 +1,4 @@
-package org.raflab.studsluzba.model.dtos;
+package org.raflab.studsluzba.dtos;
 
 import java.util.List;
 

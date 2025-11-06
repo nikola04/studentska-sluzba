@@ -1,6 +1,7 @@
 package org.raflab.studsluzba.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
@@ -23,5 +24,6 @@ public class NastavnikZvanje {
 	private String zvanje;   // sifarnik na klijentu - tabela u bazi bez veze
 	private boolean aktivno;
 	@ManyToOne
+    @EqualsAndHashCode.Exclude
 	private Nastavnik nastavnik;
 }

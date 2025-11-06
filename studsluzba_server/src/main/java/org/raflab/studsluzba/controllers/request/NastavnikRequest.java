@@ -20,7 +20,7 @@ public class NastavnikRequest {
     private String email;
     private String brojTelefona;
     private String adresa;
-    private Set<NastavnikZvanje> zvanja;
+    private Set<NastavnikZvanjeRequest> zvanja;
 
     private LocalDate datumRodjenja;
     private Character pol;
