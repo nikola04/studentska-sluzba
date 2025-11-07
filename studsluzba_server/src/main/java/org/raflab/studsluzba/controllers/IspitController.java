@@ -24,7 +24,7 @@ public class IspitController {
     @PostMapping(path = "/")
     public Long addNewIspit(@Valid @RequestBody IspitRequest request) {
         Ispit ispit = ispitMapper.toEntity(request);
-        return ispitService.saveIspit(ispit, request.getPredmetId(), request.getNastavnikId(), request.getIspitniRokId(), request.getSkolskaGodinaId()).getId();
+        return ispitService.saveIspit(ispit, request.getPredmetId(), request.getNastavnikId(), request.getIspitniRokId()).getId();
     }
 
     @GetMapping(path = "/")
@@ -46,6 +46,6 @@ public class IspitController {
     @PatchMapping(path = "/{id}")
     public IspitResponse updateIspit(@PathVariable Long id, @Valid @RequestBody IspitRequest request){
         Ispit ispit = ispitMapper.toEntity(request);
-        return ispitMapper.toResponse(ispitService.updateIspit(id, ispit, request.getPredmetId(), request.getNastavnikId(), request.getIspitniRokId(), request.getSkolskaGodinaId()));
+        return ispitMapper.toResponse(ispitService.updateIspit(id, ispit, request.getPredmetId(), request.getNastavnikId(), request.getIspitniRokId()));
     }
 }

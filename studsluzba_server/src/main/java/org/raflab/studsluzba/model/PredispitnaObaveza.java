@@ -16,4 +16,6 @@ public class PredispitnaObaveza {
 
     @ManyToOne
     private Predmet predmet;
+    @ManyToOne
+    private SkolskaGodina skolskaGodina;
 }

@@ -21,8 +21,4 @@ public class SlusaPredmet {
 	
 	@ManyToOne
 	private DrziPredmet drziPredmet;
-
-    @ManyToOne
-    private SkolskaGodina skolskaGodina;
-
 }

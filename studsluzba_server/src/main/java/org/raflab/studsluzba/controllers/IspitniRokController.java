@@ -34,7 +34,7 @@ public class IspitniRokController {
     @PostMapping(path = "/")
     public Long getAllIspitniRok(@Valid @RequestBody IspitniRokRequest request) {
         IspitniRok ispitniRok = ispitniRokMapper.toEntity(request);
-        return ispitniRokService.saveIspitniRok(ispitniRok).getId();
+        return ispitniRokService.saveIspitniRok(ispitniRok, request.getSkolskaGodinaId()).getId();
     }
 
     @DeleteMapping(path = "/{id}")
@@ -45,7 +45,7 @@ public class IspitniRokController {
 
     @PatchMapping(path = "/{id}")
     public IspitniRokResponse updateIspitniRok(@PathVariable Long id, @Valid @RequestBody IspitniRokRequest request) {
-        IspitniRok ispitniRok = ispitniRokService.updateIspitniRok(id, ispitniRokMapper.toEntity(request));
+        IspitniRok ispitniRok = ispitniRokService.updateIspitniRok(id, ispitniRokMapper.toEntity(request), request.getSkolskaGodinaId());
         return ispitniRokMapper.toResponse(ispitniRok);
     }
 }

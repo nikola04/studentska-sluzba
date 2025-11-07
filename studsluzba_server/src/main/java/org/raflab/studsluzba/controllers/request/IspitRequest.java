@@ -20,6 +20,4 @@ public class IspitRequest {
     private Long nastavnikId;
     @NonNull
     private Long ispitniRokId;
-    @NonNull
-    private Long skolskaGodinaId;
 }

@@ -19,11 +19,12 @@ public class StudentIndeks {
 	private String nacinFinansiranja;
 	private Boolean aktivan;
 	private LocalDate vaziOd;
+
 	@ManyToOne
 	private StudentPodaci student;
 	
 	@ManyToOne
-	private StudijskiProgram studijskiProgram;   // na koji studijski program je upisan
+	private StudijskiProgram studijskiProgram;
 	private Integer ostvarenoEspb;
 
     @OneToMany(mappedBy="studentIndeks")

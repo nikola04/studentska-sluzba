@@ -14,16 +14,20 @@ public class StudijskiProgram {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	private String oznaka;  // RN, RM
+	private String oznaka;  // RN, RI, SI, MD
 	private String naziv;   
 	private Integer godinaAkreditacije;
 	private String zvanje;
 	private Integer trajanjeGodina;
 	private Integer trajanjeSemestara;
-	private String vrstaStudija; // OAS - osnovne akademske studje, OSS - osnovne strukovne, 	MAS - master akademske studije
-	private Integer ukupnoEspb;
+    private Integer ukupnoEspb;
+
+    @ManyToOne
+	private VrstaStudija vrstaStudija;
+
+    @OneToMany(mappedBy = "studijskiProgram")
+    private List<StudentIndeks> studentIndeksi;
 	
-	@JsonIgnore
     @OneToMany(mappedBy = "studProgram", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Predmet> predmeti;
 }

@@ -18,4 +18,7 @@ public class IspitniRok {
 
     @OneToMany(mappedBy = "ispitniRok")
     private List<Ispit> ispiti;
+
+    @ManyToOne
+    private SkolskaGodina skolskaGodina;
 }

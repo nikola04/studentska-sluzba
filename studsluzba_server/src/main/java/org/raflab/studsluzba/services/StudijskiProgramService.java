@@ -3,7 +3,9 @@ package org.raflab.studsluzba.services;
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
 import org.raflab.studsluzba.model.Predmet;
 import org.raflab.studsluzba.model.StudijskiProgram;
+import org.raflab.studsluzba.model.VrstaStudija;
 import org.raflab.studsluzba.repositories.StudijskiProgramRepository;
+import org.raflab.studsluzba.repositories.VrstaStudijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,16 @@ public class StudijskiProgramService {
     @Autowired
     StudijskiProgramRepository studijskiProgramRepository;
 
-    public StudijskiProgram saveStudijskiProgram(StudijskiProgram studijskiProgram) {
+    @Autowired
+    VrstaStudijaRepository vrstaStudijaRepository;
+
+    @Transactional
+    public StudijskiProgram saveStudijskiProgram(StudijskiProgram studijskiProgram, Long vrstaStudijaId) {
+        VrstaStudija vrsta = vrstaStudijaRepository.findById(vrstaStudijaId)
+                .orElseThrow(() -> new ResourceNotFoundException("[VrstaStudija] Not found: " + vrstaStudijaId));
+
+        studijskiProgram.setVrstaStudija(vrsta);
+
         return studijskiProgramRepository.save(studijskiProgram);
     }
 
@@ -23,8 +34,11 @@ public class StudijskiProgramService {
         return studijskiProgramRepository.findAll();
     }
 
+    @Transactional
     public StudijskiProgram getStudijskiProgram(Long id){
-        return studijskiProgramRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudijskiProgram] Not found: " + id));
+        StudijskiProgram studijskiProgram = studijskiProgramRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudijskiProgram] Not found: " + id));
+        studijskiProgram.getVrstaStudija();
+        return studijskiProgram;
     }
 
     @Transactional
@@ -34,8 +48,11 @@ public class StudijskiProgramService {
     }
 
     @Transactional
-    public StudijskiProgram updateStudijskiProgram(Long id, StudijskiProgram studijskiProgram){
+    public StudijskiProgram updateStudijskiProgram(Long id, StudijskiProgram studijskiProgram, Long vrstaStudijaId){
         StudijskiProgram existing = studijskiProgramRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudijskiProgram] Not found: " + id));
+
+        VrstaStudija vrsta = vrstaStudijaRepository.findById(vrstaStudijaId)
+                .orElseThrow(() -> new ResourceNotFoundException("[VrstaStudija] Not found: " + vrstaStudijaId));
 
         existing.setNaziv(studijskiProgram.getNaziv());
         existing.setOznaka(studijskiProgram.getOznaka());
@@ -44,7 +61,7 @@ public class StudijskiProgramService {
         existing.setTrajanjeGodina(studijskiProgram.getTrajanjeGodina());
         existing.setTrajanjeSemestara(studijskiProgram.getTrajanjeSemestara());
         existing.setUkupnoEspb(studijskiProgram.getUkupnoEspb());
-        existing.setVrstaStudija(studijskiProgram.getVrstaStudija());
+        existing.setVrstaStudija(vrsta);
 
         return studijskiProgramRepository.save(existing);
     }

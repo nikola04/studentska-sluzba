@@ -8,4 +8,5 @@ import java.time.LocalDate;
 public class IspitniRokResponse {
     private LocalDate pocetak;
     private LocalDate kraj;
+    private SkolskaGodinaResponse skolskaGodina;
 }

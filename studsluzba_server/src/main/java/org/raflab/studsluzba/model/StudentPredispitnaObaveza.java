@@ -18,7 +18,4 @@ public class StudentPredispitnaObaveza {
 
     @ManyToOne
     private PredispitnaObaveza predispitnaObaveza;
-
-    @ManyToOne
-    private SkolskaGodina skolskaGodina;
 }

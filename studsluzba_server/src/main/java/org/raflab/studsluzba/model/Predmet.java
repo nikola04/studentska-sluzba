@@ -21,11 +21,18 @@ public class Predmet {
 	private String opis;
 	private Integer espb;
     private Boolean obavezan;
+
     @ManyToOne
 	private StudijskiProgram studProgram;
 
     @OneToMany(mappedBy="predmet")
     private List<PolozenPredmet> polozeni;
+
+    @OneToMany(mappedBy="predmet")
+    private List<DrziPredmet> drzePredmetList;
+
+    @ManyToOne
+    private SkolskaGodina skolskaGodina;
 
 	@Override
 	public int hashCode() {

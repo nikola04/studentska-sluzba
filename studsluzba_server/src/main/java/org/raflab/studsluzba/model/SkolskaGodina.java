@@ -15,11 +15,14 @@ public class SkolskaGodina {
     private Boolean aktivan;
 
     @OneToMany(mappedBy = "skolskaGodina")
-    private List<DrziPredmet> nastavnikPredmeti;
+    private List<Predmet> predmeti;
+
     @OneToMany(mappedBy = "skolskaGodina")
     private List<SlusaPredmet> slusaPredmeti;
+
     @OneToMany(mappedBy = "skolskaGodina")
-    private List<Ispit> ispiti;
+    private List<IspitniRok> ispitiRokovi;
+
     @OneToMany(mappedBy = "skolskaGodina")
     private List<AktivnostStudija> aktivnostiStudija;
 }

@@ -31,7 +31,7 @@ public class StudijskiProgramiController {
 
     @PostMapping(path="/")
     public Long createStudijskiProgram(@Valid @RequestBody StudijskiProgramRequest request) {
-        StudijskiProgram studijskiProgram = studijskiProgramService.saveStudijskiProgram(studijskiProgramMapper.toEntity(request));
+        StudijskiProgram studijskiProgram = studijskiProgramService.saveStudijskiProgram(studijskiProgramMapper.toEntity(request), request.getVrstaStudija());
         return studijskiProgram.getId();
     }
 
@@ -59,7 +59,7 @@ public class StudijskiProgramiController {
     public StudijskiProgramResponse updateStudijskiProgram(@PathVariable Long id, @Valid @RequestBody StudijskiProgramRequest request){
         StudijskiProgram studijskiProgram = studijskiProgramMapper.toEntity(request);
 
-        StudijskiProgram updated = studijskiProgramService.updateStudijskiProgram(id, studijskiProgram);
+        StudijskiProgram updated = studijskiProgramService.updateStudijskiProgram(id, studijskiProgram, request.getVrstaStudija());
         Long predmetCount = predmetService.countByStudijskiProgramId(id);
         return studijskiProgramMapper.toResponse(updated, predmetCount);
     }

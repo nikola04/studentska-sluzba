@@ -2,7 +2,9 @@ package org.raflab.studsluzba.mappers;
 
 import org.raflab.studsluzba.controllers.request.StudijskiProgramRequest;
 import org.raflab.studsluzba.controllers.response.StudijskiProgramResponse;
+import org.raflab.studsluzba.controllers.response.VrstaStudijaResponse;
 import org.raflab.studsluzba.model.StudijskiProgram;
+import org.raflab.studsluzba.model.VrstaStudija;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +13,6 @@ import java.util.List;
 
 @Component
 public class StudijskiProgramMapper {
-    @Autowired
-    private PredmetMapper predmetMapper;
-
     public StudijskiProgram toEntity(StudijskiProgramRequest request) {
         StudijskiProgram studijskiProgram = new StudijskiProgram();
 
@@ -23,10 +22,19 @@ public class StudijskiProgramMapper {
         studijskiProgram.setZvanje(request.getZvanje());
         studijskiProgram.setTrajanjeGodina(request.getTrajanjeGodina());
         studijskiProgram.setTrajanjeSemestara(request.getTrajanjeSemestara());
-        studijskiProgram.setVrstaStudija(request.getVrstaStudija());
         studijskiProgram.setUkupnoEspb(request.getUkupnoEspb());
 
         return studijskiProgram;
+    }
+
+    private VrstaStudijaResponse toVrstaStudijaResponse(VrstaStudija vrstaStudija) {
+        if(vrstaStudija == null) return null;
+        VrstaStudijaResponse vrstaStudijaResponse = new VrstaStudijaResponse();
+
+        vrstaStudijaResponse.setId(vrstaStudija.getId());
+        vrstaStudijaResponse.setNaziv(vrstaStudija.getNaziv());
+        vrstaStudijaResponse.setOznaka(vrstaStudija.getOznaka());
+        return vrstaStudijaResponse;
     }
 
     public StudijskiProgramResponse toResponse(StudijskiProgram studijskiProgram) {
@@ -38,7 +46,7 @@ public class StudijskiProgramMapper {
         studijskiProgramResponse.setZvanje(studijskiProgram.getZvanje());
         studijskiProgramResponse.setTrajanjeGodina(studijskiProgram.getTrajanjeGodina());
         studijskiProgramResponse.setTrajanjeSemestara(studijskiProgram.getTrajanjeSemestara());
-        studijskiProgramResponse.setVrstaStudija(studijskiProgram.getVrstaStudija());
+        studijskiProgramResponse.setVrstaStudija(toVrstaStudijaResponse(studijskiProgram.getVrstaStudija()));
         studijskiProgramResponse.setUkupnoEspb(studijskiProgram.getUkupnoEspb());
 
         return studijskiProgramResponse;

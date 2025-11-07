@@ -24,8 +24,6 @@ public class Ispit {
     private Nastavnik nastavnik;
     @ManyToOne
     private IspitniRok ispitniRok;
-    @ManyToOne
-    private SkolskaGodina skolskaGodina;
-    @OneToMany
+    @OneToMany(mappedBy = "ispit")
     private List<PrijavaIspita> prijaveIspita;
 }

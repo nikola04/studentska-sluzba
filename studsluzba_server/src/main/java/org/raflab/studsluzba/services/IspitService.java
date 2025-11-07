@@ -18,20 +18,17 @@ public class IspitService {
     @Autowired
     private NastavnikService nastavnikService;
     @Autowired
-    private SkolskaGodinaService skolskaGodinaService;
-    @Autowired
     private IspitniRokService ispitniRokService;
 
-    private void addIspitChildClasses(Ispit target, Long predmetId, Long nastavnikId, Long ispitniRokId, Long skolskaGodinaId){
+    private void addIspitChildClasses(Ispit target, Long predmetId, Long nastavnikId, Long ispitniRokId){
         target.setPredmet(predmetService.getPredmetById(predmetId));
         target.setNastavnik(nastavnikService.getNastavnik(nastavnikId));
-        target.setSkolskaGodina(skolskaGodinaService.getSkolskaGodina(skolskaGodinaId));
         target.setIspitniRok(ispitniRokService.getIspitniRok(ispitniRokId));
     }
 
     @Transactional
-    public Ispit saveIspit(Ispit ispit, Long predmetId, Long nastavnikId, Long ispitniRokId, Long skolskaGodinaId){
-        this.addIspitChildClasses(ispit, predmetId, nastavnikId, ispitniRokId, skolskaGodinaId);
+    public Ispit saveIspit(Ispit ispit, Long predmetId, Long nastavnikId, Long ispitniRokId){
+        this.addIspitChildClasses(ispit, predmetId, nastavnikId, ispitniRokId);
         return ispitRepository.save(ispit);
     }
 
@@ -50,10 +47,10 @@ public class IspitService {
     }
 
     @Transactional
-    public Ispit updateIspit(Long id, Ispit ispit, Long predmetId, Long nastavnikId, Long ispitniRokId, Long skolskaGodinaId){
+    public Ispit updateIspit(Long id, Ispit ispit, Long predmetId, Long nastavnikId, Long ispitniRokId){
         Ispit existing = ispitRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Ispit] Not found: " + id));
 
-        this.addIspitChildClasses(existing, predmetId, nastavnikId, ispitniRokId, skolskaGodinaId);
+        this.addIspitChildClasses(existing, predmetId, nastavnikId, ispitniRokId);
 
         existing.setDatumOdrzavanja(ispit.getDatumOdrzavanja());
         existing.setVremePocetka(ispit.getVremePocetka());

@@ -1,5 +1,7 @@
 package org.raflab.studsluzba.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -26,9 +28,17 @@ public class StudentPodaci {
 	 private String adresa;  // not null
 	 private String brojTelefonaMobilni;  
 	 private String brojTelefonaFiksni;
-	 private String email;  // not null
-	 private String brojLicneKarte; 
+     private String privatniEmail;
+     private String fakultetEmail;
+	 private String brojLicneKarte;
 	 private String licnuKartuIzdao;
 	 private String mestoStanovanja;
 	 private String adresaStanovanja;   // u toku studijaq
+
+    @ManyToOne
+    private SrednjaSkola srednjaSkola;
+    private Double uspehSrednjaSkola, uspehPrijemni;
+
+    @ManyToOne
+    private VisokoskolskaUstanova visokoskolskaUstanova;
 }

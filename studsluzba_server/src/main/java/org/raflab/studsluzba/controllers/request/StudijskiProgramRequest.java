@@ -24,8 +24,8 @@ public class StudijskiProgramRequest {
     @NotNull
     @Positive
     private Integer trajanjeSemestara;
-    @NotBlank
-    private String vrstaStudija; // OAS - osnovne akademske studje, OSS - osnovne strukovne, 	MAS - master akademske studije
+    @NotNull
+    private Long vrstaStudija;
     @NotNull
     @Positive
     private Integer ukupnoEspb;

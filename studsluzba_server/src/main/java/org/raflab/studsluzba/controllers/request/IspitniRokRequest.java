@@ -13,4 +13,7 @@ public class IspitniRokRequest {
     private LocalDate pocetak;
     @NonNull
     private LocalDate kraj;
+
+    @NonNull
+    private Long skolskaGodinaId;
 }

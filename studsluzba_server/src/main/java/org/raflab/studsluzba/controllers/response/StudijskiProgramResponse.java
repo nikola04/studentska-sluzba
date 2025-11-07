@@ -10,7 +10,7 @@ public class StudijskiProgramResponse {
     private String zvanje;
     private Integer trajanjeGodina;
     private Integer trajanjeSemestara;
-    private String vrstaStudija;
+    private VrstaStudijaResponse vrstaStudija;
     private Integer ukupnoEspb;
     private Long predmetiSize;
 }
