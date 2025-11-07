@@ -15,6 +15,8 @@ import org.raflab.studsluzba.utils.Converters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/api/predmet")
@@ -41,7 +43,7 @@ public class PredmetController {
 
     // CREATE (POST)
     @PostMapping(path = "/")
-    public Long createPredmet(@RequestBody PredmetRequest request) {
+    public Long createPredmet(@Valid @RequestBody PredmetRequest request) {
         Predmet predmet = predmetMapper.toEntity(request);
         Predmet saved = predmetService.savePredmet(predmet, request.getStudijskiProgramId());
         return saved.getId();
@@ -49,7 +51,7 @@ public class PredmetController {
 
     // UPDATE (PATCH)
     @PatchMapping(path = "/{id}")
-    public PredmetResponse updatePredmet(@PathVariable Long id, @RequestBody PredmetRequest request) {
+    public PredmetResponse updatePredmet(@PathVariable Long id, @Valid @RequestBody PredmetRequest request) {
         Predmet predmet = predmetMapper.toEntity(request);
         Predmet updated = predmetService.updatePredmet(id, predmet, request.getStudijskiProgramId());
         return predmetMapper.toResponse(updated);

@@ -16,10 +16,10 @@ import java.util.List;
 @RequestMapping(path="/api/skolskagodina")
 public class SkolskaGodinaController {
     @Autowired
-    SkolskaGodinaService skolskaGodinaService;
+    private SkolskaGodinaService skolskaGodinaService;
 
     @PostMapping(path="/")
-    public Long createSkolskaGodina(@RequestBody SkolskaGodinaRequest request) {
+    public Long createSkolskaGodina(@Valid @RequestBody SkolskaGodinaRequest request) {
         SkolskaGodina skolskaGodina = skolskaGodinaService.saveSkolskaGodina(Converters.toSkolskaGodina(request));
         return skolskaGodina.getId();
     }

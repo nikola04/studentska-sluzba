@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class SkolskaGodinaService {
     @Autowired
-    SkolskaGodinaRepository skolskaGodinaRepo;
+    private SkolskaGodinaRepository skolskaGodinaRepo;
 
     private void onActiveSkolskaGodina(SkolskaGodina skolskaGodina){
         if(skolskaGodina.getAktivan()){
@@ -30,17 +30,17 @@ public class SkolskaGodinaService {
     }
 
     public SkolskaGodina getSkolskaGodina(Long id){
-        return skolskaGodinaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found: " + id));
+        return skolskaGodinaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("[SkolskaGodina] Not found: " + id));
     }
 
     public void deleteSkolskaGodina(Long id){
-        SkolskaGodina existing = skolskaGodinaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found: " + id));
+        SkolskaGodina existing = skolskaGodinaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("[SkolskaGodina] Not found: " + id));
         skolskaGodinaRepo.delete(existing);
     }
 
     @Transactional
     public SkolskaGodina updateSkolskaGodina(Long id, SkolskaGodina skolskaGodina){
-        SkolskaGodina existing = skolskaGodinaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found: " + id));
+        SkolskaGodina existing = skolskaGodinaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("[SkolskaGodina] Not found: " + id));
 
         this.onActiveSkolskaGodina(skolskaGodina);
 

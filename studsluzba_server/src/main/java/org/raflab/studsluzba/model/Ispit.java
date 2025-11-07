@@ -16,7 +16,7 @@ public class Ispit {
 
     private LocalDate datumOdrzavanja;
     private LocalTime vremePocetka;
-    private boolean zakljucen;
+    private Boolean zakljucen;
 
     @ManyToOne
     private Predmet predmet;

@@ -29,7 +29,7 @@ public class NastavnikController {
 	NastavnikService nastavnikService;
 	
 	@PostMapping(path = "/")
-	public Long addNewNastavnik(@RequestBody NastavnikRequest nastavnikRequest) {
+	public Long addNewNastavnik(@Valid @RequestBody NastavnikRequest nastavnikRequest) {
         Set<NastavnikZvanje> zvanja = nastavnikZvanjeMapper.toEntitySet(nastavnikRequest.getZvanja());
         Nastavnik nastavnik = nastavnikService.saveNastavnik(nastavnikMapper.toEntity(nastavnikRequest), zvanja);
 
@@ -54,7 +54,7 @@ public class NastavnikController {
     }
 
     @PatchMapping(path = "/{id}")
-    public NastavnikResponse updateNastavnik(@PathVariable Long id, @RequestBody NastavnikRequest request){
+    public NastavnikResponse updateNastavnik(@PathVariable Long id, @Valid @RequestBody NastavnikRequest request){
         Nastavnik nastavnik = nastavnikMapper.toEntity(request);
         Set<NastavnikZvanje> zvanja = nastavnikZvanjeMapper.toEntitySet(request.getZvanja());
         Nastavnik updated = nastavnikService.updateNastavnik(id, nastavnik, zvanja);

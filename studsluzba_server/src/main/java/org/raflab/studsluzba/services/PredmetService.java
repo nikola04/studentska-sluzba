@@ -17,15 +17,15 @@ import java.util.List;
 
 public class PredmetService {
     @Autowired
-    PredmetRepository predmetRepository;
+    private PredmetRepository predmetRepository;
     @Autowired
-    StudijskiProgramRepository studijskiProgramRepository;
+    private StudijskiProgramRepository studijskiProgramRepository;
 
     @Transactional
     public Predmet savePredmet(Predmet predmet, Long studProgramId) {
         if (studProgramId != null) {
             StudijskiProgram sp = studijskiProgramRepository.findById(studProgramId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Studijski program not found: " + studProgramId));
+                    .orElseThrow(() -> new ResourceNotFoundException("[StudijskiProgram] not found: " + studProgramId));
             predmet.setStudProgram(sp);
         }
        return this.predmetRepository.save(predmet);
@@ -35,17 +35,17 @@ public class PredmetService {
         return predmetRepository.findAll();
     }
     public Predmet getPredmetById(Long id){
-        return predmetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found: " + id));
+        return predmetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Predmet] Not found: " + id));
     }
 
     public void deletePredmet(Long id){
-        Predmet existing = predmetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found: " + id));
+        Predmet existing = predmetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Predmet] Not found: " + id));
         predmetRepository.delete(existing);
     }
 
     @Transactional
     public Predmet updatePredmet(Long id, Predmet predmet, Long studProgramId){
-        Predmet existing = predmetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found: " + id));
+        Predmet existing = predmetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Predmet] Not found: " + id));
 
         existing.setNaziv(predmet.getNaziv());
         existing.setEspb(predmet.getEspb());
@@ -55,7 +55,7 @@ public class PredmetService {
 
         if (studProgramId != null) {
             StudijskiProgram sp = studijskiProgramRepository.findById(studProgramId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Studijski program not found: " + studProgramId));
+                    .orElseThrow(() -> new ResourceNotFoundException("[StudijskiProgram] not found: " + studProgramId));
             existing.setStudProgram(sp);
         }
 

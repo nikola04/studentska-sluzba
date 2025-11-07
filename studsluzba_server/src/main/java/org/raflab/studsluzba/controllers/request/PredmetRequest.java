@@ -8,9 +8,11 @@ import lombok.Data;
 public class PredmetRequest {
         @NonNull
         private String naziv;
+        @NonNull
         private Integer espb;
         private Boolean obavezan;
         private String opis;
+        @NonNull
         private String sifra;
         private Long studijskiProgramId;
 }

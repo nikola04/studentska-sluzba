@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class NastavnikService {
     @Autowired
-    NastavnikRepository nastavnikRepository;
+    private NastavnikRepository nastavnikRepository;
 
     @Transactional
     public Nastavnik saveNastavnik(Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja) {
@@ -35,21 +35,22 @@ public class NastavnikService {
     }
 
     public Nastavnik getNastavnik(Long id) {
-        return nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found: " + id));
+        return nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Nastavnik] Not found: " + id));
     }
 
     public List<Nastavnik> findByImeAndPrezime(String ime, String prezime) {
         return nastavnikRepository.findByImeAndPrezime(ime, prezime);
     }
 
+    @Transactional
     public void deleteNastavnik(Long id){
-        Nastavnik existing = nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found: " + id));
+        Nastavnik existing = nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Nastavnik] Not found: " + id));
         nastavnikRepository.delete(existing);
     }
 
     @Transactional
     public Nastavnik updateNastavnik(Long id, Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja){
-        Nastavnik existing = nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found: " + id));
+        Nastavnik existing = nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Nastavnik] Not found: " + id));
 
         existing.setIme(nastavnik.getIme());
         existing.setPrezime(nastavnik.getPrezime());
