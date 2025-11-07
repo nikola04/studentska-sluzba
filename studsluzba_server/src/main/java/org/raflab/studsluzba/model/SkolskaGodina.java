@@ -18,11 +18,5 @@ public class SkolskaGodina {
     private List<Predmet> predmeti;
 
     @OneToMany(mappedBy = "skolskaGodina")
-    private List<SlusaPredmet> slusaPredmeti;
-
-    @OneToMany(mappedBy = "skolskaGodina")
     private List<IspitniRok> ispitiRokovi;
-
-    @OneToMany(mappedBy = "skolskaGodina")
-    private List<AktivnostStudija> aktivnostiStudija;
 }

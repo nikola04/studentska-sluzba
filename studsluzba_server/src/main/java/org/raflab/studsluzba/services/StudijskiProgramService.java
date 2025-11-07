@@ -1,7 +1,6 @@
 package org.raflab.studsluzba.services;
 
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
-import org.raflab.studsluzba.model.Predmet;
 import org.raflab.studsluzba.model.StudijskiProgram;
 import org.raflab.studsluzba.model.VrstaStudija;
 import org.raflab.studsluzba.repositories.StudijskiProgramRepository;
@@ -20,10 +19,12 @@ public class StudijskiProgramService {
     @Autowired
     VrstaStudijaRepository vrstaStudijaRepository;
 
+    @Autowired
+    VrstaStudijaService vrstaStudijaService;
+
     @Transactional
     public StudijskiProgram saveStudijskiProgram(StudijskiProgram studijskiProgram, Long vrstaStudijaId) {
-        VrstaStudija vrsta = vrstaStudijaRepository.findById(vrstaStudijaId)
-                .orElseThrow(() -> new ResourceNotFoundException("[VrstaStudija] Not found: " + vrstaStudijaId));
+        VrstaStudija vrsta = vrstaStudijaService.findVrstaStudijaById(vrstaStudijaId);
 
         studijskiProgram.setVrstaStudija(vrsta);
 
@@ -37,7 +38,6 @@ public class StudijskiProgramService {
     @Transactional
     public StudijskiProgram getStudijskiProgram(Long id){
         StudijskiProgram studijskiProgram = studijskiProgramRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudijskiProgram] Not found: " + id));
-        studijskiProgram.getVrstaStudija();
         return studijskiProgram;
     }
 

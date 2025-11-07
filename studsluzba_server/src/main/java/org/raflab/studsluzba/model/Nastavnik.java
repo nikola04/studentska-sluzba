@@ -21,14 +21,19 @@ public class Nastavnik {
 	 private String srednjeIme;   // not null 
 	 private String email;   // not null
 	 private String brojTelefona;
-	 private String adresa;	 
+	 private String adresa;
+
+     @OneToMany(mappedBy = "nastavnik", cascade = CascadeType.ALL, orphanRemoval = true)
+     @EqualsAndHashCode.Exclude
+     private Set<NastavnikObrazovanje> obrazovanja;
+
 	 @OneToMany(mappedBy = "nastavnik", cascade = CascadeType.ALL, orphanRemoval = true)
      @EqualsAndHashCode.Exclude
      private Set<NastavnikZvanje> zvanja;
 
      @OneToMany(mappedBy = "nastavnik")
      @EqualsAndHashCode.Exclude
-     private List<DrziPredmet> drziPredmeteList;
+     private Set<DrziPredmet> drziPredmeteList;
 	 
 	 private LocalDate datumRodjenja;
 	 private Character pol;

@@ -3,8 +3,10 @@ package org.raflab.studsluzba.controllers.response;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.raflab.studsluzba.model.NastavnikObrazovanje;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -21,6 +23,7 @@ public class NastavnikResponse {
     private String brojTelefona;
     private String adresa;
     private Set<NastavnikZvanjeResponse> zvanja;
+    private Set<NastavnikObrazovanje> obrazovanja;
 
     private LocalDate datumRodjenja;
     private Character pol;

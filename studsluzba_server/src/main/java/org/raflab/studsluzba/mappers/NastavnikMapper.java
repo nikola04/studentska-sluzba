@@ -43,8 +43,8 @@ public class NastavnikMapper {
         response.setDatumRodjenja(entity.getDatumRodjenja());
         response.setPol(entity.getPol());
         response.setJmbg(entity.getJmbg());
+        response.setObrazovanja(entity.getObrazovanja());
 
-        // Zvanja
         Set<NastavnikZvanje> zvanja = entity.getZvanja();
         if (zvanja != null) {
             response.setZvanja(nastavnikZvanjeMapper.toResponseSet(zvanja));

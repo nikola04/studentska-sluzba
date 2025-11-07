@@ -1,27 +1,36 @@
 package org.raflab.studsluzba.controllers.request;
 
 import lombok.Data;
-import lombok.NonNull;
 
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Set;
 
 @Data
 public class NastavnikRequest {
 
-    @NonNull
+    @NotBlank
     private String ime;
-    @NonNull
+    @NotBlank
     private String prezime;
-    @NonNull
+    @NotBlank
     private String srednjeIme;
-    @NonNull
+    @NotNull
+    @Email(message = "Field 'email' must be valid Email")
     private String email;
+    @NotBlank
     private String brojTelefona;
+    @NotBlank
     private String adresa;
     private Set<NastavnikZvanjeRequest> zvanja;
 
+    @NotNull
     private LocalDate datumRodjenja;
+    @NotNull
     private Character pol;
+    @NotBlank
+    @Size(min = 13, max = 13)
     private String jmbg;
+
+    private Set<NastavnikObrazovanjeRequest> obrazovanje;
 }

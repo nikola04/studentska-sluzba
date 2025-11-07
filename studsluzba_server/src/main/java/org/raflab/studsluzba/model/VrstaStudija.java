@@ -3,7 +3,6 @@ package org.raflab.studsluzba.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Entity
@@ -14,7 +13,4 @@ public class VrstaStudija {
 
     private String naziv;
     private String oznaka;
-
-    @OneToMany(mappedBy = "vrstaStudija")
-    private List<StudijskiProgram> studijskiProgrami;
 }

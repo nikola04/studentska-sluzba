@@ -1,15 +1,15 @@
 package org.raflab.studsluzba.services;
 
+import org.raflab.studsluzba.controllers.request.NastavnikObrazovanjeRequest;
 import org.raflab.studsluzba.controllers.request.NastavnikZvanjeRequest;
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
-import org.raflab.studsluzba.model.Nastavnik;
-import org.raflab.studsluzba.model.NastavnikZvanje;
-import org.raflab.studsluzba.model.SkolskaGodina;
+import org.raflab.studsluzba.model.*;
 import org.raflab.studsluzba.repositories.NastavnikRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -20,12 +20,33 @@ public class NastavnikService {
     @Autowired
     private NastavnikRepository nastavnikRepository;
 
+    @Autowired
+    private VisokoskolskaUstanovaService visokoskolskaUstanovaService;
+    @Autowired
+    private VrstaStudijaService vrstaStudijaService;
+
+    private void addObrazovanje(Nastavnik nastavnik, NastavnikObrazovanjeRequest obrazovanjeRequest){
+        VisokoskolskaUstanova visokoskolskaUstanova = visokoskolskaUstanovaService.getVisokoskolskaUstanovaById(obrazovanjeRequest.getVisokoskolskaUstanovaId());
+        VrstaStudija vrstaStudija = vrstaStudijaService.findVrstaStudijaById(obrazovanjeRequest.getVrstaStudijaId());
+
+        NastavnikObrazovanje obrazovanje = new NastavnikObrazovanje();
+        obrazovanje.setVisokoskolskaUstanova(visokoskolskaUstanova);
+        obrazovanje.setVrstaStudija(vrstaStudija);
+        obrazovanje.setNastavnik(nastavnik);
+
+        if(nastavnik.getObrazovanja() == null) nastavnik.setObrazovanja(new HashSet<>());
+
+        nastavnik.getObrazovanja().add(obrazovanje);
+    }
+
     @Transactional
-    public Nastavnik saveNastavnik(Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja) {
+    public Nastavnik saveNastavnik(Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja, Set<NastavnikObrazovanjeRequest> obrazovanjeRequest) {
         if (nastavnikZvanja != null && !nastavnikZvanja.isEmpty()) {
             nastavnikZvanja.forEach(zvanje -> zvanje.setNastavnik(nastavnik));
             nastavnik.setZvanja(nastavnikZvanja);
         }
+
+        obrazovanjeRequest.forEach(obrazovanje -> this.addObrazovanje(nastavnik, obrazovanje));
 
         return nastavnikRepository.save(nastavnik);
     }
@@ -49,8 +70,11 @@ public class NastavnikService {
     }
 
     @Transactional
-    public Nastavnik updateNastavnik(Long id, Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja){
+    public Nastavnik updateNastavnik(Long id, Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja, Set<NastavnikObrazovanjeRequest> obrazovanjeRequest){
         Nastavnik existing = nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Nastavnik] Not found: " + id));
+
+        if(obrazovanjeRequest != null)
+            obrazovanjeRequest.forEach(obrazovanje -> this.addObrazovanje(existing, obrazovanje));
 
         existing.setIme(nastavnik.getIme());
         existing.setPrezime(nastavnik.getPrezime());

@@ -33,7 +33,6 @@ public class StudentPodaciRequest {
     private String drzavljanstvo;   // not null
     private String nacionalnost;   // can be null if user doesnt want to specify it?
     @NotNull
-    @Pattern(regexp = "^[MZ]$", message = "Field 'pol' must be 'M' or 'Z'")
     private Character pol;    // not null
     @NotBlank
     private String adresa;  // not null
