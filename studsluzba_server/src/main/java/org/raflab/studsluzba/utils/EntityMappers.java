@@ -25,7 +25,7 @@ public class EntityMappers {
 		s.setGodinaUpisa(si.getGodina());
 		s.setBroj(si.getBroj());
 		s.setStudProgramOznaka(si.getStudProgramOznaka());
-		s.setAktivanIndeks(si.isAktivan());
+		s.setAktivanIndeks(si.getAktivan());
 		return s;
 
 	}
@@ -40,7 +40,7 @@ public class EntityMappers {
 		response.setGodina(si.getGodina());
 		response.setStudProgramOznaka(si.getStudProgramOznaka());
 		response.setNacinFinansiranja(si.getNacinFinansiranja());
-		response.setAktivan(si.isAktivan());
+		response.setAktivan(si.getAktivan());
 		response.setVaziOd(si.getVaziOd());
 		response.setOstvarenoEspb(si.getOstvarenoEspb());
 		response.setStudijskiProgram(si.getStudijskiProgram());

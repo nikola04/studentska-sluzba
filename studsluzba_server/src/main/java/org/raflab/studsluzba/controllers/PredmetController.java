@@ -3,15 +3,10 @@ package org.raflab.studsluzba.controllers;
 import java.util.List;
 
 import org.raflab.studsluzba.controllers.request.PredmetRequest;
-import org.raflab.studsluzba.controllers.request.SkolskaGodinaRequest;
 import org.raflab.studsluzba.controllers.response.PredmetResponse;
 import org.raflab.studsluzba.mappers.PredmetMapper;
 import org.raflab.studsluzba.model.Predmet;
-import org.raflab.studsluzba.model.SkolskaGodina;
-import org.raflab.studsluzba.repositories.PredmetRepository;
 import org.raflab.studsluzba.services.PredmetService;
-import org.raflab.studsluzba.services.SkolskaGodinaService;
-import org.raflab.studsluzba.utils.Converters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

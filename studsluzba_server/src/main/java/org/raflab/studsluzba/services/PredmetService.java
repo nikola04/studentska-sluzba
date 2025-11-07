@@ -65,4 +65,12 @@ public class PredmetService {
     public List<Predmet> getPredmetForGodinaAkreditacije(Integer godinaAkreditacije){
         return predmetRepository.getPredmetForGodinaAkreditacije(godinaAkreditacije);
     }
+
+    public List<Predmet> getPredmetForStudijskiProgram(Long id){
+        return predmetRepository.findPredmetForStudijskiProgram(id);
+    }
+
+    public Long countByStudijskiProgramId(Long id){
+        return predmetRepository.countByStudijskiProgramId(id);
+    }
 }

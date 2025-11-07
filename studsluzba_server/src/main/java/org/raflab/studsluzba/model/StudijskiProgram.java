@@ -24,6 +24,6 @@ public class StudijskiProgram {
 	private Integer ukupnoEspb;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "studProgram")
+    @OneToMany(mappedBy = "studProgram", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Predmet> predmeti;
 }

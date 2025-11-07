@@ -1,7 +1,6 @@
 package org.raflab.studsluzba.controllers;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.raflab.studsluzba.controllers.request.NastavnikRequest;
@@ -11,7 +10,6 @@ import org.raflab.studsluzba.mappers.NastavnikZvanjeMapper;
 import org.raflab.studsluzba.model.Nastavnik;
 import org.raflab.studsluzba.model.NastavnikZvanje;
 import org.raflab.studsluzba.services.NastavnikService;
-import org.raflab.studsluzba.utils.Converters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

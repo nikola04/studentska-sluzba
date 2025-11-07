@@ -1,6 +1,5 @@
 package org.raflab.studsluzba.controllers.request;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -15,8 +14,12 @@ public class IspitRequest {
     private LocalTime vremePocetka;
     private Boolean zakljucen;
 
+    @NonNull
     private Long predmetId;
+    @NonNull
     private Long nastavnikId;
+    @NonNull
     private Long ispitniRokId;
+    @NonNull
     private Long skolskaGodinaId;
 }

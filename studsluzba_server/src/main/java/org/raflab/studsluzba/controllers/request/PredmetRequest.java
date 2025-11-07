@@ -1,18 +1,23 @@
 package org.raflab.studsluzba.controllers.request;
 
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 public class PredmetRequest {
-        @NonNull
+        @NotBlank
         private String naziv;
-        @NonNull
+        @NotNull
         private Integer espb;
+        @NotNull
         private Boolean obavezan;
-        private String opis;
-        @NonNull
+        private String opis; // can be null
+        @NotBlank
         private String sifra;
+        @NotNull
         private Long studijskiProgramId;
 }

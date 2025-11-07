@@ -23,14 +23,10 @@ public class IspitService {
     private IspitniRokService ispitniRokService;
 
     private void addIspitChildClasses(Ispit target, Long predmetId, Long nastavnikId, Long ispitniRokId, Long skolskaGodinaId){
-        if(predmetId != null)
-            target.setPredmet(predmetService.getPredmetById(predmetId));
-        if(nastavnikId != null)
-            target.setNastavnik(nastavnikService.getNastavnik(nastavnikId));
-        if(skolskaGodinaId != null)
-            target.setSkolskaGodina(skolskaGodinaService.getSkolskaGodina(skolskaGodinaId));
-        if(ispitniRokId != null)
-            target.setIspitniRok(ispitniRokService.getIspitniRok(ispitniRokId));
+        target.setPredmet(predmetService.getPredmetById(predmetId));
+        target.setNastavnik(nastavnikService.getNastavnik(nastavnikId));
+        target.setSkolskaGodina(skolskaGodinaService.getSkolskaGodina(skolskaGodinaId));
+        target.setIspitniRok(ispitniRokService.getIspitniRok(ispitniRokId));
     }
 
     @Transactional

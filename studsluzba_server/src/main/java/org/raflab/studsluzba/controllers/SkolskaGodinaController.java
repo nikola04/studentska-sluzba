@@ -2,9 +2,9 @@ package org.raflab.studsluzba.controllers;
 
 import org.raflab.studsluzba.controllers.request.SkolskaGodinaRequest;
 import org.raflab.studsluzba.controllers.response.SkolskaGodinaResponse;
+import org.raflab.studsluzba.mappers.SkolskaGodinaMapper;
 import org.raflab.studsluzba.model.SkolskaGodina;
 import org.raflab.studsluzba.services.SkolskaGodinaService;
-import org.raflab.studsluzba.utils.Converters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,23 +16,25 @@ import java.util.List;
 @RequestMapping(path="/api/skolskagodina")
 public class SkolskaGodinaController {
     @Autowired
+    private SkolskaGodinaMapper skolskaGodinaMapper;
+    @Autowired
     private SkolskaGodinaService skolskaGodinaService;
 
     @PostMapping(path="/")
     public Long createSkolskaGodina(@Valid @RequestBody SkolskaGodinaRequest request) {
-        SkolskaGodina skolskaGodina = skolskaGodinaService.saveSkolskaGodina(Converters.toSkolskaGodina(request));
+        SkolskaGodina skolskaGodina = skolskaGodinaService.saveSkolskaGodina(skolskaGodinaMapper.toEntity(request));
         return skolskaGodina.getId();
     }
 
     @GetMapping(path = "/")
     public List<SkolskaGodinaResponse> getAllSkolskaGodina(){
         List<SkolskaGodina> skolskaGodinaList = skolskaGodinaService.getAllSkolskaGodina();
-        return Converters.toSkolskaGodinaResponseList(skolskaGodinaList);
+        return skolskaGodinaMapper.toResponseList(skolskaGodinaList);
     }
 
     @GetMapping(path = "/{id}")
     public SkolskaGodinaResponse getSkolskaGodina(@PathVariable Long id){
-        return Converters.toSkolskaGodinaResponse(skolskaGodinaService.getSkolskaGodina(id));
+        return skolskaGodinaMapper.toResponse(skolskaGodinaService.getSkolskaGodina(id));
     }
 
     @DeleteMapping(path = "/{id}")
@@ -43,6 +45,7 @@ public class SkolskaGodinaController {
 
     @PatchMapping(path = "/{id}")
     public SkolskaGodinaResponse updateSkolskaGodina(@PathVariable Long id, @Valid @RequestBody SkolskaGodinaRequest request){
-        return Converters.toSkolskaGodinaResponse(skolskaGodinaService.updateSkolskaGodina(id, Converters.toSkolskaGodina(request)));
+        SkolskaGodina sgEntity = skolskaGodinaMapper.toEntity(request);
+        return skolskaGodinaMapper.toResponse(skolskaGodinaService.updateSkolskaGodina(id, sgEntity));
     }
 }

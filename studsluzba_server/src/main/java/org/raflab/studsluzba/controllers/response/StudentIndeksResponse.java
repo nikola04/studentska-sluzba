@@ -17,6 +17,6 @@ public class StudentIndeksResponse {
     private boolean aktivan;
     private LocalDate vaziOd;
     private StudentPodaci student;
-    private StudijskiProgram studijskiProgram;   // na koji studijski program je upisan
+    private StudijskiProgram studijskiProgram;
     private Integer ostvarenoEspb;
 }

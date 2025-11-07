@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Entity
 @Data
 public class StudentPodaci {
-	
 	 @Id
 	 @GeneratedValue(strategy=GenerationType.IDENTITY)
 	 private Long id;
@@ -31,6 +30,5 @@ public class StudentPodaci {
 	 private String brojLicneKarte; 
 	 private String licnuKartuIzdao;
 	 private String mestoStanovanja;
-	 private String adresaStanovanja;   // u toku studija
-
+	 private String adresaStanovanja;   // u toku studijaq
 }
