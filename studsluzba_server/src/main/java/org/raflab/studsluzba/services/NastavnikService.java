@@ -25,18 +25,22 @@ public class NastavnikService {
     @Autowired
     private VrstaStudijaService vrstaStudijaService;
 
-    private void addObrazovanje(Nastavnik nastavnik, NastavnikObrazovanjeRequest obrazovanjeRequest){
-        VisokoskolskaUstanova visokoskolskaUstanova = visokoskolskaUstanovaService.getVisokoskolskaUstanovaById(obrazovanjeRequest.getVisokoskolskaUstanovaId());
-        VrstaStudija vrstaStudija = vrstaStudijaService.findVrstaStudijaById(obrazovanjeRequest.getVrstaStudijaId());
+    private Set<NastavnikObrazovanje> fetchObrazovanja(Nastavnik nastavnik, Set<NastavnikObrazovanjeRequest> requests){
+        if(requests == null) return null;
+        Set<NastavnikObrazovanje> obrazovanja = new HashSet<>();
 
-        NastavnikObrazovanje obrazovanje = new NastavnikObrazovanje();
-        obrazovanje.setVisokoskolskaUstanova(visokoskolskaUstanova);
-        obrazovanje.setVrstaStudija(vrstaStudija);
-        obrazovanje.setNastavnik(nastavnik);
+        requests.forEach(request -> {
+            VisokoskolskaUstanova visokoskolskaUstanova = visokoskolskaUstanovaService.getVisokoskolskaUstanovaById(request.getVisokoskolskaUstanovaId());
+            VrstaStudija vrstaStudija = vrstaStudijaService.findVrstaStudijaById(request.getVrstaStudijaId());
 
-        if(nastavnik.getObrazovanja() == null) nastavnik.setObrazovanja(new HashSet<>());
+            NastavnikObrazovanje obrazovanje = new NastavnikObrazovanje();
+            obrazovanje.setVisokoskolskaUstanova(visokoskolskaUstanova);
+            obrazovanje.setVrstaStudija(vrstaStudija);
+            obrazovanje.setNastavnik(nastavnik);
 
-        nastavnik.getObrazovanja().add(obrazovanje);
+            obrazovanja.add(obrazovanje);
+        });
+        return obrazovanja;
     }
 
     @Transactional
@@ -46,7 +50,7 @@ public class NastavnikService {
             nastavnik.setZvanja(nastavnikZvanja);
         }
 
-        obrazovanjeRequest.forEach(obrazovanje -> this.addObrazovanje(nastavnik, obrazovanje));
+        nastavnik.setObrazovanja(fetchObrazovanja(nastavnik, obrazovanjeRequest));
 
         return nastavnikRepository.save(nastavnik);
     }
@@ -73,8 +77,11 @@ public class NastavnikService {
     public Nastavnik updateNastavnik(Long id, Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja, Set<NastavnikObrazovanjeRequest> obrazovanjeRequest){
         Nastavnik existing = nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Nastavnik] Not found: " + id));
 
-        if(obrazovanjeRequest != null)
-            obrazovanjeRequest.forEach(obrazovanje -> this.addObrazovanje(existing, obrazovanje));
+        if(obrazovanjeRequest != null) {
+            Set<NastavnikObrazovanje> obrazovanja = fetchObrazovanja(existing, obrazovanjeRequest);
+            existing.getObrazovanja().removeIf(obrazovanje -> !obrazovanja.contains(obrazovanje));
+            existing.getObrazovanja().addAll(obrazovanja);
+        }
 
         existing.setIme(nastavnik.getIme());
         existing.setPrezime(nastavnik.getPrezime());
