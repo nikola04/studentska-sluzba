@@ -19,6 +19,9 @@ public class DrziPredmet {
 	@ManyToOne
 	private Predmet predmet;
 
-    @OneToMany(mappedBy = "drziPredmet")
-    private List<SlusaPredmet> slusajuPredmtList;
+    @ManyToOne
+    private SkolskaGodina skolskaGodina;
+
+    @OneToMany(mappedBy = "drziPredmet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PredmetSlusa> slusajuPredmtList;
 }

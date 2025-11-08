@@ -9,7 +9,5 @@ public class PredmetResponse {
         private Boolean obavezan;
         private String opis;
         private String sifra;
-        private Long studijskiProgramId;
-        private String studijskiProgramNaziv; // opciono - da prikažeš i naziv
-
+        private StudijskiProgramResponse studijskiProgram;
 }

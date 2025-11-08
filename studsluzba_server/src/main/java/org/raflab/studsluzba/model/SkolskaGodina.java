@@ -15,8 +15,5 @@ public class SkolskaGodina {
     private Boolean aktivan;
 
     @OneToMany(mappedBy = "skolskaGodina")
-    private List<Predmet> predmeti;
-
-    @OneToMany(mappedBy = "skolskaGodina")
     private List<IspitniRok> ispitiRokovi;
 }

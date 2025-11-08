@@ -27,8 +27,8 @@ public class Seeder implements CommandLineRunner {
     private DrziPredmetRepository drziPredmetRepository;
     @Autowired
     private SlusaPredmetRepository slusaPredmetRepository;
-    @Autowired
-    private GrupaRepository grupaRepository;
+//    @Autowired
+//    private GrupaRepository grupaRepository;
 
     @Override
     public void run(String... args) throws Exception {

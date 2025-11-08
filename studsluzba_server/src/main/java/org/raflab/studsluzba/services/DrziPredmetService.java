@@ -1,83 +1,59 @@
 package org.raflab.studsluzba.services;
 
 import lombok.RequiredArgsConstructor;
-import org.raflab.studsluzba.controllers.request.DrziPredmetNewRequest;
-import org.raflab.studsluzba.controllers.request.DrziPredmetRequest;
+import org.raflab.studsluzba.exceptions.ResourceAlreadyExistsException;
 import org.raflab.studsluzba.model.DrziPredmet;
 import org.raflab.studsluzba.model.Nastavnik;
 import org.raflab.studsluzba.model.Predmet;
+import org.raflab.studsluzba.model.SkolskaGodina;
 import org.raflab.studsluzba.repositories.DrziPredmetRepository;
-import org.raflab.studsluzba.repositories.NastavnikRepository;
-import org.raflab.studsluzba.repositories.PredmetRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class DrziPredmetService {
+    @Autowired
+    private final DrziPredmetRepository drziPredmetRepository;
+    @Autowired
+    private NastavnikService nastavnikService;
+    @Autowired
+    private PredmetService predmetService;
+    @Autowired
+    private SkolskaGodinaService skolskaGodinaService;
 
-    final DrziPredmetRepository drziPredmetRepository;
-    final PredmetRepository predmetRepository;
-    final NastavnikRepository nastavnikRepository;
+    public List<DrziPredmet> getAllDrziPredmetByNastavnikId(Long nastavnikId) {
+        return drziPredmetRepository.getDrziPredmetByNastavnikId(nastavnikId);
+    }
+
+    public List<DrziPredmet> getAllDrziPredmetByPredmetId(Long predmetId) {
+        return drziPredmetRepository.getDrziPredmetByPredmetId(predmetId);
+    }
+
 
     @Transactional
-    public void saveDrziPredmet(DrziPredmetRequest request) {
+    public void saveDrziPredmet(Long nastavnikId, Long predmetId, Long skolskaGodinaId) {
+        if (drziPredmetRepository.getDrziPredmetByPredmetIdNastavnikIdSkolskaGodinaId(predmetId, nastavnikId, skolskaGodinaId) != null)
+            throw new ResourceAlreadyExistsException("[DrziPredmet] Already exists: " + predmetId + " " + nastavnikId + " " + skolskaGodinaId);
 
-        List<DrziPredmetNewRequest> drziPredmetList = request.getDrziPredmet();
-        List<DrziPredmetNewRequest> newDrziPredmetList = request.getNewDrziPredmet();
+        Nastavnik nastavnik = nastavnikService.getNastavnik(nastavnikId);
+        Predmet predmet = predmetService.getPredmet(predmetId);
+        SkolskaGodina skolskaGodina = skolskaGodinaService.getSkolskaGodina(skolskaGodinaId);
 
-        // izvuci sve predmete iz baze po predmetId
-        Map<Long, Predmet> predmetMap = predmetRepository.findByIdIn(
-                drziPredmetList.stream().map(DrziPredmetNewRequest::getPredmetId).collect(Collectors.toList())
-        ).stream().collect(Collectors.toMap(Predmet::getId, Function.identity()));
+        DrziPredmet drziPredmet = new DrziPredmet();
+        drziPredmet.setNastavnik(nastavnik);
+        drziPredmet.setPredmet(predmet);
+        drziPredmet.setSkolskaGodina(skolskaGodina);
 
-        // izvuci sve predmete iz baze po predmetNaziv za nove unose
-        Map<String, Predmet> newPredmetMap = predmetRepository.findByNazivIn(
-                newDrziPredmetList.stream().map(DrziPredmetNewRequest::getPredmetNaziv).collect(Collectors.toList())
-        ).stream().collect(Collectors.toMap(Predmet::getNaziv, Function.identity()));
+        drziPredmetRepository.save(drziPredmet);
+    }
 
-        // izvuci sve nastavnike iz baze po email
-        List<String> allEmails = Stream.concat(
-                drziPredmetList.stream().map(DrziPredmetNewRequest::getEmailNastavnik),
-                newDrziPredmetList.stream().map(DrziPredmetNewRequest::getEmailNastavnik)
-        ).distinct().collect(Collectors.toList());
-
-        Map<String, Nastavnik> nastavnikMap = nastavnikRepository.findByEmailIn(allEmails)
-                .stream().collect(Collectors.toMap(Nastavnik::getEmail, Function.identity()));
-
-        // kreiranje liste DrziPredmet objekata za cuvanje
-        List<DrziPredmet> drziPredmetEntities = new ArrayList<>();
-
-        for (DrziPredmetNewRequest drziPredmetRequest : drziPredmetList) {
-            Predmet predmet = predmetMap.get(drziPredmetRequest.getPredmetId());
-            Nastavnik nastavnik = nastavnikMap.get(drziPredmetRequest.getEmailNastavnik());
-
-            if (predmet != null && nastavnik != null) {
-                DrziPredmet drziPredmet = new DrziPredmet();
-                drziPredmet.setPredmet(predmet);
-                drziPredmet.setNastavnik(nastavnik);
-                drziPredmetEntities.add(drziPredmet);
-            }
-        }
-
-        for (DrziPredmetNewRequest newDrziPredmetRequest : newDrziPredmetList) {
-            Predmet predmet = newPredmetMap.get(newDrziPredmetRequest.getPredmetNaziv());
-            Nastavnik nastavnik = nastavnikMap.get(newDrziPredmetRequest.getEmailNastavnik());
-
-            if (predmet != null && nastavnik != null) {
-                DrziPredmet drziPredmet = new DrziPredmet();
-                drziPredmet.setPredmet(predmet);
-                drziPredmet.setNastavnik(nastavnik);
-                drziPredmetEntities.add(drziPredmet);
-            }
-        }
-        System.out.println("BROJ DrziPredmet za cuvanje: " + drziPredmetEntities.size());
-
-        drziPredmetRepository.saveAll(drziPredmetEntities);
+    @Transactional
+    public void deleteDrziPredmet(Long nastavnikId, Long predmetId, Long skolskaGodinaId) {
+        DrziPredmet drziPredmet = drziPredmetRepository.getDrziPredmetByPredmetIdNastavnikIdSkolskaGodinaId(predmetId, nastavnikId, skolskaGodinaId);
+        drziPredmetRepository.delete(drziPredmet);
     }
 }

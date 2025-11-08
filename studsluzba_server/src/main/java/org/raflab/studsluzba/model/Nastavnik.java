@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -33,7 +32,7 @@ public class Nastavnik {
 
      @OneToMany(mappedBy = "nastavnik")
      @EqualsAndHashCode.Exclude
-     private Set<DrziPredmet> drziPredmeteList;
+     private Set<DrziPredmet> predmeteListDrzi;
 	 
 	 private LocalDate datumRodjenja;
 	 private Character pol;

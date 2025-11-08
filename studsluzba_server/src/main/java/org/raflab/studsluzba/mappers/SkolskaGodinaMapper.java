@@ -21,6 +21,7 @@ public class SkolskaGodinaMapper {
     public SkolskaGodinaResponse toResponse(SkolskaGodina skolskaGodina) {
         SkolskaGodinaResponse skolskaGodinaResponse = new SkolskaGodinaResponse();
 
+        skolskaGodinaResponse.setId(skolskaGodina.getId());
         skolskaGodinaResponse.setAktivan(skolskaGodina.getAktivan());
 
         return skolskaGodinaResponse;

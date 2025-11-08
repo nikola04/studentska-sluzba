@@ -12,7 +12,7 @@ public class PredispitnaObaveza {
     private Long id;
 
     private PredispitneObavezeVrsta vrsta;
-    private double maxBrojPoena;
+    private Double maxBrojPoena;
 
     @ManyToOne
     private Predmet predmet;

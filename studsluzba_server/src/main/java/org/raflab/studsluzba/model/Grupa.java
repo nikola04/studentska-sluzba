@@ -4,12 +4,7 @@ import lombok.Data;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -21,8 +16,12 @@ public class Grupa {
 	
 	@ManyToOne
 	private StudijskiProgram studijskiProgram;
-	
-	@ManyToMany
-	private List<Predmet> predmeti;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "grupa_predmeti",
+            joinColumns = @JoinColumn(name = "grupa_id"),
+            inverseJoinColumns = @JoinColumn(name = "predmeti_id")
+    )
+    private List<Predmet> predmeti;
 }

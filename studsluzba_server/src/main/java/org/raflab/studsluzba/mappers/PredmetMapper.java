@@ -3,6 +3,7 @@ package org.raflab.studsluzba.mappers;
 import org.raflab.studsluzba.controllers.request.PredmetRequest;
 import org.raflab.studsluzba.controllers.response.PredmetResponse;
 import org.raflab.studsluzba.model.Predmet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class PredmetMapper {
+    @Autowired
+    StudijskiProgramMapper studijskiProgramMapper;
 
     public Predmet toEntity(PredmetRequest request) {
         Predmet p = new Predmet();
@@ -29,11 +32,7 @@ public class PredmetMapper {
         r.setObavezan(entity.getObavezan());
         r.setOpis(entity.getOpis());
         r.setSifra(entity.getSifra());
-
-        if (entity.getStudProgram() != null) {
-            r.setStudijskiProgramId(entity.getStudProgram().getId());
-            r.setStudijskiProgramNaziv(entity.getStudProgram().getNaziv());
-        }
+        r.setStudijskiProgram(studijskiProgramMapper.toResponse(entity.getStudProgram()));
         return r;
     }
 

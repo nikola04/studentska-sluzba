@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.raflab.studsluzba.model.DrziPredmet;
 import org.raflab.studsluzba.model.Predmet;
-import org.raflab.studsluzba.model.SlusaPredmet;
+import org.raflab.studsluzba.model.PredmetSlusa;
 import org.raflab.studsluzba.model.StudentIndeks;
 import org.raflab.studsluzba.repositories.DrziPredmetRepository;
 import org.raflab.studsluzba.repositories.SlusaPredmetRepository;
@@ -33,13 +33,7 @@ public class RaspodelaNastaveController {
 	
 	@Autowired
 	SlusaPredmetRepository slusaPredmetRepo;
-	
-	@GetMapping(path = "/drzipredmet/aktivna/nastavnik/{idNastavnika}")
-	public List<Predmet> getDrziPredmetUAktivnojSkolskojGodini(@PathVariable Long idNastavnika) {
-		return drziPredmetRepo.getPredmetiZaNastavnikaUAktivnojSkolskojGodini(idNastavnika);			
-	}
-	
-	
+
 	@GetMapping(path = "/slusapredmetaktivna/{idPredmeta}/{idNastavnika}")
 	public List<StudentIndeks> getSlusaPredmetUAktivnojSkolskojGodini(@PathVariable Long idPredmeta, @PathVariable Long idNastavnika) {
 		return slusaPredmetRepo.getStudentiSlusaPredmetAktivnaGodina(idPredmeta, idNastavnika);			
@@ -60,13 +54,13 @@ public class RaspodelaNastaveController {
 	 */
 	
 	@PostMapping(path="/drzipredmet/add") 
-   	public Long addDrziPredmet (@RequestBody DrziPredmet drziPredmet) {  	    
+   	public Long addDrziPredmet (@RequestBody DrziPredmet drziPredmet) {
    	    return drziPredmetRepo.save(drziPredmet).getId();
    	}
 	
 	@PostMapping(path="/slusapredmet/add") 
-   	public Long addSlusaPredmet (@RequestBody SlusaPredmet slusaPredmet) {  	    
-   	    return slusaPredmetRepo.save(slusaPredmet).getId();
+   	public Long addSlusaPredmet (@RequestBody PredmetSlusa predmetSlusa) {
+   	    return slusaPredmetRepo.save(predmetSlusa).getId();
    	}
 	
 	@DeleteMapping(path="/drzipredmet/{id}")

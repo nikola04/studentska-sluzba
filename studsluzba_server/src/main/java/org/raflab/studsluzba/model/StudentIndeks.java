@@ -27,7 +27,7 @@ public class StudentIndeks {
 	private StudijskiProgram studijskiProgram;
 
     @OneToMany(mappedBy="studentIndeks")
-    private List<SlusaPredmet> slusaPredmeti;
+    private List<PredmetSlusa> predmetiSlusa;
 
     @OneToMany(mappedBy="studentIndeks")
     private List<PolozenPredmet> polozeniPredmeti;

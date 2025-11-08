@@ -25,14 +25,14 @@ public class Predmet {
     @ManyToOne
 	private StudijskiProgram studProgram;
 
-    @OneToMany(mappedBy="predmet")
+    @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PolozenPredmet> polozeni;
 
-    @OneToMany(mappedBy="predmet")
+    @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DrziPredmet> drzePredmetList;
 
-    @ManyToOne
-    private SkolskaGodina skolskaGodina;
+    @ManyToMany(mappedBy = "predmeti")
+    private List<Grupa> grupe;
 
 	@Override
 	public int hashCode() {

@@ -2,15 +2,18 @@ package org.raflab.studsluzba.controllers;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.raflab.studsluzba.controllers.request.NastavnikObrazovanjeRequest;
+import org.raflab.studsluzba.controllers.request.DrziPredmetRequest;
 import org.raflab.studsluzba.controllers.request.NastavnikRequest;
+import org.raflab.studsluzba.controllers.response.DrziPredmetResponse;
 import org.raflab.studsluzba.controllers.response.NastavnikResponse;
+import org.raflab.studsluzba.mappers.DrziPredmetMapper;
 import org.raflab.studsluzba.mappers.NastavnikMapper;
 import org.raflab.studsluzba.mappers.NastavnikZvanjeMapper;
+import org.raflab.studsluzba.model.DrziPredmet;
 import org.raflab.studsluzba.model.Nastavnik;
 import org.raflab.studsluzba.model.NastavnikZvanje;
+import org.raflab.studsluzba.services.DrziPredmetService;
 import org.raflab.studsluzba.services.NastavnikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +28,12 @@ public class NastavnikController {
     NastavnikMapper nastavnikMapper;
     @Autowired
     NastavnikZvanjeMapper nastavnikZvanjeMapper;
+    @Autowired
+    DrziPredmetMapper drziPredmetMapper;
 	@Autowired
 	NastavnikService nastavnikService;
+    @Autowired
+    DrziPredmetService drziPredmetService;
 	
 	@PostMapping(path = "/")
 	public Long addNewNastavnik(@Valid @RequestBody NastavnikRequest nastavnikRequest) {
@@ -65,5 +72,24 @@ public class NastavnikController {
 	public List<NastavnikResponse> search(@RequestParam(required = false) String ime, @RequestParam(required = false) String prezime){
         return nastavnikMapper.toResponseList(nastavnikService.findByImeAndPrezime(ime, prezime));
 	}
+
+    @GetMapping(path = "/{nastavnikId}/predmet")
+    public List<DrziPredmetResponse> getAllNastavnikPredmet(@PathVariable Long nastavnikId){
+        List<DrziPredmet> drziPredmetList = drziPredmetService.getAllDrziPredmetByNastavnikId(nastavnikId);
+
+        return drziPredmetMapper.toResponseListWithPredmet(drziPredmetList);
+    }
+
+    @PostMapping(path = "/{nastavnikId}/predmet/{predmetId}")
+    public boolean addNewNastavnikPredmet(@PathVariable Long nastavnikId, @PathVariable Long predmetId, @Valid @RequestBody DrziPredmetRequest request){
+        drziPredmetService.saveDrziPredmet(nastavnikId, predmetId, request.getSkolskaGodinaId());
+        return true;
+    }
+
+    @DeleteMapping(path = "/{nastavnikId}/predmet/{predmetId}/godina/{godinaId}")
+    public boolean deleteNastavnikPredmet(@PathVariable Long nastavnikId, @PathVariable Long predmetId, @PathVariable Long godinaId){
+        drziPredmetService.deleteDrziPredmet(nastavnikId, predmetId, godinaId);
+        return true;
+    }
 	
 }

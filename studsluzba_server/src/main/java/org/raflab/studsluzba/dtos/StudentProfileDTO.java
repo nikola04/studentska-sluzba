@@ -4,7 +4,7 @@ import java.util.List;
 
 import lombok.Data;
 import org.raflab.studsluzba.model.Predmet;
-import org.raflab.studsluzba.model.SlusaPredmet;
+import org.raflab.studsluzba.model.PredmetSlusa;
 import org.raflab.studsluzba.model.StudentIndeks;
 
 /*
@@ -29,7 +29,7 @@ public class StudentProfileDTO {
 	
 	// za aktivnu skolsku godinu
 	
-	private List<SlusaPredmet> slusaPredmete;
+	private List<PredmetSlusa> predmeteSlusa;
 	
 	private List<Predmet> nepolozeniPredmeti;
 	

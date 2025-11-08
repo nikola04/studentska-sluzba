@@ -1,14 +1,14 @@
 package org.raflab.studsluzba.services;
 
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
-import org.raflab.studsluzba.model.Predmet;
-import org.raflab.studsluzba.model.StudijskiProgram;
+import org.raflab.studsluzba.model.*;
 import org.raflab.studsluzba.repositories.PredmetRepository;
 import org.raflab.studsluzba.repositories.StudijskiProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,11 +21,9 @@ public class PredmetService {
 
     @Transactional
     public Predmet savePredmet(Predmet predmet, Long studProgramId) {
-        if (studProgramId != null) {
-            StudijskiProgram sp = studijskiProgramService.getStudijskiProgram(studProgramId);
-            predmet.setStudProgram(sp);
-        }
-       return this.predmetRepository.save(predmet);
+        StudijskiProgram sp = studijskiProgramService.getStudijskiProgram(studProgramId);
+        predmet.setStudProgram(sp);
+        return this.predmetRepository.save(predmet);
     }
 
     public List<Predmet> getAllPredmets() {
@@ -35,9 +33,16 @@ public class PredmetService {
         return predmetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Predmet] Not found: " + id));
     }
 
+    @Transactional
     public void deletePredmet(Long id){
-        Predmet existing = this.getPredmet(id);
-        predmetRepository.delete(existing);
+        Predmet predmet = this.getPredmet(id);
+
+        for (Grupa g : predmet.getGrupe()) {
+            g.getPredmeti().remove(predmet);
+        }
+        predmet.getGrupe().clear();
+
+        predmetRepository.delete(predmet);
     }
 
     @Transactional
@@ -50,10 +55,8 @@ public class PredmetService {
         existing.setOpis(predmet.getOpis());
         existing.setSifra(predmet.getSifra());
 
-        if (studProgramId != null) {
-            StudijskiProgram sp = studijskiProgramService.getStudijskiProgram(studProgramId);
-            existing.setStudProgram(sp);
-        }
+        StudijskiProgram sp = studijskiProgramService.getStudijskiProgram(studProgramId);
+        existing.setStudProgram(sp);
 
         return predmetRepository.save(existing);
     }

@@ -2,12 +2,21 @@ package org.raflab.studsluzba.controllers;
 
 import java.util.List;
 
+import org.raflab.studsluzba.controllers.request.PredispitnaObavezaRequest;
 import org.raflab.studsluzba.controllers.request.PredmetRequest;
+import org.raflab.studsluzba.controllers.response.DrziPredmetResponse;
+import org.raflab.studsluzba.controllers.response.PredispitnaObavezaResponse;
 import org.raflab.studsluzba.controllers.response.PredmetResponse;
+import org.raflab.studsluzba.mappers.DrziPredmetMapper;
+import org.raflab.studsluzba.mappers.PredispitnaObavezaMapper;
 import org.raflab.studsluzba.mappers.PredmetMapper;
+import org.raflab.studsluzba.model.PredispitnaObaveza;
 import org.raflab.studsluzba.model.Predmet;
+import org.raflab.studsluzba.services.DrziPredmetService;
+import org.raflab.studsluzba.services.PredispitnaObavezaService;
 import org.raflab.studsluzba.services.PredmetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,24 +28,31 @@ public class PredmetController {
 
     @Autowired
     private PredmetService predmetService;
+    @Autowired
+    private DrziPredmetService drziPredmetService;
+    @Autowired
+    private PredispitnaObavezaService predispitnaObavezaService;
 
     @Autowired
     private PredmetMapper predmetMapper;
+    @Autowired
+    private DrziPredmetMapper drziPredmetMapper;
+    @Autowired
+    private PredispitnaObavezaMapper predispitnaObavezaMapper;
 
+    /* Predmet */
     @GetMapping(path = "/")
     public List<PredmetResponse> getAllPredmeti() {
         List<Predmet> predmeti = predmetService.getAllPredmets();
         return predmetMapper.toResponseList(predmeti);
     }
 
-    // GET BY ID
     @GetMapping(path = "/{id}")
     public PredmetResponse getPredmetById(@PathVariable Long id) {
         Predmet predmet = predmetService.getPredmet(id);
         return predmetMapper.toResponse(predmet);
     }
 
-    // CREATE (POST)
     @PostMapping(path = "/")
     public Long createPredmet(@Valid @RequestBody PredmetRequest request) {
         Predmet predmet = predmetMapper.toEntity(request);
@@ -44,7 +60,6 @@ public class PredmetController {
         return saved.getId();
     }
 
-    // UPDATE (PATCH)
     @PatchMapping(path = "/{id}")
     public PredmetResponse updatePredmet(@PathVariable Long id, @Valid @RequestBody PredmetRequest request) {
         Predmet predmet = predmetMapper.toEntity(request);
@@ -52,14 +67,45 @@ public class PredmetController {
         return predmetMapper.toResponse(updated);
     }
 
-    // DELETE
     @DeleteMapping(path = "/{id}")
     public boolean deletePredmet(@PathVariable Long id) {
         predmetService.deletePredmet(id);
         return true;
     }
 
-    // CUSTOM: get by godina akreditacije
+    /* DrziPredmet */
+    @GetMapping(path = "/{predmetId}/drzi")
+    public List<DrziPredmetResponse> getDrziPredmet(@PathVariable Long predmetId) {
+        return drziPredmetMapper.toResponseListWithNastavnik(drziPredmetService.getAllDrziPredmetByPredmetId(predmetId));
+    }
+
+    /* PredispitnaObaveza */
+    @GetMapping(path = "/{predmetId}/predispitna")
+    public List<PredispitnaObavezaResponse> getPredispitnaObaveza(@PathVariable Long predmetId) {
+        return predispitnaObavezaMapper.toResponseList(predispitnaObavezaService.getAllPredispitnaObavezaForPredmetId(predmetId));
+    }
+
+    @PostMapping(path = "/{predmetId}/predispitna")
+    public Long addNewPredispitnaObaveza(@PathVariable Long predmetId, @Valid @RequestBody PredispitnaObavezaRequest request) {
+        PredispitnaObaveza predispitnaObaveza = predispitnaObavezaMapper.toEntity(request);
+
+        return predispitnaObavezaService.savePredispitnaObaveza(predispitnaObaveza, predmetId, request.getSkolskaGodinaId()).getId();
+    }
+
+    @PatchMapping(path = "/{predmetId}/predispitna/{id}")
+    public PredispitnaObavezaResponse updatePredispitnaObaveza(@PathVariable Long id, @PathVariable Long predmetId, @Valid @RequestBody PredispitnaObavezaRequest request) {
+        PredispitnaObaveza predispitnaObaveza = predispitnaObavezaMapper.toEntity(request);
+
+        return predispitnaObavezaMapper.toResponse(predispitnaObavezaService.updatePredispitnaObaveza(id, predmetId, request.getSkolskaGodinaId(), predispitnaObaveza));
+    }
+
+    @DeleteMapping(path = "/{predmetId}/predispitna/{predispitnaObavezaId}")
+    public boolean deletePredispitnaObaveza(@PathVariable Long predmetId, @PathVariable Long predispitnaObavezaId) {
+        predispitnaObavezaService.deletePredispitnaObaveza(predmetId, predispitnaObavezaId);
+        return true;
+    }
+
+    // Random?
     @GetMapping(path = "/godina-akreditacije/{godinaAkreditacije}")
     public List<PredmetResponse> getPredmetiForGodinaAkreditacije(@PathVariable Integer godinaAkreditacije) {
         List<Predmet> predmeti = predmetService.getPredmetForGodinaAkreditacije(godinaAkreditacije);

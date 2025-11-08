@@ -28,7 +28,7 @@ public class StudentProfileService {
 		StudentProfileDTO retVal = new StudentProfileDTO();
 		StudentIndeks studIndeks = studentIndeksRepo.findById(indeksId).get();		
 		retVal.setIndeks(studIndeks);		
-		retVal.setSlusaPredmete(slusaPredmetRepo.getSlusaPredmetForIndeksAktivnaGodina(indeksId));
+		retVal.setPredmeteSlusa(slusaPredmetRepo.getSlusaPredmetForIndeksAktivnaGodina(indeksId));
 		return retVal;
 	}
 	
@@ -37,7 +37,7 @@ public class StudentProfileService {
 		StudentIndeks studIndeks = studentIndeksRepo.findById(indeksId).get();
 		Long studPodaciId = studIndeks.getStudent().getId();
 		retVal.setAktivanIndeks(studentPodaciRepo.getAktivanIndeks(studPodaciId));		
-		retVal.setSlusaPredmete(slusaPredmetRepo.getSlusaPredmetForIndeksAktivnaGodina(indeksId));
+		retVal.setPredmeteSlusa(slusaPredmetRepo.getSlusaPredmetForIndeksAktivnaGodina(indeksId));
 		return retVal;
 	}
 
