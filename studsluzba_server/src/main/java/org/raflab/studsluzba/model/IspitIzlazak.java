@@ -12,8 +12,12 @@ public class IspitIzlazak {
     private Long id;
 
     private Double brojPoena;
+    private String napomena;
     private Boolean ponisten;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private IspitPrijava ispitPrijava;
+
+    @OneToOne
+    private PolozenPredmet polozenPredmet;
 }

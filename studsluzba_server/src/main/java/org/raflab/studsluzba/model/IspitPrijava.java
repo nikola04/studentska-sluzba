@@ -22,7 +22,4 @@ public class IspitPrijava {
 
     @OneToOne(cascade = CascadeType.ALL)
     private IspitIzlazak ispitIzlazak;
-
-    @OneToOne
-    private PolozenPredmet polozenPredmet;
 }

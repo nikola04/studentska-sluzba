@@ -12,6 +12,7 @@ public class IspitIzlazakMapper {
 
         entity.setBrojPoena(request.getBrojPoena());
         entity.setPonisten(request.getPonisten());
+        entity.setNapomena(request.getNapomena());
 
         return entity;
     }
@@ -23,6 +24,7 @@ public class IspitIzlazakMapper {
         response.setId(entity.getId());
         response.setBrojPoena(entity.getBrojPoena());
         response.setPonisten(entity.getPonisten());
+        response.setNapomena(entity.getNapomena());
 
         return response;
     }

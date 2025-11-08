@@ -18,6 +18,10 @@ public class IspitIzlazakService {
     @Autowired
     private IspitPrijavaService ispitPrijavaService;
 
+    public IspitIzlazak getIspitIzlazak(Long id){
+        return ispitIzlazakRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("[IspitIzlazak] Not found: " + id));
+    }
+
     @Transactional
     public IspitIzlazak saveIspitIzlazak(IspitIzlazak ispitIzlazak, Long studentIndeksId, Long ispitId){
         IspitPrijava ispitPrijava = ispitPrijavaService.getIspitPrijavaByStudentIndeksIdAndIspitId(studentIndeksId, ispitId);

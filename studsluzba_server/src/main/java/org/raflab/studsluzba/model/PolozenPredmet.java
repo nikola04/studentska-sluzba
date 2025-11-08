@@ -13,12 +13,12 @@ public class PolozenPredmet {
 
     private Integer ocena;
 
-    @OneToOne
-    private IspitPrijava ispitPrijava; // if null - from other college
+    @ManyToOne
+    private Predmet predmet;
 
     @ManyToOne
     private StudentIndeks studentIndeks;
 
-    @ManyToOne
-    private Predmet predmet;
+    @OneToOne
+    private IspitIzlazak ispitIzlazak; // if null - from other college
 }

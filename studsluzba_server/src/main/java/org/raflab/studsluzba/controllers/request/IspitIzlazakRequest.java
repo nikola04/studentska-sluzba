@@ -10,6 +10,7 @@ public class IspitIzlazakRequest {
     @NonNull
     @PositiveOrZero
     private Double brojPoena;
+    private String napomena; // can be null
     @NonNull
     private Boolean ponisten;
 }

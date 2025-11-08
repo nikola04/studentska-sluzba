@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"broj", "godina", "studijski_program_id", "aktivan"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"broj", "godina", "studijski_program_id"}))
 public class StudentIndeks {
 
 	@Id
@@ -28,6 +28,9 @@ public class StudentIndeks {
 
     @OneToMany(mappedBy="studentIndeks")
     private List<PredmetSlusa> predmetiSlusa;
+
+    @OneToMany(mappedBy="studentIndeks")
+    private List<IspitPrijava> prijaveIspita;
 
     @OneToMany(mappedBy="studentIndeks")
     private List<PolozenPredmet> polozeniPredmeti;

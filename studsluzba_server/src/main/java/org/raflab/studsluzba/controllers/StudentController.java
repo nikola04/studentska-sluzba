@@ -1,14 +1,9 @@
 package org.raflab.studsluzba.controllers;
 
-import org.raflab.studsluzba.controllers.request.IspitIzlazakRequest;
-import org.raflab.studsluzba.controllers.request.StudentIndeksRequest;
-import org.raflab.studsluzba.controllers.request.StudentPodaciRequest;
+import org.raflab.studsluzba.controllers.request.*;
 import org.raflab.studsluzba.controllers.response.*;
 import org.raflab.studsluzba.mappers.*;
-import org.raflab.studsluzba.model.IspitIzlazak;
-import org.raflab.studsluzba.model.PredmetSlusa;
-import org.raflab.studsluzba.model.StudentIndeks;
-import org.raflab.studsluzba.model.StudentPodaci;
+import org.raflab.studsluzba.model.*;
 import org.raflab.studsluzba.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +25,10 @@ public class StudentController {
     private IspitPrijavaMapper ispitPrijavaMapper;
     @Autowired
     private IspitIzlazakMapper ispitIzlazakMapper;
+    @Autowired
+    private StudentPredispitnaObavezaMapper studentPredispitnaObavezaMapper;
+    @Autowired
+    private PolozenPredmetMapper polozenPredmetMapper;
 
     @Autowired
     private StudentService studentService;
@@ -41,6 +40,10 @@ public class StudentController {
     private IspitPrijavaService ispitPrijavaService;
     @Autowired
     private IspitIzlazakService ispitIzlazakService;
+    @Autowired
+    private StudentPredispitnaObavezaService studPredObavezaService;
+    @Autowired
+    private PolozenPredmetService polozenPredmetService;
 
     /* StudentPodaci */
     @PostMapping(path="/podaci")
@@ -149,6 +152,42 @@ public class StudentController {
     @DeleteMapping(path = "/indeks/{studentId}/ispit/{ispitId}/izlazak")
     public boolean deleteIspitIzlazak(@PathVariable Long studentId, @PathVariable Long ispitId) {
         ispitIzlazakService.deleteIspitIzlazak(ispitId, studentId);
+        return true;
+    }
+
+    /* StudentPredispitnaObaveza */
+    @GetMapping(path = "/indeks/{studentId}/predispitna")
+    public List<StudentPredispitnaObavezaResponse> getAllStudentPredispitnaObaveza(@PathVariable Long studentId) {
+        return studentPredispitnaObavezaMapper.toResponseList(studPredObavezaService.getAllStudentPredispitnaObaveza(studentId));
+    }
+
+    @PostMapping(path = "/indeks/{studentId}/predispitna/{predispitnaId}")
+    public Long newStudentPredispitnaObaveza(@PathVariable Long studentId, @PathVariable Long predispitnaId, @Valid @RequestBody StudentPredispitnaObavezaRequest request) {
+        StudentPredispitnaObaveza predispitnaObaveza = studentPredispitnaObavezaMapper.toEntity(request);
+        return studPredObavezaService.saveStudentPredispitnaObaveza(predispitnaObaveza, studentId, predispitnaId).getId();
+    }
+
+    @DeleteMapping(path = "/indeks/{studentId}/predispitna/{predispitnaId}")
+    public boolean deleteStudentPredispitnaObaveza(@PathVariable Long studentId, @PathVariable Long predispitnaId) {
+        studPredObavezaService.deleteStudentPredispitnaObaveza(studentId, predispitnaId);
+        return true;
+    }
+
+    /* PolozenPredmet */
+    @GetMapping(path = "/indeks/{studentId}/predmet/polozen")
+    public List<PolozenPredmetResponse> getAllStudentPolozenPredmet(@PathVariable Long studentId) {
+        return polozenPredmetMapper.toResponseList(polozenPredmetService.getAllPolozenPredmet(studentId));
+    }
+
+    @PostMapping(path = "/indeks/{studentId}/predmet/{predmetId}/polozen")
+    public Long newStudentPolozenPredmet(@PathVariable Long studentId, @PathVariable Long predmetId, @Valid @RequestBody PolozenPredmetRequest request) {
+        PolozenPredmet polozenPredmet = polozenPredmetMapper.toEntity(request);
+        return polozenPredmetService.savePolozenPredmet(polozenPredmet, studentId, predmetId, request.getIspitIzlazakId()).getId();
+    }
+
+    @DeleteMapping(path = "/indeks/{studentId}/predmet/{predmetId}/polozen")
+    public boolean deleteStudentPolozenPredmet(@PathVariable Long studentId, @PathVariable Long predmetId) {
+        polozenPredmetService.deletePolozenPredmet(studentId, predmetId);
         return true;
     }
 }

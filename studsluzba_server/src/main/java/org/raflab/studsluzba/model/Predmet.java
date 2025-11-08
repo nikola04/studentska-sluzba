@@ -26,9 +26,6 @@ public class Predmet {
 	private StudijskiProgram studProgram;
 
     @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PolozenPredmet> polozeni;
-
-    @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DrziPredmet> drzePredmetList;
 
     @ManyToMany(mappedBy = "predmeti")
@@ -51,11 +48,8 @@ public class Predmet {
 			return false;
 		Predmet other = (Predmet) obj;
 		if (sifra == null) {
-			if (other.sifra != null)
-				return false;
-		} else if (!sifra.equals(other.sifra))
-			return false;
-		return true;
-	}
+            return other.sifra == null;
+		} else return sifra.equals(other.sifra);
+    }
 
 }
