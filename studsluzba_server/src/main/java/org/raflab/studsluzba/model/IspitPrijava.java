@@ -17,7 +17,10 @@ public class IspitPrijava {
     @ManyToOne
     private Ispit ispit;
 
-    @OneToOne
+    @ManyToOne
+    private StudentIndeks studentIndeks;
+
+    @OneToOne(cascade = CascadeType.ALL)
     private IspitIzlazak ispitIzlazak;
 
     @OneToOne

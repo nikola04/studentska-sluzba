@@ -27,12 +27,6 @@ public class StudentIndeksService {
         return studentIndeksRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudentIndeks] Not found: " + id));
     }
 
-    public StudentIndeks getStudentIndeks(Long studentId, Long id) {
-        StudentIndeks indeks = studentIndeksRepository.findStudentIndeks(studentId, id);
-        if (indeks == null) throw new ResourceNotFoundException("[StudentIndeks] Not found: " + id);
-        return indeks;
-    }
-
     public List<StudentIndeks> getAllStudentIndeks(Long studentPodaciId) {
         return studentIndeksRepository.findStudentIndeksiForStudentPodaciId(studentPodaciId);
     }
@@ -50,8 +44,8 @@ public class StudentIndeksService {
     }
 
     @Transactional
-    public void deleteStudentIndeks(Long studentId, Long id) {
-        StudentIndeks existing = this.getStudentIndeks(studentId, id);
+    public void deleteStudentIndeks(Long id) {
+        StudentIndeks existing = this.getStudentIndeks(id);
         studentIndeksRepository.delete(existing);
     }
 

@@ -56,6 +56,10 @@ public class IspitService {
         return ispitRepository.findAll();
     }
 
+    public List<Ispit> getAllIspitByIspitniRok(Long ispitniRokId){
+        return ispitRepository.findByIspitniRokId(ispitniRokId);
+    }
+
     @Transactional
     public void deleteIspit(Long id){
         Ispit existing = this.getIspit(id);

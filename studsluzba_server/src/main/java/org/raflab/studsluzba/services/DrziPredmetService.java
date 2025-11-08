@@ -2,6 +2,7 @@ package org.raflab.studsluzba.services;
 
 import lombok.RequiredArgsConstructor;
 import org.raflab.studsluzba.exceptions.ResourceAlreadyExistsException;
+import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
 import org.raflab.studsluzba.model.DrziPredmet;
 import org.raflab.studsluzba.model.Nastavnik;
 import org.raflab.studsluzba.model.Predmet;
@@ -24,6 +25,10 @@ public class DrziPredmetService {
     private PredmetService predmetService;
     @Autowired
     private SkolskaGodinaService skolskaGodinaService;
+
+    public DrziPredmet getDrziPredmet(Long id) {
+        return drziPredmetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[DrziPredmet] Not found: " + id));
+    }
 
     public List<DrziPredmet> getAllDrziPredmetByNastavnikId(Long nastavnikId) {
         return drziPredmetRepository.getDrziPredmetByNastavnikId(nastavnikId);

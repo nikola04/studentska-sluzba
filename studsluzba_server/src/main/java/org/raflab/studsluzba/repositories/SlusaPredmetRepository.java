@@ -4,15 +4,19 @@ import java.util.List;
 
 import org.raflab.studsluzba.model.PredmetSlusa;
 import org.raflab.studsluzba.model.StudentIndeks;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SlusaPredmetRepository extends CrudRepository<PredmetSlusa, Long> {
+public interface SlusaPredmetRepository extends JpaRepository<PredmetSlusa, Long> {
+
+    @Query("select sp from PredmetSlusa sp where sp.drziPredmet.id = :drziPredmetId and sp.studentIndeks.id = :studentIndeksId")
+    PredmetSlusa findByDrziPredmetIdAndStudentIndeksId(Long drziPredmetId, Long studentIndeksId);
 	
-	@Query("select sp from PredmetSlusa sp where sp.studentIndeks.id = :indeksId1")
-	List<PredmetSlusa> getSlusaPredmetForIndeksAktivnaGodina(Long indeksId);
+	@Query("select sp from PredmetSlusa sp where sp.studentIndeks.id = :studentIndeksId")
+	List<PredmetSlusa> findSlusaPredmetByStudentIndeksId(Long studentIndeksId);
 	
 	
 	@Query("select sp.studentIndeks from PredmetSlusa sp where sp.drziPredmet.predmet.id = :idPredmeta "

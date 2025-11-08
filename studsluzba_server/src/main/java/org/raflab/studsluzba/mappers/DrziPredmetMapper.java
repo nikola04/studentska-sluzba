@@ -18,6 +18,7 @@ public class DrziPredmetMapper {
     public DrziPredmetResponse toResponse(DrziPredmet drziPredmet) {
         DrziPredmetResponse response = new DrziPredmetResponse();
 
+        response.setId(drziPredmet.getId());
         response.setSkolskaGodinaId(drziPredmet.getSkolskaGodina().getId());
         response.setNastavnikId(drziPredmet.getNastavnik().getId());
         response.setPredmetId(drziPredmet.getPredmet().getId());
@@ -36,6 +37,14 @@ public class DrziPredmetMapper {
         DrziPredmetResponse response = toResponse(drziPredmet);
         if(drziPredmet.getPredmet() != null)
             response.setNastavnik(nastavnikMapper.toResponse(drziPredmet.getNastavnik()));
+        return response;
+    }
+
+    public DrziPredmetResponse toResponseWithNastavnikAndPredmet(DrziPredmet drziPredmet) {
+        DrziPredmetResponse response = toResponseWithNastavnik(drziPredmet);
+        if(drziPredmet.getPredmet() != null)
+            response.setPredmet(predmetMapper.toResponse(drziPredmet.getPredmet()));
+
         return response;
     }
 

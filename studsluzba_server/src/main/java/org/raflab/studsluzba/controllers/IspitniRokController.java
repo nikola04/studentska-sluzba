@@ -1,9 +1,13 @@
 package org.raflab.studsluzba.controllers;
 
 import org.raflab.studsluzba.controllers.request.IspitniRokRequest;
+import org.raflab.studsluzba.controllers.response.IspitResponse;
 import org.raflab.studsluzba.controllers.response.IspitniRokResponse;
+import org.raflab.studsluzba.mappers.IspitMapper;
 import org.raflab.studsluzba.mappers.IspitniRokMapper;
+import org.raflab.studsluzba.model.Ispit;
 import org.raflab.studsluzba.model.IspitniRok;
+import org.raflab.studsluzba.services.IspitService;
 import org.raflab.studsluzba.services.IspitniRokService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +21,13 @@ import java.util.List;
 public class IspitniRokController {
     @Autowired
     private IspitniRokMapper ispitniRokMapper;
+    @Autowired
+    private IspitMapper ispitMapper;
 
     @Autowired
     private IspitniRokService ispitniRokService;
+    @Autowired
+    private IspitService ispitService;
 
     @GetMapping(path = "/")
     public List<IspitniRokResponse> getAllIspitniRok() {
@@ -32,7 +40,7 @@ public class IspitniRokController {
     }
 
     @PostMapping(path = "/")
-    public Long getAllIspitniRok(@Valid @RequestBody IspitniRokRequest request) {
+    public Long saveIspitniRok(@Valid @RequestBody IspitniRokRequest request) {
         IspitniRok ispitniRok = ispitniRokMapper.toEntity(request);
         return ispitniRokService.saveIspitniRok(ispitniRok, request.getSkolskaGodinaId()).getId();
     }
@@ -47,5 +55,12 @@ public class IspitniRokController {
     public IspitniRokResponse updateIspitniRok(@PathVariable Long id, @Valid @RequestBody IspitniRokRequest request) {
         IspitniRok ispitniRok = ispitniRokService.updateIspitniRok(id, ispitniRokMapper.toEntity(request), request.getSkolskaGodinaId());
         return ispitniRokMapper.toResponse(ispitniRok);
+    }
+
+    /* Ispit */
+    @GetMapping(path = "/{id}/ispit")
+    public List<IspitResponse> getAllIspitiByIspitniRokId(@PathVariable Long id) {
+        List<Ispit> ispitList = ispitService.getAllIspitByIspitniRok(id);
+        return ispitMapper.toResponseList(ispitList);
     }
 }

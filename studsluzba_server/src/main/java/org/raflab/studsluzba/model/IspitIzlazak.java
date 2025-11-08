@@ -11,9 +11,9 @@ public class IspitIzlazak {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private double brojPoena;
-    private boolean ponisten;
+    private Double brojPoena;
+    private Boolean ponisten;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private IspitPrijava ispitPrijava;
 }

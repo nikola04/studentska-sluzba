@@ -23,6 +23,9 @@ public class IspitMapper {
     public IspitResponse toResponse(Ispit entity){
         IspitResponse response = new IspitResponse();
 
+        response.setId(entity.getId());
+        response.setPredmetId(entity.getPredmet().getId());
+        response.setNastavnikId(entity.getNastavnik().getId());
         response.setDatumOdrzavanja(entity.getDatumOdrzavanja());
         response.setVremePocetka(entity.getVremePocetka());
         response.setZakljucen(entity.getZakljucen());
