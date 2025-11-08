@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-public class PrijavaIspita {
+public class IspitPrijava {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,7 +18,7 @@ public class PrijavaIspita {
     private Ispit ispit;
 
     @OneToOne
-    private IzlazakNaIspit izlazakNaIspit;
+    private IspitIzlazak ispitIzlazak;
 
     @OneToOne
     private PolozenPredmet polozenPredmet;

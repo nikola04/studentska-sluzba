@@ -21,7 +21,7 @@ public class IspitService {
     private IspitniRokService ispitniRokService;
 
     private void addIspitChildClasses(Ispit target, Long predmetId, Long nastavnikId, Long ispitniRokId){
-        target.setPredmet(predmetService.getPredmetById(predmetId));
+        target.setPredmet(predmetService.getPredmet(predmetId));
         target.setNastavnik(nastavnikService.getNastavnik(nastavnikId));
         target.setIspitniRok(ispitniRokService.getIspitniRok(ispitniRokId));
     }
@@ -42,13 +42,13 @@ public class IspitService {
 
     @Transactional
     public void deleteIspit(Long id){
-        Ispit existing = ispitRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Ispit] Not found: " + id));
+        Ispit existing = this.getIspit(id);
         ispitRepository.delete(existing);
     }
 
     @Transactional
     public Ispit updateIspit(Long id, Ispit ispit, Long predmetId, Long nastavnikId, Long ispitniRokId){
-        Ispit existing = ispitRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Ispit] Not found: " + id));
+        Ispit existing = this.getIspit(id);
 
         this.addIspitChildClasses(existing, predmetId, nastavnikId, ispitniRokId);
 

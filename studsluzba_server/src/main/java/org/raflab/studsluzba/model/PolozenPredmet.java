@@ -14,7 +14,7 @@ public class PolozenPredmet {
     private Integer ocena;
 
     @OneToOne
-    private PrijavaIspita prijavaIspita; // if null - from other college
+    private IspitPrijava ispitPrijava; // if null - from other college
 
     @ManyToOne
     private StudentIndeks studentIndeks;

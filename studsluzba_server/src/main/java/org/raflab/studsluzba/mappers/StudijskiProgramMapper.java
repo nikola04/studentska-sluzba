@@ -40,6 +40,7 @@ public class StudijskiProgramMapper {
     public StudijskiProgramResponse toResponse(StudijskiProgram studijskiProgram) {
         StudijskiProgramResponse studijskiProgramResponse = new StudijskiProgramResponse();
 
+        studijskiProgramResponse.setId(studijskiProgram.getId());
         studijskiProgramResponse.setOznaka(studijskiProgram.getOznaka());
         studijskiProgramResponse.setNaziv(studijskiProgram.getNaziv());
         studijskiProgramResponse.setGodinaAkreditacije(studijskiProgram.getGodinaAkreditacije());

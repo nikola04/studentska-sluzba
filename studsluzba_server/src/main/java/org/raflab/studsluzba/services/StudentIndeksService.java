@@ -1,6 +1,9 @@
 package org.raflab.studsluzba.services;
 
+import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
 import org.raflab.studsluzba.model.StudentIndeks;
+import org.raflab.studsluzba.model.StudentPodaci;
+import org.raflab.studsluzba.model.StudijskiProgram;
 import org.raflab.studsluzba.repositories.StudentIndeksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,14 +15,49 @@ import java.util.Objects;
 
 @Service
 public class StudentIndeksService {
-    
     @Autowired
     private StudentIndeksRepository studentIndeksRepository;
 
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private StudijskiProgramService studijskiProgramService;
+
+    public StudentIndeks getStudentIndeks(Long id) {
+        return studentIndeksRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudentIndeks] Not found: " + id));
+    }
+
+    public StudentIndeks getStudentIndeks(Long studentId, Long id) {
+        StudentIndeks indeks = studentIndeksRepository.findStudentIndeks(studentId, id);
+        if (indeks == null) throw new ResourceNotFoundException("[StudentIndeks] Not found: " + id);
+        return indeks;
+    }
+
+    public List<StudentIndeks> getAllStudentIndeks(Long studentPodaciId) {
+        return studentIndeksRepository.findStudentIndeksiForStudentPodaciId(studentPodaciId);
+    }
+
+    @Transactional
+    public StudentIndeks saveStudentIndeks(StudentIndeks studentIndeks, Long studentId, Long studProgramId) {
+        StudentPodaci studentPodaci = studentService.getStudentPodaci(studentId);
+        StudijskiProgram sp = studijskiProgramService.getStudijskiProgram(studProgramId);
+
+        studentIndeks.setBroj(this.findBroj(studentIndeks.getGodina(), sp.getId()));
+        studentIndeks.setStudent(studentPodaci);
+        studentIndeks.setStudijskiProgram(sp);
+
+        return studentIndeksRepository.save(studentIndeks);
+    }
+
+    @Transactional
+    public void deleteStudentIndeks(Long studentId, Long id) {
+        StudentIndeks existing = this.getStudentIndeks(studentId, id);
+        studentIndeksRepository.delete(existing);
+    }
+
     @Transactional(readOnly = true)
-    public int findBroj(int godina, String studProgramOznaka) {
-        List<Integer> brojeviList = studentIndeksRepository.
-                findBrojeviByGodinaAndStudProgramOznaka(godina, studProgramOznaka);
+    public int findBroj(int godina, Long studProgramId) {
+        List<Integer> brojeviList = studentIndeksRepository.findBrojeviByGodinaAndStudProgramOznaka(godina, studProgramId);
 
         return findNextAvailableNumber(brojeviList);
     }
@@ -39,9 +77,5 @@ public class StudentIndeksService {
             expected++;
         }
         return expected;
-    }
-
-    public StudentIndeks findByStudentIdAndAktivan(Long studentPodaciId) {
-        return studentIndeksRepository.findAktivanStudentIndeksiByStudentPodaciId(studentPodaciId);
     }
 }

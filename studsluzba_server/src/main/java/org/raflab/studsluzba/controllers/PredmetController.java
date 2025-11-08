@@ -32,7 +32,7 @@ public class PredmetController {
     // GET BY ID
     @GetMapping(path = "/{id}")
     public PredmetResponse getPredmetById(@PathVariable Long id) {
-        Predmet predmet = predmetService.getPredmetById(id);
+        Predmet predmet = predmetService.getPredmet(id);
         return predmetMapper.toResponse(predmet);
     }
 

@@ -40,6 +40,7 @@ public class StudentMapper {
     public StudentPodaciResponse toResponse(StudentPodaci studentPodaci) {
         StudentPodaciResponse student = new StudentPodaciResponse();
 
+        student.setId(studentPodaci.getId());
         student.setIme(studentPodaci.getIme());
         student.setPrezime(studentPodaci.getPrezime());
         student.setSrednjeIme(studentPodaci.getSrednjeIme());

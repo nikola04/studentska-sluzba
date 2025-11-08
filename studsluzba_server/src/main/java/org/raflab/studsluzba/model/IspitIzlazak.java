@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-public class IzlazakNaIspit {
+public class IspitIzlazak {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,5 +15,5 @@ public class IzlazakNaIspit {
     private boolean ponisten;
 
     @OneToOne
-    private PrijavaIspita prijavaIspita;
+    private IspitPrijava ispitPrijava;
 }

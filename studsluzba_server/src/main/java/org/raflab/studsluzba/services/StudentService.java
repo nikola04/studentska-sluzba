@@ -29,13 +29,13 @@ public class StudentService {
 
     @Transactional
     public void deleteStudentPodaci(Long id){
-        StudentPodaci existing = studentPodaciRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudentPodaci] Not found: " + id));
+        StudentPodaci existing = this.getStudentPodaci(id);
         studentPodaciRepo.delete(existing);
     }
 
     @Transactional
     public StudentPodaci updateStudentPodaci(Long id, StudentPodaci studentPodaci){
-        StudentPodaci existing = studentPodaciRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudentPodaci] Not found: " + id));
+        StudentPodaci existing = this.getStudentPodaci(id);
 
         existing.setIme(studentPodaci.getIme());
         existing.setPrezime(studentPodaci.getPrezime());

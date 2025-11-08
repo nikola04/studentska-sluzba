@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class StudijskiProgramResponse {
+    private Long id;
     private String oznaka;
     private String naziv;
     private Integer godinaAkreditacije;

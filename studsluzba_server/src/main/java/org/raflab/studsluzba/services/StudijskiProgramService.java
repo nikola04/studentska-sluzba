@@ -4,7 +4,6 @@ import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
 import org.raflab.studsluzba.model.StudijskiProgram;
 import org.raflab.studsluzba.model.VrstaStudija;
 import org.raflab.studsluzba.repositories.StudijskiProgramRepository;
-import org.raflab.studsluzba.repositories.VrstaStudijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +16,11 @@ public class StudijskiProgramService {
     StudijskiProgramRepository studijskiProgramRepository;
 
     @Autowired
-    VrstaStudijaRepository vrstaStudijaRepository;
-
-    @Autowired
     VrstaStudijaService vrstaStudijaService;
 
     @Transactional
     public StudijskiProgram saveStudijskiProgram(StudijskiProgram studijskiProgram, Long vrstaStudijaId) {
-        VrstaStudija vrsta = vrstaStudijaService.findVrstaStudijaById(vrstaStudijaId);
+        VrstaStudija vrsta = vrstaStudijaService.getVrstaStudija(vrstaStudijaId);
 
         studijskiProgram.setVrstaStudija(vrsta);
 
@@ -37,22 +33,20 @@ public class StudijskiProgramService {
 
     @Transactional
     public StudijskiProgram getStudijskiProgram(Long id){
-        StudijskiProgram studijskiProgram = studijskiProgramRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudijskiProgram] Not found: " + id));
-        return studijskiProgram;
+        return studijskiProgramRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudijskiProgram] Not found: " + id));
     }
 
     @Transactional
     public void deleteStudijskiProgram(Long id){
-        StudijskiProgram existing = studijskiProgramRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudijskiProgram] Not found: " + id));
+        StudijskiProgram existing = this.getStudijskiProgram(id);
         studijskiProgramRepository.delete(existing);
     }
 
     @Transactional
     public StudijskiProgram updateStudijskiProgram(Long id, StudijskiProgram studijskiProgram, Long vrstaStudijaId){
-        StudijskiProgram existing = studijskiProgramRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[StudijskiProgram] Not found: " + id));
+        StudijskiProgram existing = this.getStudijskiProgram(id);
 
-        VrstaStudija vrsta = vrstaStudijaRepository.findById(vrstaStudijaId)
-                .orElseThrow(() -> new ResourceNotFoundException("[VrstaStudija] Not found: " + vrstaStudijaId));
+        VrstaStudija vrsta = vrstaStudijaService.getVrstaStudija(vrstaStudijaId);
 
         existing.setNaziv(studijskiProgram.getNaziv());
         existing.setOznaka(studijskiProgram.getOznaka());

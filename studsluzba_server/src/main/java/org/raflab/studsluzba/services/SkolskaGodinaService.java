@@ -35,13 +35,13 @@ public class SkolskaGodinaService {
 
     @Transactional
     public void deleteSkolskaGodina(Long id){
-        SkolskaGodina existing = skolskaGodinaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("[SkolskaGodina] Not found: " + id));
+        SkolskaGodina existing = this.getSkolskaGodina(id);
         skolskaGodinaRepo.delete(existing);
     }
 
     @Transactional
     public SkolskaGodina updateSkolskaGodina(Long id, SkolskaGodina skolskaGodina){
-        SkolskaGodina existing = skolskaGodinaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("[SkolskaGodina] Not found: " + id));
+        SkolskaGodina existing = this.getSkolskaGodina(id);
 
         this.onActiveSkolskaGodina(skolskaGodina);
 

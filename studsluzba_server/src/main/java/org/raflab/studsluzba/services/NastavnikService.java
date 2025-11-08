@@ -1,7 +1,6 @@
 package org.raflab.studsluzba.services;
 
 import org.raflab.studsluzba.controllers.request.NastavnikObrazovanjeRequest;
-import org.raflab.studsluzba.controllers.request.NastavnikZvanjeRequest;
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
 import org.raflab.studsluzba.model.*;
 import org.raflab.studsluzba.repositories.NastavnikRepository;
@@ -11,9 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class NastavnikService {
@@ -30,8 +27,8 @@ public class NastavnikService {
         Set<NastavnikObrazovanje> obrazovanja = new HashSet<>();
 
         requests.forEach(request -> {
-            VisokoskolskaUstanova visokoskolskaUstanova = visokoskolskaUstanovaService.getVisokoskolskaUstanovaById(request.getVisokoskolskaUstanovaId());
-            VrstaStudija vrstaStudija = vrstaStudijaService.findVrstaStudijaById(request.getVrstaStudijaId());
+            VisokoskolskaUstanova visokoskolskaUstanova = visokoskolskaUstanovaService.getVisokoskolskaUstanova(request.getVisokoskolskaUstanovaId());
+            VrstaStudija vrstaStudija = vrstaStudijaService.getVrstaStudija(request.getVrstaStudijaId());
 
             NastavnikObrazovanje obrazovanje = new NastavnikObrazovanje();
             obrazovanje.setVisokoskolskaUstanova(visokoskolskaUstanova);
@@ -69,13 +66,13 @@ public class NastavnikService {
 
     @Transactional
     public void deleteNastavnik(Long id){
-        Nastavnik existing = nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Nastavnik] Not found: " + id));
+        Nastavnik existing = this.getNastavnik(id);
         nastavnikRepository.delete(existing);
     }
 
     @Transactional
     public Nastavnik updateNastavnik(Long id, Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja, Set<NastavnikObrazovanjeRequest> obrazovanjeRequest){
-        Nastavnik existing = nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Nastavnik] Not found: " + id));
+        Nastavnik existing = this.getNastavnik(id);
 
         if(obrazovanjeRequest != null) {
             Set<NastavnikObrazovanje> obrazovanja = fetchObrazovanja(existing, obrazovanjeRequest);

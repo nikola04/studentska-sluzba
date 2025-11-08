@@ -25,5 +25,5 @@ public class Ispit {
     @ManyToOne
     private IspitniRok ispitniRok;
     @OneToMany(mappedBy = "ispit")
-    private List<PrijavaIspita> prijaveIspita;
+    private List<IspitPrijava> prijaveIspita;
 }

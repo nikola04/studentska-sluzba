@@ -35,13 +35,13 @@ public class IspitniRokService {
 
     @Transactional
     public void deleteIspitniRok(Long id){
-        IspitniRok existing = ispitniRokRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[IspitniRok] Not found: " + id));
+        IspitniRok existing = this.getIspitniRok(id);
         ispitniRokRepository.delete(existing);
     }
 
     @Transactional
     public IspitniRok updateIspitniRok(Long id, IspitniRok ispitniRok, Long skolskaGodinaId){
-        IspitniRok existing = ispitniRokRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[IspitniRok] Not found: " + id));
+        IspitniRok existing = this.getIspitniRok(id);
         SkolskaGodina skolskaGodina = skolskaGodinaService.getSkolskaGodina(skolskaGodinaId);
 
         existing.setPocetak(ispitniRok.getPocetak());
