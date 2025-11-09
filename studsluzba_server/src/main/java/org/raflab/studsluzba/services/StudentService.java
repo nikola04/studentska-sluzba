@@ -6,6 +6,8 @@ import org.raflab.studsluzba.model.StudentPodaci;
 import org.raflab.studsluzba.model.VisokoskolskaUstanova;
 import org.raflab.studsluzba.repositories.StudentPodaciRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,6 +43,13 @@ public class StudentService {
 
     public List<StudentPodaci> getAllStudentPodaci() {
         return studentPodaciRepo.findAll();
+    }
+
+    public Page<StudentPodaci> searchStudentPodaci(String name, String lastName, Pageable pageable){
+        String nameParam = (name != null && !name.isEmpty()) ? "%" + name.toLowerCase() + "%" : null;
+        String lastNameParam = (lastName != null && !lastName.isEmpty()) ? "%" + lastName.toLowerCase() + "%" : null;
+
+        return studentPodaciRepo.findStudent(nameParam, lastNameParam, pageable);
     }
 
     public List<StudentPodaci> getStudentPodaciBySrednjaSkola(Long srednjaSkolaId){

@@ -11,12 +11,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StudentPodaciRepository extends JpaRepository<StudentPodaci, Long> {	//	nasljedjene implementacije poput findById i findByAll
-
+public interface StudentPodaciRepository extends JpaRepository<StudentPodaci, Long> {
 	@Query("select sp from StudentPodaci sp where "
 			+ "(:ime is null or lower(sp.ime) like :ime) and "
-			+ "(:prezime is null or lower(sp.prezime) like :prezime) and "
-			+ "not exists (select indeks from StudentIndeks indeks where indeks.student = sp)")
+			+ "(:prezime is null or lower(sp.prezime) like :prezime)")
 	Page<StudentPodaci> findStudent(String ime, String prezime, Pageable pageable);
 
     @Query("select sp from StudentPodaci sp where sp.srednjaSkola.id = :srednjaSkola")

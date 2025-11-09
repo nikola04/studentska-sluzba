@@ -6,6 +6,10 @@ import org.raflab.studsluzba.mappers.*;
 import org.raflab.studsluzba.model.*;
 import org.raflab.studsluzba.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -59,6 +63,21 @@ public class StudentController {
     @GetMapping(path="/podaci")
     public List<StudentPodaciResponse> getAllStudentPodaci() {
         return studentMapper.toResponseList(studentService.getAllStudentPodaci());
+    }
+
+    @GetMapping(path="/podaci/search")
+    public PagedResponse<StudentPodaciResponse> getAllStudentPodaciSearch(
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String lastName,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "prezime") String sortBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        Page<StudentPodaci> studentPodaciPage = studentService.searchStudentPodaci(name, lastName, pageable);
+
+        return studentMapper.toPagedResponse(studentPodaciPage);
     }
 
     @GetMapping(path="/podaci/{id}")

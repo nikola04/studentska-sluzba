@@ -1,8 +1,10 @@
 package org.raflab.studsluzba.mappers;
 
 import org.raflab.studsluzba.controllers.request.StudentPodaciRequest;
+import org.raflab.studsluzba.controllers.response.PagedResponse;
 import org.raflab.studsluzba.controllers.response.StudentPodaciResponse;
 import org.raflab.studsluzba.model.StudentPodaci;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -73,5 +75,18 @@ public class StudentMapper {
 
     public List<StudentPodaciResponse> toResponseList(List<StudentPodaci> studentPodaciList) {
         return studentPodaciList.stream().map(this::toResponse).collect(Collectors.toList());
+    }
+
+    public PagedResponse<StudentPodaciResponse> toPagedResponse(Page<StudentPodaci> page) {
+        List<StudentPodaciResponse> content = toResponseList(page.getContent());
+
+        return new PagedResponse<>(
+            content,
+            page.getNumber(),
+            page.getSize(),
+            page.getTotalElements(),
+            page.getTotalPages(),
+            page.isLast()
+        );
     }
 }
