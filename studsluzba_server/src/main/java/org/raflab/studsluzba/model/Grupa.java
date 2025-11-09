@@ -17,7 +17,7 @@ public class Grupa {
 	@ManyToOne
 	private StudijskiProgram studijskiProgram;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = { CascadeType.MERGE})
     @JoinTable(
             name = "grupa_predmeti",
             joinColumns = @JoinColumn(name = "grupa_id"),
