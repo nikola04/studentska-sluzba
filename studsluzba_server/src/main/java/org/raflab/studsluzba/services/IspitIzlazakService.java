@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class IspitIzlazakService {
@@ -20,6 +21,14 @@ public class IspitIzlazakService {
 
     public IspitIzlazak getIspitIzlazak(Long id){
         return ispitIzlazakRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("[IspitIzlazak] Not found: " + id));
+    }
+
+    public List<IspitIzlazak> getAllIspitIzlazakByIspitId(Long ispitId){
+        return ispitIzlazakRepository.findAllByIspitIdSorted(ispitId);
+    }
+
+    public Integer getIzlazakCountForStudentByPredmetId(Long studentIndeksId, Long predmetId){
+        return ispitIzlazakRepository.countIzlazakByStudentIdPredmetId(studentIndeksId, predmetId);
     }
 
     @Transactional

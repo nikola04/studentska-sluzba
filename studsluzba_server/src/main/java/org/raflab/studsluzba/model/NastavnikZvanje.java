@@ -18,7 +18,7 @@ public class NastavnikZvanje {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	private LocalDate datumIzbora;  // ili reizbora
+	private LocalDate datumIzbora;
 	private String naucnaOblast;  // sifarnik na klijentu - tabela u bazi bez veze
 	private String uzaNaucnaOblast;  // sifarnik na klijentu - tabela u bazi bez veze
 	private String zvanje;   // sifarnik na klijentu - tabela u bazi bez veze

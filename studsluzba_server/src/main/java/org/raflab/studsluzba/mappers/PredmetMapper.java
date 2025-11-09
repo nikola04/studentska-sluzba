@@ -21,6 +21,8 @@ public class PredmetMapper {
         p.setObavezan(request.getObavezan());
         p.setOpis(request.getOpis());
         p.setSifra(request.getSifra());
+        p.setFondCasovaPredavanja(request.getFondCasovaPredavanja());
+        p.setFondCasovaVezbe(request.getFondCasovaVezbe());
         return p;
     }
 
@@ -33,6 +35,8 @@ public class PredmetMapper {
         r.setOpis(entity.getOpis());
         r.setSifra(entity.getSifra());
         r.setStudijskiProgram(studijskiProgramMapper.toResponse(entity.getStudProgram()));
+        r.setFondCasovaPredavanja(entity.getFondCasovaPredavanja());
+        r.setFondCasovaVezbe(entity.getFondCasovaVezbe());
         return r;
     }
 

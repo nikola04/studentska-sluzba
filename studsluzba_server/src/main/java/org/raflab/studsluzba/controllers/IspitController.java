@@ -2,6 +2,7 @@ package org.raflab.studsluzba.controllers;
 
 import org.raflab.studsluzba.controllers.request.IspitRequest;
 import org.raflab.studsluzba.controllers.response.IspitResponse;
+import org.raflab.studsluzba.controllers.response.IspitRezultatResponse;
 import org.raflab.studsluzba.controllers.response.StudentIndeksResponse;
 import org.raflab.studsluzba.mappers.IspitMapper;
 import org.raflab.studsluzba.mappers.StudentIndeksMapper;
@@ -64,5 +65,10 @@ public class IspitController {
     @GetMapping(path = "/{id}/average-ocena")
     public Double getAverageOcenaByIspitId(@PathVariable Long id){
         return ispitService.getAverageOcega(id);
+    }
+
+    @GetMapping(path = "/{id}/rezultati")
+    public List<IspitRezultatResponse> getIspitRezultati(@PathVariable Long id){
+        return ispitService.getIspitRezultati(id);
     }
 }

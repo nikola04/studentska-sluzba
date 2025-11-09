@@ -13,4 +13,5 @@ public class IspitResponse {
     private LocalDate datumOdrzavanja;
     private LocalTime vremePocetka;
     private Boolean zakljucen;
+    private IspitniRokResponse ispitniRok;
 }

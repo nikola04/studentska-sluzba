@@ -57,6 +57,8 @@ public class PredmetService {
         existing.setObavezan(predmet.getObavezan());
         existing.setOpis(predmet.getOpis());
         existing.setSifra(predmet.getSifra());
+        existing.setFondCasovaPredavanja(predmet.getFondCasovaPredavanja());
+        existing.setFondCasovaVezbe(predmet.getFondCasovaVezbe());
 
         StudijskiProgram sp = studijskiProgramService.getStudijskiProgram(studProgramId);
         existing.setStudProgram(sp);

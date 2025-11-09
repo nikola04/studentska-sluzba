@@ -38,6 +38,10 @@ public class PredispitnaObavezaService {
         return predispitnaObavezaRepository.findByPredmetId(predmetId);
     }
 
+    public Double getPoeniForStudentIndeksByPredmetId(Long studentIndeksId, Long predmetId, Long skolskaGodinaId){
+        return predispitnaObavezaRepository.sumPoeniForStudentIndeksIdByPredmetId(studentIndeksId, predmetId, skolskaGodinaId);
+    }
+
     @Transactional
     public PredispitnaObaveza savePredispitnaObaveza(PredispitnaObaveza predispitnaObaveza, Long predmetId, Long skolskaGodinaId){
         fetchChilds(predispitnaObaveza, predmetId, skolskaGodinaId);

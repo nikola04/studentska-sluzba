@@ -1,10 +1,14 @@
 package org.raflab.studsluzba.services;
 
+import org.raflab.studsluzba.controllers.response.IspitRezultatResponse;
 import org.raflab.studsluzba.exceptions.ResourceAlreadyExistsException;
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
+import org.raflab.studsluzba.mappers.StudentIndeksMapper;
 import org.raflab.studsluzba.model.*;
 import org.raflab.studsluzba.repositories.IspitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class IspitService {
@@ -23,6 +28,12 @@ public class IspitService {
     private NastavnikService nastavnikService;
     @Autowired
     private IspitniRokService ispitniRokService;
+    @Autowired
+    private IspitIzlazakService ispitIzlazakService;
+    @Autowired
+    private PredispitnaObavezaService predispitnaObavezaService;
+    @Autowired
+    private StudentIndeksMapper studentIndeksMapper;
 
     private void fetchChilds(Ispit target, Long predmetId, Long nastavnikId, Long ispitniRokId){
         target.setPredmet(predmetService.getPredmet(predmetId));
@@ -67,6 +78,14 @@ public class IspitService {
         return ispitRepository.findByIspitniRokId(ispitniRokId);
     }
 
+    public Page<Ispit> getNepolozeniPageByStudentId(Long studentId, Pageable pageable){
+        return ispitRepository.findNepolozeniByStudentId(studentId, pageable);
+    }
+
+    public Page<Ispit> getPolozeniPageByStudentId(Long studentId, Pageable pageable){
+        return ispitRepository.findPolozeniByStudentId(studentId, pageable);
+    }
+
     public Ispit getIspitByPredmetIdIspitniRokId(Long predmetId, Long ispitniRokId){
         Ispit ispit = ispitRepository.findByIspitniRokIdAndPredmetId(ispitniRokId, predmetId);
         if(ispit == null)
@@ -76,6 +95,24 @@ public class IspitService {
 
     public Double getAverageOcega(Long ispitId){
         return ispitRepository.findAverageOcegaByIspitniRokId(ispitId);
+    }
+
+    public List<IspitRezultatResponse> getIspitRezultati(Long ispitId){
+        List<IspitIzlazak> izlazakList = ispitIzlazakService.getAllIspitIzlazakByIspitId(ispitId);
+
+        return izlazakList.stream().map(izlazak -> {
+            IspitRezultatResponse response = new IspitRezultatResponse();
+            StudentIndeks studentIndeks = izlazak.getIspitPrijava().getStudentIndeks();
+            Ispit ispit = izlazak.getIspitPrijava().getIspit();
+            Double predispitniPoeni = predispitnaObavezaService.getPoeniForStudentIndeksByPredmetId(studentIndeks.getId(), ispit.getPredmet().getId(), ispit.getIspitniRok().getSkolskaGodina().getId());
+
+            response.setBrojPoenaIspit(izlazak.getBrojPoena());
+            response.setStudentIndeks(studentIndeksMapper.toResponse(studentIndeks));
+            response.setBrojPoenaPredispitne(predispitniPoeni);
+            response.setBrojPoenaUkupno(izlazak.getBrojPoena() + predispitniPoeni);
+
+            return response;
+        }).collect(Collectors.toList());
     }
 
     @Transactional

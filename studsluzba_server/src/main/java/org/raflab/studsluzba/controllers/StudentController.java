@@ -35,6 +35,8 @@ public class StudentController {
     private PolozenPredmetMapper polozenPredmetMapper;
     @Autowired
     private UplataMapper uplataMapper;
+    @Autowired
+    private IspitMapper ispitMapper;
 
     @Autowired
     private StudentService studentService;
@@ -52,6 +54,10 @@ public class StudentController {
     private PolozenPredmetService polozenPredmetService;
     @Autowired
     private UplataService uplataService;
+    @Autowired
+    private IspitService ispitService;
+    @Autowired
+    private PredispitnaObavezaService predispitnaObavezaService;
 
     /* StudentPodaci */
     @PostMapping(path="/podaci")
@@ -143,6 +149,27 @@ public class StudentController {
         return true;
     }
 
+    /* Ispit */
+    @GetMapping(path = "/indeks/{studentId}/ispit/nepolozen")
+    public PagedResponse<IspitResponse> getAllIspitNepolozen(@PathVariable Long studentId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "id") String sortBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return ispitMapper.toPagedResponse(ispitService.getNepolozeniPageByStudentId(studentId, pageable));
+    }
+
+    @GetMapping(path = "/indeks/{studentId}/ispit/polozen")
+    public PagedResponse<IspitResponse> getAllIspitPolozen(@PathVariable Long studentId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "id") String sortBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return ispitMapper.toPagedResponse(ispitService.getPolozeniPageByStudentId(studentId, pageable));
+    }
+
     /* IspitPrijava */
     @GetMapping(path = "/indeks/{studentId}/ispit/{ispitId}")
     public IspitPrijavaResponse getIspitPrijava(@PathVariable Long studentId, @PathVariable Long ispitId){
@@ -153,6 +180,7 @@ public class StudentController {
     public List<IspitPrijavaResponse> getAllIspitPrijava(@PathVariable Long studentId){
         return ispitPrijavaMapper.toResponseList(ispitPrijavaService.getAllIspitPrijavaByStudentIndeksId(studentId));
     }
+
 
     @PostMapping(path = "/indeks/{studentId}/ispit/{ispitId}/prijava")
     public IspitPrijavaResponse saveIspitPrijava(@PathVariable Long studentId, @PathVariable Long ispitId) {
@@ -183,10 +211,20 @@ public class StudentController {
         return true;
     }
 
+    @GetMapping(path = "/indeks/{studentId}/ispit/predmet/{predmetId}/izlazak")
+    public Integer getIspitIzlazak(@PathVariable Long studentId, @PathVariable Long predmetId){
+        return ispitIzlazakService.getIzlazakCountForStudentByPredmetId(studentId, predmetId);
+    }
+
     /* StudentPredispitnaObaveza */
     @GetMapping(path = "/indeks/{studentId}/predispitna")
     public List<StudentPredispitnaObavezaResponse> getAllStudentPredispitnaObaveza(@PathVariable Long studentId) {
         return studentPredispitnaObavezaMapper.toResponseList(studPredObavezaService.getAllStudentPredispitnaObaveza(studentId));
+    }
+
+    @GetMapping(path = "/indeks/{studentId}/predispitna/predmet/{predmetId}/godina/{godinaId}")
+    public Double getAllStudentPredispitnaObaveza(@PathVariable Long studentId, @PathVariable Long predmetId, @PathVariable Long godinaId) {
+        return predispitnaObavezaService.getPoeniForStudentIndeksByPredmetId(studentId, predmetId, godinaId);
     }
 
     @PostMapping(path = "/indeks/{studentId}/predispitna/{predispitnaId}")

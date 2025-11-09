@@ -21,6 +21,8 @@ public class Predmet {
 	private String opis;
 	private Integer espb;
     private Boolean obavezan;
+    private Integer fondCasovaVezbe;
+    private Integer fondCasovaPredavanja;
 
     @ManyToOne
 	private StudijskiProgram studProgram;

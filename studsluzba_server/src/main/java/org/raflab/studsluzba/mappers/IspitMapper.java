@@ -2,7 +2,10 @@ package org.raflab.studsluzba.mappers;
 
 import org.raflab.studsluzba.controllers.request.IspitRequest;
 import org.raflab.studsluzba.controllers.response.IspitResponse;
+import org.raflab.studsluzba.controllers.response.PagedResponse;
 import org.raflab.studsluzba.model.Ispit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,6 +13,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class IspitMapper {
+    @Autowired
+    private IspitniRokMapper ispitniRokMapper;
     public Ispit toEntity(IspitRequest request){
         Ispit ispit = new Ispit();
 
@@ -29,11 +34,24 @@ public class IspitMapper {
         response.setDatumOdrzavanja(entity.getDatumOdrzavanja());
         response.setVremePocetka(entity.getVremePocetka());
         response.setZakljucen(entity.getZakljucen());
+        response.setIspitniRok(ispitniRokMapper.toResponse(entity.getIspitniRok()));
 
         return response;
     }
 
     public List<IspitResponse> toResponseList(List<Ispit> entities){
         return entities.stream().map(this::toResponse).collect(Collectors.toList());
+    }
+
+    public PagedResponse<IspitResponse> toPagedResponse(Page<Ispit> page){
+        List<IspitResponse> content = toResponseList(page.getContent());
+        return new PagedResponse<>(
+                content,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isLast()
+        );
     }
 }

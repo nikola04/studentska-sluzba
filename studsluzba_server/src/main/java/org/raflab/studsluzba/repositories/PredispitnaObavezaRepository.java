@@ -11,4 +11,7 @@ import java.util.List;
 public interface PredispitnaObavezaRepository extends JpaRepository<PredispitnaObaveza, Long> {
     @Query("SELECT p FROM PredispitnaObaveza p WHERE p.predmet.id = :predmetId")
     List<PredispitnaObaveza> findByPredmetId(Long predmetId);
+
+    @Query("SELECT SUM(spo.brojPoena) FROM StudentPredispitnaObaveza spo WHERE spo.studentIndeks.id = :studentIndeksId and spo.predispitnaObaveza.predmet.id = :predmetId and spo.predispitnaObaveza.skolskaGodina.id = :skolskaGodinaId")
+    Double sumPoeniForStudentIndeksIdByPredmetId(Long studentIndeksId, Long predmetId, Long skolskaGodinaId);
 }
