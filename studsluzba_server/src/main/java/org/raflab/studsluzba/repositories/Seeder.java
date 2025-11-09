@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Component
@@ -29,6 +30,12 @@ public class Seeder implements CommandLineRunner {
     @Autowired private VrstaStudijaRepository vrstaStudijaRepo;
     @Autowired private DrziPredmetRepository drziPredmetRepo; // Potreban za dohvatanje posle save-a
     @Autowired private GrupaRepository grupaRepository;
+    @Autowired private IspitniRokService ispitniRokService;
+    @Autowired private IspitService ispitService;
+    @Autowired private IspitPrijavaService ispitPrijavaService;
+    @Autowired private PredispitnaObavezaService predispitnaObavezaService;
+    @Autowired private UplataService uplataService;
+
     private VrstaStudija oas;
     private VisokoskolskaUstanova fon;
     private SrednjaSkola gim;
@@ -52,15 +59,25 @@ public class Seeder implements CommandLineRunner {
 
     private void seedData() {
         logger.info("Seedujem prvi sloj podataka");
-        VrstaStudija vOas = new VrstaStudija(); vOas.setNaziv("Osnovne akademske studije"); vOas.setOznaka("OAS");
+        VrstaStudija vOas = new VrstaStudija();
+        vOas.setNaziv("Osnovne akademske studije");
+        vOas.setOznaka("OAS");
         oas = vrstaStudijaService.createVrstaStudija(vOas);
-        VisokoskolskaUstanova vFon = new VisokoskolskaUstanova(); vFon.setNaziv("Univerzitet u Beogradu - Fakultet organizacionih nauka");
+        VisokoskolskaUstanova vFon = new VisokoskolskaUstanova();
+        vFon.setNaziv("Univerzitet u Beogradu - Fakultet organizacionih nauka");
         fon = visokoskolskaUstanovaService.createVisokoskolskaUstanova(vFon);
-        SrednjaSkola sGim = new SrednjaSkola(); sGim.setNaziv("Gimnazija Smederevska Palanka"); sGim.setMesto("Smederevska Palanka"); sGim.setTipSkole(TipSkole.GIMNAZIJA);
+        SrednjaSkola sGim = new SrednjaSkola();
+        sGim.setNaziv("Gimnazija Smederevska Palanka");
+        sGim.setMesto("Smederevska Palanka");
+        sGim.setTipSkole(TipSkole.GIMNAZIJA);
         gim = srednjaSkolaService.createSrednjaSkola(sGim);
-        SkolskaGodina sSg2023 = new SkolskaGodina(); sSg2023.setGodina(2023); sSg2023.setAktivan(false);
+        SkolskaGodina sSg2023 = new SkolskaGodina();
+        sSg2023.setGodina(2023);
+        sSg2023.setAktivan(false);
         skolskaGodinaService.saveSkolskaGodina(sSg2023);
-        SkolskaGodina sSg2024 = new SkolskaGodina(); sSg2024.setGodina(2024); sSg2024.setAktivan(true);
+        SkolskaGodina sSg2024 = new SkolskaGodina();
+        sSg2024.setGodina(2024);
+        sSg2024.setAktivan(true);
         sgAktivna = skolskaGodinaService.saveSkolskaGodina(sSg2024);
 
         logger.info("Seedujem drugi sloj.");
@@ -205,8 +222,100 @@ public class Seeder implements CommandLineRunner {
             g.setPredmeti(Collections.singletonList(predmetList.get(i - 1)));
             grupaRepository.save(g);
         }
+        // SLOJ 10: ISPITNI ROK
+        logger.info("Seedujem Sloj 10: IspitniRok...");
+        List<IspitniRok> ispitniRokList = new ArrayList<>();
+
+        // AKTIVAN rok - TEKUĆA godina + BUDUĆI datumi
+        int currentYear = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+
+        IspitniRok aktivniRok = new IspitniRok();
+        // Postavite BUDUĆE datume koji sigurno nisu prošli
+        if (currentMonth <= 6) {
+            // Ako smo u prvoj polovini godine - Junski rok
+            aktivniRok.setPocetak(LocalDate.of(currentYear, 6, 1));
+            aktivniRok.setKraj(LocalDate.of(currentYear, 6, 30));
+        } else {
+            // Ako smo u drugoj polovini godine - Januarski rok sledeće godine
+            aktivniRok.setPocetak(LocalDate.of(currentYear + 1, 1, 10));
+            aktivniRok.setKraj(LocalDate.of(currentYear + 1, 1, 30));
+        }
+
+        IspitniRok savedAktivni = ispitniRokService.saveIspitniRok(aktivniRok, sgAktivna.getId());
+        ispitniRokList.add(savedAktivni);
+
+        logger.info("Seedujem Sloj 11: Ispit...");
+        List<Ispit> ispitList = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i++) {
+            Ispit ispit = new Ispit();
+
+            // Postavite datum između početka i kraja aktivnog roka
+            ispit.setDatumOdrzavanja(savedAktivni.getPocetak().plusDays(5 + i)); // 6-10 dan roka
+            ispit.setVremePocetka(LocalTime.of(9, 0));
+            ispit.setZakljucen(false);
+
+            Long predmetId = predmetList.get(i - 1).getId();
+            Long nastavnikId = nastavnikList.get(i - 1).getId();
+            Long ispitniRokId = savedAktivni.getId();
+
+            Ispit savedIspit = ispitService.saveIspit(ispit, predmetId, nastavnikId, ispitniRokId);
+            ispitList.add(savedIspit);
+        }
+
+        logger.info("Seedujem Sloj 12: IspitPrijava...");
+        for (int i = 1; i <= 5; i++) {
+            Long studentIndeksId = indeksList.get(i - 1).getId();
+            Long ispitId = ispitList.get(i - 1).getId();
+            ispitPrijavaService.saveIspitPrijava(ispitId, studentIndeksId);
+        }
+
+        logger.info("Seedujem Sloj 13: PredispitnaObaveza...");
+        for (int i = 1; i <= 5; i++) {
+            PredispitnaObaveza po = new PredispitnaObaveza();
+            po.setVrsta(i % 2 == 0 ? PredispitneObavezeVrsta.TEST : PredispitneObavezeVrsta.KOLOKVIJUM);
+            po.setMaxBrojPoena(20.0 + i);
+
+            Long predmetId = predmetList.get(i - 1).getId();
+            Long skolskaGodinaId = sgAktivna.getId();
+
+            predispitnaObavezaService.savePredispitnaObaveza(po, predmetId, skolskaGodinaId);
+        }
+
+//        logger.info("Seedujem Sloj 14: UpisGodine i ObnovaGodine...");
+//        for (int i = 1; i <= 5; i++) {
+//            // UpisGodine
+//            UpisGodine ug = new UpisGodine();
+//            ug.setDatumUpisa(LocalDate.of(2023, 10, 1));
+//            ug.setNapomena("Redovni upis " + i);
+//            ug.setStudentIndeks(indeksList.get(i - 1));
+//            ug.setSkolskaGodina(sgAktivna);
+//            ug.setPredmeti(Collections.singletonList(predmetList.get(i - 1)));
+//            upisGodineRepository.save(ug);
+//
+//            // ObnovaGodine (za neke studente)
+//            if (i % 2 == 0) {
+//                ObnovaGodine og = new ObnovaGodine();
+//                og.setDatumObnove(LocalDate.of(2024, 2, 1));
+//                og.setNapomena("Obnova godine " + i);
+//                og.setStudentIndeks(indeksList.get(i - 1));
+//                og.setSkolskaGodina(sgAktivna);
+//                og.setPredmeti(Collections.singletonList(predmetList.get(i - 1)));
+//                obnovaGodineRepository.save(og);
+//            }
+//     }
+        logger.info("Seedujem Sloj 15: Uplata...");
+        for (int i = 1; i <= 5; i++) {
+            if (indeksList.get(i - 1).getNacinFinansiranja() == NacinFinansiranja.SAMOFINANSIRANJE) {
+                Uplata uplata = new Uplata();
+                uplata.setIznosDinari(50000.0 + (i * 10000));
+
+                uplataService.saveUplata(uplata, indeksList.get(i - 1).getId());
+            }
+
+        }
+
 
     }
-
-
 }
