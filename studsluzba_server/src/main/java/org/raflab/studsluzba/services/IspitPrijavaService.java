@@ -2,7 +2,7 @@ package org.raflab.studsluzba.services;
 
 import org.raflab.studsluzba.exceptions.ResourceAlreadyExistsException;
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
-import org.raflab.studsluzba.model.IspitPrijava;
+import org.raflab.studsluzba.model.*;
 import org.raflab.studsluzba.repositories.IspitPrijavaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +45,22 @@ public class IspitPrijavaService {
 
         fetchChilds(ispitPrijava, ispitId, indeksId);
         ispitPrijava.setDatumPrijave(LocalDate.now());
+
+        return ispitPrijavaRepository.save(ispitPrijava);
+    }
+
+    public IspitPrijava saveIspitPrijava(Long indeksId, Long predmetId, Long ispitniRokId){
+        StudentIndeks studentIndeks = studentIndeksService.getStudentIndeks(indeksId);
+        Ispit ispit = ispitService.getIspitByPredmetIdIspitniRokId(predmetId, ispitniRokId);
+
+        if(ispitPrijavaRepository.findByIspitIdAndStudentIndeksId(indeksId, ispit.getId()) != null)
+            throw new ResourceAlreadyExistsException("[IspitPrijava] You have already signed this ispit");
+
+        IspitPrijava ispitPrijava = new IspitPrijava();
+
+        ispitPrijava.setDatumPrijave(LocalDate.now());
+        ispitPrijava.setIspit(ispit);
+        ispitPrijava.setStudentIndeks(studentIndeks);
 
         return ispitPrijavaRepository.save(ispitPrijava);
     }

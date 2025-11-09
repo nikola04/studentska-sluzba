@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +28,10 @@ public class StudentIndeksService {
 
     public List<StudentIndeks> getAllStudentIndeks(Long studentPodaciId) {
         return studentIndeksRepository.findStudentIndeksiForStudentPodaciId(studentPodaciId);
+    }
+
+    public List<StudentIndeks> getAlStudentIndeksByIspitPrijava(Long ispitId){
+        return studentIndeksRepository.findByIspitId(ispitId);
     }
 
     @Transactional

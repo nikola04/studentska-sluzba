@@ -2,9 +2,12 @@ package org.raflab.studsluzba.controllers;
 
 import org.raflab.studsluzba.controllers.request.IspitRequest;
 import org.raflab.studsluzba.controllers.response.IspitResponse;
+import org.raflab.studsluzba.controllers.response.StudentIndeksResponse;
 import org.raflab.studsluzba.mappers.IspitMapper;
+import org.raflab.studsluzba.mappers.StudentIndeksMapper;
 import org.raflab.studsluzba.model.Ispit;
 import org.raflab.studsluzba.services.IspitService;
+import org.raflab.studsluzba.services.StudentIndeksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +20,11 @@ import java.util.List;
 public class IspitController {
     @Autowired
     private IspitMapper ispitMapper;
+    @Autowired
+    private StudentIndeksMapper studentIndeksMapper;
 
+    @Autowired
+    private StudentIndeksService studentIndeksService;
     @Autowired
     private IspitService ispitService;
 
@@ -47,5 +54,15 @@ public class IspitController {
     public IspitResponse updateIspit(@PathVariable Long id, @Valid @RequestBody IspitRequest request){
         Ispit ispit = ispitMapper.toEntity(request);
         return ispitMapper.toResponse(ispitService.updateIspit(id, ispit, request.getPredmetId(), request.getNastavnikId(), request.getIspitniRokId()));
+    }
+
+    @GetMapping(path = "/{id}/student")
+    public List<StudentIndeksResponse> getStudentsByIspitId(@PathVariable Long id){
+        return studentIndeksMapper.toResponseList(studentIndeksService.getAlStudentIndeksByIspitPrijava(id));
+    }
+
+    @GetMapping(path = "/{id}/average-ocena")
+    public Double getAverageOcenaByIspitId(@PathVariable Long id){
+        return ispitService.getAverageOcega(id);
     }
 }

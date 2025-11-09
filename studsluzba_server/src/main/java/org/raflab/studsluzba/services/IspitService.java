@@ -1,5 +1,6 @@
 package org.raflab.studsluzba.services;
 
+import org.raflab.studsluzba.exceptions.ResourceAlreadyExistsException;
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
 import org.raflab.studsluzba.model.*;
 import org.raflab.studsluzba.repositories.IspitRepository;
@@ -34,6 +35,12 @@ public class IspitService {
         LocalDate datumOdrzavanja = ispit.getDatumOdrzavanja();
         LocalDate today = LocalDate.now();
 
+        Ispit existing = ispitRepository.findByIspitniRokIdAndPredmetId(ispitniRok.getId(), ispit.getPredmet().getId());
+        if(existing != null)
+            throw new ResourceAlreadyExistsException("[Ispit] You have already signed this ispit");
+
+        // check if nastavnik DrziPredmet ???
+
         if(ispitniRok.getKraj().isBefore(today))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "IspitniRok has already ended");
 
@@ -58,6 +65,17 @@ public class IspitService {
 
     public List<Ispit> getAllIspitByIspitniRok(Long ispitniRokId){
         return ispitRepository.findByIspitniRokId(ispitniRokId);
+    }
+
+    public Ispit getIspitByPredmetIdIspitniRokId(Long predmetId, Long ispitniRokId){
+        Ispit ispit = ispitRepository.findByIspitniRokIdAndPredmetId(ispitniRokId, predmetId);
+        if(ispit == null)
+            throw new ResourceNotFoundException("[Ispit] Not found: " + predmetId + " " + ispitniRokId);
+        return ispit;
+    }
+
+    public Double getAverageOcega(Long ispitId){
+        return ispitRepository.findAverageOcegaByIspitniRokId(ispitId);
     }
 
     @Transactional

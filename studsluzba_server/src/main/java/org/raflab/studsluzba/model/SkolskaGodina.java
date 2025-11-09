@@ -12,6 +12,7 @@ public class SkolskaGodina {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer godina;
     private Boolean aktivan;
 
     @OneToMany(mappedBy = "skolskaGodina")

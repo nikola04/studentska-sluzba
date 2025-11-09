@@ -1,0 +1,13 @@
+package org.raflab.studsluzba.controllers.request;
+
+import lombok.Data;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
+@Data
+public class UplataRequest {
+    @NotNull
+    @Positive
+    private Double iznos;
+}

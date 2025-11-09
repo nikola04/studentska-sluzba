@@ -34,4 +34,7 @@ public class StudentIndeks {
 
     @OneToMany(mappedBy="studentIndeks")
     private List<PolozenPredmet> polozeniPredmeti;
+
+    @OneToMany(mappedBy="studentIndeks")
+    private List<Uplata> uplate;
 }

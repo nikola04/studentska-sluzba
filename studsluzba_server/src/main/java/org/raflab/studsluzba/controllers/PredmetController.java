@@ -13,10 +13,10 @@ import org.raflab.studsluzba.mappers.PredmetMapper;
 import org.raflab.studsluzba.model.PredispitnaObaveza;
 import org.raflab.studsluzba.model.Predmet;
 import org.raflab.studsluzba.services.DrziPredmetService;
+import org.raflab.studsluzba.services.PolozenPredmetService;
 import org.raflab.studsluzba.services.PredispitnaObavezaService;
 import org.raflab.studsluzba.services.PredmetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,6 +32,8 @@ public class PredmetController {
     private DrziPredmetService drziPredmetService;
     @Autowired
     private PredispitnaObavezaService predispitnaObavezaService;
+    @Autowired
+    private PolozenPredmetService polozenPredmetService;
 
     @Autowired
     private PredmetMapper predmetMapper;
@@ -73,6 +75,11 @@ public class PredmetController {
         return true;
     }
 
+    @GetMapping(path = "/{id}/prosecna-ocena")
+    public Double getProsecnaOcena(@PathVariable Long id, @RequestParam(required = false) Integer from, @RequestParam(required = false) Integer to) {
+        return polozenPredmetService.getAveragePredmetGradeFromToYear(id, from, to);
+    }
+
     /* DrziPredmet */
     @GetMapping(path = "/{predmetId}/drzi")
     public List<DrziPredmetResponse> getDrziPredmet(@PathVariable Long predmetId) {
@@ -103,12 +110,5 @@ public class PredmetController {
     public boolean deletePredispitnaObaveza(@PathVariable Long predmetId, @PathVariable Long predispitnaObavezaId) {
         predispitnaObavezaService.deletePredispitnaObaveza(predmetId, predispitnaObavezaId);
         return true;
-    }
-
-    // Random?
-    @GetMapping(path = "/godina-akreditacije/{godinaAkreditacije}")
-    public List<PredmetResponse> getPredmetiForGodinaAkreditacije(@PathVariable Integer godinaAkreditacije) {
-        List<Predmet> predmeti = predmetService.getPredmetForGodinaAkreditacije(godinaAkreditacije);
-        return predmetMapper.toResponseList(predmeti);
     }
 }

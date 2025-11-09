@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class SkolskaGodinaResponse {
     private Long id;
+    private Integer godina;
     private Boolean aktivan;
 }

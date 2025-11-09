@@ -1,14 +1,13 @@
 package org.raflab.studsluzba.services;
 
+import org.raflab.studsluzba.exceptions.ResourceAlreadyExistsException;
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
 import org.raflab.studsluzba.model.*;
 import org.raflab.studsluzba.repositories.PredmetRepository;
-import org.raflab.studsluzba.repositories.StudijskiProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +15,7 @@ import java.util.List;
 public class PredmetService {
     @Autowired
     private PredmetRepository predmetRepository;
+
     @Autowired
     private StudijskiProgramService studijskiProgramService;
 
@@ -23,6 +23,10 @@ public class PredmetService {
     public Predmet savePredmet(Predmet predmet, Long studProgramId) {
         StudijskiProgram sp = studijskiProgramService.getStudijskiProgram(studProgramId);
         predmet.setStudProgram(sp);
+
+        if(predmetRepository.findBySifra(predmet.getSifra()) != null)
+            throw new ResourceAlreadyExistsException("[Predmet] Sifra Already exists: " + predmet.getSifra());
+
         return this.predmetRepository.save(predmet);
     }
 
@@ -37,9 +41,8 @@ public class PredmetService {
     public void deletePredmet(Long id){
         Predmet predmet = this.getPredmet(id);
 
-        for (Grupa g : predmet.getGrupe()) {
+        for (Grupa g : predmet.getGrupe())
             g.getPredmeti().remove(predmet);
-        }
         predmet.getGrupe().clear();
 
         predmetRepository.delete(predmet);
@@ -59,10 +62,6 @@ public class PredmetService {
         existing.setStudProgram(sp);
 
         return predmetRepository.save(existing);
-    }
-
-    public List<Predmet> getPredmetForGodinaAkreditacije(Integer godinaAkreditacije){
-        return predmetRepository.getPredmetForGodinaAkreditacije(godinaAkreditacije);
     }
 
     public List<Predmet> getPredmetForStudijskiProgram(Long id){

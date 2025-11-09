@@ -1,6 +1,8 @@
 package org.raflab.studsluzba.controllers.response;
 
 import lombok.Data;
+import org.raflab.studsluzba.model.SrednjaSkola;
+import org.raflab.studsluzba.model.VisokoskolskaUstanova;
 
 import java.time.LocalDate;
 
@@ -27,5 +29,9 @@ public class StudentPodaciResponse {
     private String licnuKartuIzdao;
     private String mestoStanovanja;
     private String adresaStanovanja;   // u toku studija
-
+    private Double uspehPrijemni;
+    private Double uspehSrednjaSkola;
+    private Long srednjaSkolaId;
+    private SrednjaSkola srednjaSkola;
+    private VisokoskolskaUstanova visokoskolskaUstanova;
 }

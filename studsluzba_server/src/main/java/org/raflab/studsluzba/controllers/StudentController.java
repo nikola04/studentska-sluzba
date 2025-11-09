@@ -29,6 +29,8 @@ public class StudentController {
     private StudentPredispitnaObavezaMapper studentPredispitnaObavezaMapper;
     @Autowired
     private PolozenPredmetMapper polozenPredmetMapper;
+    @Autowired
+    private UplataMapper uplataMapper;
 
     @Autowired
     private StudentService studentService;
@@ -44,11 +46,13 @@ public class StudentController {
     private StudentPredispitnaObavezaService studPredObavezaService;
     @Autowired
     private PolozenPredmetService polozenPredmetService;
+    @Autowired
+    private UplataService uplataService;
 
     /* StudentPodaci */
     @PostMapping(path="/podaci")
-	public Long addNewStudentPodaci(@Valid @RequestBody StudentPodaciRequest studentPodaci) {
-		StudentPodaci sp = studentService.saveStudentPodaci(studentMapper.toEntity(studentPodaci));
+	public Long addNewStudentPodaci(@Valid @RequestBody StudentPodaciRequest request) {
+		StudentPodaci sp = studentService.saveStudentPodaci(studentMapper.toEntity(request), request.getSrednjaSkolaId(), request.getVisokoskolskaUstanovaId());
 		return sp.getId();
 	}
 
@@ -71,7 +75,7 @@ public class StudentController {
     @PatchMapping(path = "/podaci/{id}")
     public StudentPodaciResponse updateStudentPodaci(@PathVariable Long id, @Valid @RequestBody StudentPodaciRequest request) {
         StudentPodaci studentPodaci = studentMapper.toEntity(request);
-        StudentPodaci updated = studentService.updateStudentPodaci(id, studentPodaci);
+        StudentPodaci updated = studentService.updateStudentPodaci(id, studentPodaci, request.getSrednjaSkolaId(), request.getVisokoskolskaUstanovaId());
         return studentMapper.toResponse(updated);
     }
 
@@ -142,6 +146,11 @@ public class StudentController {
         return true;
     }
 
+    @PostMapping(path = "/indeks/{studentId}/ispit/rok/{ispitniRokId}/predmet/{predmetId}/prijava")
+    public IspitPrijavaResponse saveIspitPrijavaByIspitniRok(@PathVariable Long studentId, @PathVariable Long ispitniRokId, @PathVariable Long predmetId) {
+        return ispitPrijavaMapper.toResponse(ispitPrijavaService.saveIspitPrijava(studentId, predmetId, ispitniRokId));
+    }
+
     /* IspitIzlazak */
     @PostMapping(path = "/indeks/{studentId}/ispit/{ispitId}/izlazak")
     public Long saveIspitIzlazak(@PathVariable Long studentId, @PathVariable Long ispitId, @Valid @RequestBody IspitIzlazakRequest request) {
@@ -188,6 +197,34 @@ public class StudentController {
     @DeleteMapping(path = "/indeks/{studentId}/predmet/{predmetId}/polozen")
     public boolean deleteStudentPolozenPredmet(@PathVariable Long studentId, @PathVariable Long predmetId) {
         polozenPredmetService.deletePolozenPredmet(studentId, predmetId);
+        return true;
+    }
+
+    /* Uplata */
+    @PostMapping(path = "/indeks/{id}/uplata")
+    public Long newUplata(@PathVariable Long id, @Valid @RequestBody UplataRequest request){
+        Uplata uplata = uplataMapper.toEntity(request);
+        return uplataService.saveUplata(uplata, id).getId();
+    }
+
+    @GetMapping(path = "/indeks/{id}/uplata")
+    public List<UplataResponse> getAllUplata(@PathVariable Long id){
+        return uplataMapper.toResponseList(uplataService.getAllUplata(id));
+    }
+
+    @GetMapping(path = "/indeks/{id}/uplata/preostalo")
+    public Iznos getPreostaliIznos(@PathVariable Long id){
+        return uplataService.getMissingAmount(id);
+    }
+
+    @GetMapping(path = "/indeks/{id}/uplata/{uplataId}")
+    public UplataResponse getUplata(@PathVariable Long id, @PathVariable Long uplataId){
+        return uplataMapper.toResponse(uplataService.getUplata(id, uplataId));
+    }
+
+    @DeleteMapping(path = "/indeks/{id}/uplata/{uplataId}")
+    public boolean deleteUplata(@PathVariable Long id, @PathVariable Long uplataId){
+        uplataService.deleteUplata(id, uplataId);
         return true;
     }
 }

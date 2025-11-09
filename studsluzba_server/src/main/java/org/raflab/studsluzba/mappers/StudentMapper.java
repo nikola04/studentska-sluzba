@@ -5,8 +5,8 @@ import org.raflab.studsluzba.controllers.response.StudentPodaciResponse;
 import org.raflab.studsluzba.model.StudentPodaci;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class StudentMapper {
@@ -33,6 +33,8 @@ public class StudentMapper {
         student.setBrojTelefonaFiksni(request.getBrojTelefonaFiksni());
         student.setBrojLicneKarte(request.getBrojLicneKarte());
         student.setLicnuKartuIzdao(request.getLicnuKartuIzdao());
+        student.setUspehPrijemni(request.getUspehPrijemni());
+        student.setUspehSrednjaSkola(request.getUspehSrednjaSkola());
 
         return student;
     }
@@ -61,15 +63,15 @@ public class StudentMapper {
         student.setBrojTelefonaFiksni(studentPodaci.getBrojTelefonaFiksni());
         student.setBrojLicneKarte(studentPodaci.getBrojLicneKarte());
         student.setLicnuKartuIzdao(studentPodaci.getLicnuKartuIzdao());
+        student.setUspehPrijemni(studentPodaci.getUspehPrijemni());
+        student.setUspehSrednjaSkola(studentPodaci.getUspehSrednjaSkola());
+        student.setSrednjaSkola(studentPodaci.getSrednjaSkola());
+        student.setVisokoskolskaUstanova(studentPodaci.getVisokoskolskaUstanova());
 
         return student;
     }
 
-    public List<StudentPodaciResponse> toResponseList(Iterable<StudentPodaci> studentPodaciIterable) {
-        List<StudentPodaciResponse> skolskaGodinaResponses = new ArrayList<>();
-        studentPodaciIterable.forEach((skolskaGodina) -> {
-            skolskaGodinaResponses.add(toResponse(skolskaGodina));
-        });
-        return skolskaGodinaResponses;
+    public List<StudentPodaciResponse> toResponseList(List<StudentPodaci> studentPodaciList) {
+        return studentPodaciList.stream().map(this::toResponse).collect(Collectors.toList());
     }
 }

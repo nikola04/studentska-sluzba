@@ -29,6 +29,10 @@ public class PolozenPredmetService {
         return polozenPredmetRepository.findByStudentIndeksId(studentIndeksId);
     }
 
+    public Double getAveragePredmetGradeFromToYear(Long predmetId, Integer fromYear, Integer toYear){
+        return polozenPredmetRepository.findPredmetAverageGradeFromToYear(predmetId, fromYear, toYear);
+    }
+
     @Transactional
     public PolozenPredmet savePolozenPredmet(PolozenPredmet polozenPredmet, Long studentIndeksId, Long predmetId, Long ispitIzlazakId){
         StudentIndeks studentIndeks = studentIndeksService.getStudentIndeks(studentIndeksId);

@@ -14,4 +14,7 @@ public interface SkolskaGodinaRepository extends JpaRepository<SkolskaGodina, Lo
     @Transactional
     @Query("UPDATE SkolskaGodina SET aktivan = false WHERE aktivan = true")
     void deactivateSkolskaGodina();
+
+    @Query("select s from SkolskaGodina s WHERE s.godina = :godina")
+    SkolskaGodina findByGodina(Integer godina);
 }

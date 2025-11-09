@@ -1,5 +1,6 @@
 package org.raflab.studsluzba.services;
 
+import org.raflab.studsluzba.exceptions.ResourceAlreadyExistsException;
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
 import org.raflab.studsluzba.model.SkolskaGodina;
 import org.raflab.studsluzba.repositories.SkolskaGodinaRepository;
@@ -14,14 +15,17 @@ public class SkolskaGodinaService {
     @Autowired
     private SkolskaGodinaRepository skolskaGodinaRepo;
 
-    private void onActiveSkolskaGodina(SkolskaGodina skolskaGodina){
+    private void beforeSaveCheck(SkolskaGodina skolskaGodina){
         if(skolskaGodina.getAktivan()){
             skolskaGodinaRepo.deactivateSkolskaGodina();
         }
+
+        if(this.skolskaGodinaRepo.findByGodina(skolskaGodina.getGodina()) != null)
+            throw new ResourceAlreadyExistsException("[SkolskaGodina] Godina already exists: " + skolskaGodina.getGodina());
     }
 
     public SkolskaGodina saveSkolskaGodina(SkolskaGodina skolskaGodina) {
-        this.onActiveSkolskaGodina(skolskaGodina);
+        this.beforeSaveCheck(skolskaGodina);
         return skolskaGodinaRepo.save(skolskaGodina);
     }
 
@@ -43,9 +47,10 @@ public class SkolskaGodinaService {
     public SkolskaGodina updateSkolskaGodina(Long id, SkolskaGodina skolskaGodina){
         SkolskaGodina existing = this.getSkolskaGodina(id);
 
-        this.onActiveSkolskaGodina(skolskaGodina);
+        this.beforeSaveCheck(skolskaGodina);
 
         existing.setAktivan(skolskaGodina.getAktivan());
+        existing.setGodina(skolskaGodina.getGodina());
 
         return skolskaGodinaRepo.save(existing);
     }

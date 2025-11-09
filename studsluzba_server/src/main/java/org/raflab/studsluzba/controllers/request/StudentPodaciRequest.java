@@ -42,20 +42,27 @@ public class StudentPodaciRequest {
     @NotBlank
     @Pattern(regexp = "^\\+\\d+$", message = "Field 'brojTelefonaMobilni' must start with '+' and contain only digits")
     private String brojTelefonaFiksni;
-    @NotBlank()
+    @NotBlank
     @Email(message = "Field 'fakultetEmail' must be valid Email")
     private String fakultetEmail;
-    @NotBlank()
+    @NotBlank
     @Email(message = "Field 'privatniEmail' must be valid Email")
     private String privatniEmail;
-    @NotBlank()
+    @NotBlank
     private String brojLicneKarte;
     @NotBlank
     private String licnuKartuIzdao;
-
-    @NotBlank()
+    @NotBlank
     private String mestoStanovanja;
-
-    @NotBlank()
+    @NotBlank
     private String adresaStanovanja;
+
+    @NotNull
+    private Double uspehSrednjaSkola;
+    @NotNull
+    private Double uspehPrijemni;
+    @NotNull
+    private Long srednjaSkolaId;
+
+    private Long visokoskolskaUstanovaId;
 }

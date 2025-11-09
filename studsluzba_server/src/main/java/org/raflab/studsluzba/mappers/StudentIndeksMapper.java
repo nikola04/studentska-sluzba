@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 public class StudentIndeksMapper {
     @Autowired
     StudijskiProgramMapper studijskiProgramMapper;
+    @Autowired
+    StudentMapper studentMapper;
 
     public StudentIndeks toEntity(StudentIndeksRequest request) {
         StudentIndeks studentIndeks = new StudentIndeks();
@@ -46,6 +48,7 @@ public class StudentIndeksMapper {
         studentIndeksResponse.setVaziOd(studentIndeks.getVaziOd());
         studentIndeksResponse.setOstvarenoEspb(studentIndeks.getOstvarenoEspb());
         studentIndeksResponse.setStudijskiProgram(studijskiProgramMapper.toResponse(studentIndeks.getStudijskiProgram()));
+        studentIndeksResponse.setStudent(studentMapper.toResponse(studentIndeks.getStudent()));
 
         return studentIndeksResponse;
     }
