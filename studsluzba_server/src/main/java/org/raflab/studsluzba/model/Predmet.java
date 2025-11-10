@@ -24,6 +24,8 @@ public class Predmet {
     private Integer fondCasovaVezbe;
     private Integer fondCasovaPredavanja;
 
+    private Integer semestar;
+
     @ManyToOne
 	private StudijskiProgram studProgram;
 

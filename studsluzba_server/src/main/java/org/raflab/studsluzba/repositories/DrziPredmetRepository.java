@@ -4,10 +4,8 @@ import java.util.List;
 
 
 import org.raflab.studsluzba.model.DrziPredmet;
-import org.raflab.studsluzba.model.Predmet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,4 +18,7 @@ public interface DrziPredmetRepository extends JpaRepository<DrziPredmet, Long> 
 
     @Query("select dp from DrziPredmet dp where dp.predmet.id = :predmetId")
     List<DrziPredmet> getDrziPredmetByPredmetId(Long predmetId);
+
+    @Query("select dp from DrziPredmet dp where dp.predmet.id = :predmetId and dp.skolskaGodina.id = :godinaId")
+    List<DrziPredmet> findByPredmetIdGodinaId(Long predmetId, Long godinaId);
 }

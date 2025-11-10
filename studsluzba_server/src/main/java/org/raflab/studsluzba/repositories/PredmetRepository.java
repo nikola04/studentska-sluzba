@@ -19,4 +19,7 @@ public interface PredmetRepository extends JpaRepository<Predmet, Long> {
 
     @Query("SELECT COUNT(p) FROM Predmet p WHERE p.studProgram.id = :studProgramId")
     Long countByStudijskiProgramId(@Param("studProgramId") Long studProgramId);
+
+    @Query("SELECT p FROM Predmet p join p.drzePredmetList dp join dp.slusajuPredmtList sp where sp.studentIndeks.id = :studentId and sp.drziPredmet.skolskaGodina.id = :skolskaGodinaId and p.id not in (select pp.predmet.id from PolozenPredmet pp where pp.studentIndeks.id = :studentId)")
+    List<Predmet> findNepolozeniPredmeti(Long studentId, Long skolskaGodinaId);
 }

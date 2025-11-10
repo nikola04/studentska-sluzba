@@ -17,4 +17,7 @@ public interface SkolskaGodinaRepository extends JpaRepository<SkolskaGodina, Lo
 
     @Query("select s from SkolskaGodina s WHERE s.godina = :godina")
     SkolskaGodina findByGodina(Integer godina);
+
+    @Query("select s from SkolskaGodina s WHERE s.aktivan = :aktivan order by s.godina desc")
+    SkolskaGodina findByAktivan(boolean aktivan);
 }

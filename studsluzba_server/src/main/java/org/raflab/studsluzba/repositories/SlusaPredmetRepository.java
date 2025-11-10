@@ -6,7 +6,6 @@ import org.raflab.studsluzba.model.PredmetSlusa;
 import org.raflab.studsluzba.model.StudentIndeks;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,7 +25,9 @@ public interface SlusaPredmetRepository extends JpaRepository<PredmetSlusa, Long
 	
 	@Query("select sp.studentIndeks from PredmetSlusa sp where sp.drziPredmet.id = :idDrziPredmet")
 	List<StudentIndeks> getStudentiSlusaPredmetZaDrziPredmet(Long idDrziPredmet);
-	
+
+    @Query("select sum(ps.drziPredmet.predmet.espb) from PredmetSlusa ps where ps.studentIndeks.id = :studentId and ps.drziPredmet.skolskaGodina.id = :godinaId")
+    Integer sumESPBForSlusaPredmetByStudentIdGodinaId(Long studentId, Long godinaId);
 	
 	/*
 	 * TODO dodati slicne operacije koja vracaju sve studente za stud program/ godinu studija koje ne slusaju predmet

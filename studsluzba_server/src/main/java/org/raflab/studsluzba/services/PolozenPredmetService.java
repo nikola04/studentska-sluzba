@@ -68,6 +68,8 @@ public class PolozenPredmetService {
         if(ispitIzlazak != null)
             ispitIzlazak.setPolozenPredmet(polozenPredmet);
 
+        studentIndeks.setOstvarenoEspb(studentIndeks.getOstvarenoEspb() + polozenPredmet.getPredmet().getEspb());
+
         return polozenPredmetRepository.save(polozenPredmet);
     }
 

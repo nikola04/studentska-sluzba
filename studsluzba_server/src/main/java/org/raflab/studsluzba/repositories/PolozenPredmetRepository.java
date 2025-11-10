@@ -23,4 +23,7 @@ public interface PolozenPredmetRepository extends JpaRepository<PolozenPredmet, 
             @Param("toYear") Integer toYear
     );
 
+    @Query("select sum(pp.predmet.espb) from PolozenPredmet pp where pp.studentIndeks = :studentIndeksId and pp.ispitIzlazak.ispitPrijava.ispit.ispitniRok.skolskaGodina.id = :skolskaGodinaId")
+    Integer sumESPBForStudentIndeksIdBySkolskaGodinaId(Long studentIndeksId, Long skolskaGodinaId);
+
 }

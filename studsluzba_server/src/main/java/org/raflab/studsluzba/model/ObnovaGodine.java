@@ -16,6 +16,7 @@ public class ObnovaGodine {
     private LocalDate datumObnove;
     @Column(length = 500)
     private String napomena;
+    private Integer godina;
 
     @ManyToOne(optional = false)
     private StudentIndeks studentIndeks;
@@ -28,5 +29,5 @@ public class ObnovaGodine {
             joinColumns = @JoinColumn(name = "obnova_godine_id"),
             inverseJoinColumns = @JoinColumn(name = "predmet_id")
     )
-    private List<Predmet> predmeti;
+    private List<Predmet> obnovljeniPredmeti;
 }

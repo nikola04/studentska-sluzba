@@ -34,6 +34,10 @@ public class DrziPredmetService {
         return drziPredmetRepository.getDrziPredmetByNastavnikId(nastavnikId);
     }
 
+    public List<DrziPredmet> getAllDrziPredmetByPredmetIdGodinaId(Long predmetId, Long godinaId){
+        return drziPredmetRepository.findByPredmetIdGodinaId(predmetId, godinaId);
+    }
+
     public List<DrziPredmet> getAllDrziPredmetByPredmetId(Long predmetId) {
         return drziPredmetRepository.getDrziPredmetByPredmetId(predmetId);
     }
