@@ -37,6 +37,10 @@ public class StudentController {
     private UplataMapper uplataMapper;
     @Autowired
     private IspitMapper ispitMapper;
+    @Autowired
+    private UpisGodineMapper upisGodineMapper;
+    @Autowired
+    private ObnovaGodineMapper obnovaGodineMapper;
 
     @Autowired
     private StudentService studentService;
@@ -58,6 +62,10 @@ public class StudentController {
     private IspitService ispitService;
     @Autowired
     private PredispitnaObavezaService predispitnaObavezaService;
+    @Autowired
+    private UpisGodineService upisGodineService;
+    @Autowired
+    private ObnovaGodineService obnovaGodineService;
 
     /* StudentPodaci */
     @PostMapping(path="/podaci")
@@ -111,9 +119,10 @@ public class StudentController {
         return studentIndeksMapper.toResponseList(indeksList);
     }
 
-    @GetMapping(path = "/indeks/{indeksId}")
-    public StudentIndeksResponse getStudentIndeksById(@PathVariable Long indeksId) {
-        StudentIndeks indeks = studentIndeksService.getStudentIndeks(indeksId);
+    @GetMapping(path = "/indeks/{studentIndeksBroj}")
+    public StudentIndeksResponse getStudentIndeksById(@PathVariable String studentIndeksBroj) {
+        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+        StudentIndeks indeks = studentIndeksService.getStudentIndeks(studentIndeksId);
         return studentIndeksMapper.toResponse(indeks);
     }
 
@@ -129,6 +138,32 @@ public class StudentController {
     public boolean deleteStudentIndeks(@PathVariable Long indeksId) {
         studentIndeksService.deleteStudentIndeks(indeksId);
         return true;
+    }
+
+    /* UpisGodine */
+    @PostMapping(path = "/indeks/{studentIndeksBroj}/upis/godina/{skolskaGodinaId}")
+    public Long addNewUpisGodine(@PathVariable String studentIndeksBroj, @PathVariable Long skolskaGodinaId, @RequestParam(defaultValue = "") String napomena){
+        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+        return upisGodineService.saveUpisGodine(studentIndeksId, skolskaGodinaId, napomena).getId();
+    }
+
+    @GetMapping(path = "/indeks/{studentIndeksBroj}/upis")
+    public List<UpisGodineResponse> getUpisGodine(@PathVariable String studentIndeksBroj){
+        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+        return upisGodineMapper.toResponseList(upisGodineService.getAllUpisGodineByStudentIndeksId(studentIndeksId));
+    }
+
+    /* ObnovaGodine */
+    @PostMapping(path = "/indeks/{studentIndeksBroj}/obnova/godina/{skolskaGodinaId}")
+    public Long addNewObnovaGodine(@PathVariable String studentIndeksBroj, @PathVariable Long skolskaGodinaId, @RequestParam(defaultValue = "") String napomena){
+        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+        return obnovaGodineService.saveObnovaGodine(studentIndeksId, skolskaGodinaId, napomena).getId();
+    }
+
+    @GetMapping(path = "/indeks/{studentIndeksBroj}/obnova")
+    public List<ObnovaGodineResponse> getObnovaGodine(@PathVariable String studentIndeksBroj){
+        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+        return obnovaGodineMapper.toResponseList(obnovaGodineService.getAllObnovljenaGodinaByStudentIndeks(studentIndeksId));
     }
 
     /* PredmetSlusa */
@@ -150,24 +185,26 @@ public class StudentController {
     }
 
     /* Ispit */
-    @GetMapping(path = "/indeks/{studentId}/ispit/nepolozen")
-    public PagedResponse<IspitResponse> getAllIspitNepolozen(@PathVariable Long studentId,
+    @GetMapping(path = "/indeks/{studentIndeksBroj}/ispit/nepolozen")
+    public PagedResponse<IspitResponse> getAllIspitNepolozen(@PathVariable String studentIndeksBroj,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "id") String sortBy
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return ispitMapper.toPagedResponse(ispitService.getNepolozeniPageByStudentId(studentId, pageable));
+        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+        return ispitMapper.toPagedResponse(ispitService.getNepolozeniPageByStudentId(studentIndeksId, pageable));
     }
 
-    @GetMapping(path = "/indeks/{studentId}/ispit/polozen")
-    public PagedResponse<IspitResponse> getAllIspitPolozen(@PathVariable Long studentId,
+    @GetMapping(path = "/indeks/{studentIndeksBroj}/ispit/polozen")
+    public PagedResponse<IspitResponse> getAllIspitPolozen(@PathVariable String studentIndeksBroj,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "id") String sortBy
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return ispitMapper.toPagedResponse(ispitService.getPolozeniPageByStudentId(studentId, pageable));
+        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+        return ispitMapper.toPagedResponse(ispitService.getPolozeniPageByStudentId(studentIndeksId, pageable));
     }
 
     /* IspitPrijava */
@@ -251,9 +288,9 @@ public class StudentController {
         return polozenPredmetService.savePolozenPredmet(polozenPredmet, studentId, predmetId, request.getIspitIzlazakId()).getId();
     }
 
-    @DeleteMapping(path = "/indeks/{studentId}/predmet/{predmetId}/polozen")
-    public boolean deleteStudentPolozenPredmet(@PathVariable Long studentId, @PathVariable Long predmetId) {
-        polozenPredmetService.deletePolozenPredmet(studentId, predmetId);
+    @DeleteMapping(path = "/indeks/{studentIndeksId}/predmet/{predmetId}/polozen")
+    public boolean deleteStudentPolozenPredmet(@PathVariable Long studentIndeksId, @PathVariable Long predmetId) {
+        polozenPredmetService.deletePolozenPredmet(studentIndeksId, predmetId);
         return true;
     }
 

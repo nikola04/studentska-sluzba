@@ -15,6 +15,8 @@ public class UpisGodineService {
     private UpisGodineRepository upisGodineRepository;
     @Autowired
     private SkolskaGodinaRepository skolskaGodinaRepository;
+    @Autowired
+    private ObnovaGodineRepository obnovaGodineRepository;
 
     @Autowired
     private SkolskaGodinaService skolskaGodinaService;
@@ -26,13 +28,18 @@ public class UpisGodineService {
     @Autowired
     private SlusaPredmetService slusaPredmetService;
 
-    public void saveUpisGodine(Long studentIndeksId, Long skolskaGodinaId, String napomena){
+    public List<UpisGodine> getAllUpisGodineByStudentIndeksId(Long studentIndeksId){
+        return upisGodineRepository.findAllByStudentIndeksId(studentIndeksId);
+    }
+
+    public UpisGodine saveUpisGodine(Long studentIndeksId, Long skolskaGodinaId, String napomena){
         SkolskaGodina currentGodina = skolskaGodinaRepository.findByAktivan(true);
         SkolskaGodina skolskaGodina = skolskaGodinaService.getSkolskaGodina(skolskaGodinaId);
         StudentIndeks indeks = studentIndeksService.getStudentIndeks(studentIndeksId);
         UpisGodine latestUpis = upisGodineRepository.findLatestUpisByStudentIndeksId(studentIndeksId);
+        ObnovaGodine latestObnova = obnovaGodineRepository.findLatestObnovaByStudentIndeksId(studentIndeksId);
 
-        if(currentGodina.getGodina() >= skolskaGodina.getGodina())
+        if(currentGodina != null && currentGodina.getGodina() >= skolskaGodina.getGodina())
             throw new IllegalArgumentException("[UpisGodine] Skolska godina must be newer than current");
 
         if(latestUpis == null){ // first upis
@@ -42,19 +49,23 @@ public class UpisGodineService {
             upisGodine.setStudentIndeks(indeks);
             upisGodine.setSkolskaGodina(skolskaGodina);
             upisGodine.setNapomena(napomena);
-            upisGodineRepository.save(upisGodine);
-            return;
+            return upisGodineRepository.save(upisGodine);
         }
 
-        if(latestUpis.getSkolskaGodina().getId().equals(skolskaGodina.getId())){
-            throw new IllegalArgumentException("[UpisGodine] Student already signed in this year");
+        SkolskaGodina latestGodina = latestUpis.getSkolskaGodina();
+        if(latestObnova != null && latestObnova.getSkolskaGodina().getGodina() > latestGodina.getGodina())
+            latestGodina = latestObnova.getSkolskaGodina();
+
+
+        if(skolskaGodina.getGodina() <= latestGodina.getGodina()){
+            throw new IllegalArgumentException("[UpisGodine] Student already signed in this year or year passed");
         }
 
         Integer espb = indeks.getOstvarenoEspb();
         if(espb < 60 * indeks.getGodina() - 30)
             throw new IllegalArgumentException("[UpisGodine] Not enough ESPB");
 
-        List<Predmet> nepolozeniPredmeti = predmetRepository.findNepolozeniPredmeti(indeks.getId(), currentGodina.getId());
+        List<Predmet> nepolozeniPredmeti = predmetRepository.findNepolozeniPredmeti(indeks.getId(), latestGodina.getId());
 
         slusaPredmetService.addAllSlusaPredmet(skolskaGodina, indeks, nepolozeniPredmeti);
         UpisGodine upisGodine = new UpisGodine();
@@ -64,6 +75,6 @@ public class UpisGodineService {
         upisGodine.setSkolskaGodina(skolskaGodina);
         upisGodine.setNapomena(napomena);
         upisGodine.setPrenetiPredmeti(new ArrayList<>(nepolozeniPredmeti));
-        upisGodineRepository.save(upisGodine);
+        return upisGodineRepository.save(upisGodine);
     }
 }

@@ -14,4 +14,8 @@ public interface ObnovaGodineRepository extends JpaRepository<ObnovaGodine, Long
 
     @Query("select o from ObnovaGodine o where o.studentIndeks.id = :studentId")
     List<ObnovaGodine> findAllByStudentIndeksId(Long studentId);
+
+    @Query("select o from ObnovaGodine o where o.studentIndeks.id = :id order by o.datumObnove desc")
+    ObnovaGodine findLatestObnovaByStudentIndeksId(Long id);
+
 }

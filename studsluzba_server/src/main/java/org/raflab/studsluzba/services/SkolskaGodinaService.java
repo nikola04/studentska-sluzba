@@ -15,17 +15,18 @@ public class SkolskaGodinaService {
     @Autowired
     private SkolskaGodinaRepository skolskaGodinaRepo;
 
-    private void beforeSaveCheck(SkolskaGodina skolskaGodina){
+    private void beforeSaveCheck(SkolskaGodina skolskaGodina, boolean checkExisting){
         if(skolskaGodina.getAktivan()){
             skolskaGodinaRepo.deactivateSkolskaGodina();
         }
 
-        if(this.skolskaGodinaRepo.findByGodina(skolskaGodina.getGodina()) != null)
+        SkolskaGodina existing = this.skolskaGodinaRepo.findByGodina(skolskaGodina.getGodina());
+        if(checkExisting && existing != null)
             throw new ResourceAlreadyExistsException("[SkolskaGodina] Godina already exists: " + skolskaGodina.getGodina());
     }
 
     public SkolskaGodina saveSkolskaGodina(SkolskaGodina skolskaGodina) {
-        this.beforeSaveCheck(skolskaGodina);
+        this.beforeSaveCheck(skolskaGodina, true);
         return skolskaGodinaRepo.save(skolskaGodina);
     }
 
@@ -47,7 +48,7 @@ public class SkolskaGodinaService {
     public SkolskaGodina updateSkolskaGodina(Long id, SkolskaGodina skolskaGodina){
         SkolskaGodina existing = this.getSkolskaGodina(id);
 
-        this.beforeSaveCheck(skolskaGodina);
+        this.beforeSaveCheck(skolskaGodina, false);
 
         existing.setAktivan(skolskaGodina.getAktivan());
         existing.setGodina(skolskaGodina.getGodina());

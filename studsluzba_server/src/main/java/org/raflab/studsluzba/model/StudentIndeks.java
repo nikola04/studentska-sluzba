@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -21,10 +22,12 @@ public class StudentIndeks {
     private Integer ostvarenoEspb;
 
     @ManyToOne
-	private StudentPodaci student;
+    @ToString.Exclude
+    private StudentPodaci student;
 	
 	@ManyToOne
-	private StudijskiProgram studijskiProgram;
+    @ToString.Exclude
+    private StudijskiProgram studijskiProgram;
 
     @OneToMany(mappedBy="studentIndeks")
     private List<PredmetSlusa> predmetiSlusa;

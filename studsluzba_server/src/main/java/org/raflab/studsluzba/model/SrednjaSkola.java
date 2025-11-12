@@ -2,6 +2,7 @@ package org.raflab.studsluzba.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -24,5 +25,6 @@ public class SrednjaSkola {
 
     @OneToMany(mappedBy = "srednjaSkola")
     @JsonIgnore
+    @ToString.Exclude
     private List<StudentPodaci> studenti;
 }

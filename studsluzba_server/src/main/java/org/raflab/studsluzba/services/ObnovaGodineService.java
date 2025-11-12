@@ -31,25 +31,34 @@ public class ObnovaGodineService {
     @Autowired
     private SlusaPredmetService slusaPredmetService;
 
-    public void saveObnovaGodine(Long studentIndeksId, Long skolskaGodinaId, String napomena){
+    public List<ObnovaGodine> getAllObnovljenaGodinaByStudentIndeks(Long studentIndeksId){
+        return obnovaGodineRepository.findAllByStudentIndeksId(studentIndeksId);
+    }
+
+    public ObnovaGodine saveObnovaGodine(Long studentIndeksId, Long skolskaGodinaId, String napomena){
         SkolskaGodina currentGodina = skolskaGodinaRepository.findByAktivan(true);
         SkolskaGodina skolskaGodina = skolskaGodinaService.getSkolskaGodina(skolskaGodinaId);
         StudentIndeks indeks = studentIndeksService.getStudentIndeks(studentIndeksId);
         UpisGodine latestUpis = upisGodineRepository.findLatestUpisByStudentIndeksId(studentIndeksId);
+        ObnovaGodine latestObnova = obnovaGodineRepository.findLatestObnovaByStudentIndeksId(studentIndeksId);
 
-        if(currentGodina.getGodina() >= skolskaGodina.getGodina())
+        if(currentGodina != null && currentGodina.getGodina() >= skolskaGodina.getGodina())
             throw new IllegalArgumentException("[ObnovaGodine] Skolska godina must be newer than current");
 
         if(latestUpis == null)
             throw new IllegalArgumentException("[ObnovaGodine] Student has not been signed yet. Student should sign first year");
 
-        if(latestUpis.getSkolskaGodina().getId().equals(currentGodina.getId()))
+        Integer latestGodina = latestUpis.getSkolskaGodina().getGodina();
+        if(latestObnova != null && latestObnova.getSkolskaGodina().getGodina() > latestGodina)
+            latestGodina = latestObnova.getSkolskaGodina().getGodina();
+
+        if(currentGodina != null && latestUpis.getSkolskaGodina().getId().equals(currentGodina.getId()))
             throw new IllegalArgumentException("[ObnovaGodine] Student already signed in this year");
 
-        if(obnovaGodineRepository.findObnovaGodineByStudentIndeksIdGodinaId(studentIndeksId, currentGodina.getId()) != null)
-            throw new IllegalArgumentException("[ObnovaGodine] Student already signed in this year");
+        if(latestGodina >= skolskaGodina.getGodina())
+            throw new IllegalArgumentException("[ObnovaGodine] Student already signed in this year or year passed");
 
-        List<Predmet> nepolozeniPredmeti = predmetRepository.findNepolozeniPredmeti(indeks.getId(), currentGodina.getId());
+        List<Predmet> nepolozeniPredmeti = predmetRepository.findNepolozeniPredmeti(indeks.getId(), latestUpis.getSkolskaGodina().getId());
 
         slusaPredmetService.addAllSlusaPredmet(skolskaGodina, indeks, nepolozeniPredmeti);
         ObnovaGodine obnovaGodine = new ObnovaGodine();
@@ -59,6 +68,6 @@ public class ObnovaGodineService {
         obnovaGodine.setSkolskaGodina(skolskaGodina);
         obnovaGodine.setNapomena(napomena);
         obnovaGodine.setObnovljeniPredmeti(new ArrayList<>(nepolozeniPredmeti));
-        obnovaGodineRepository.save(obnovaGodine);
+        return obnovaGodineRepository.save(obnovaGodine);
     }
 }

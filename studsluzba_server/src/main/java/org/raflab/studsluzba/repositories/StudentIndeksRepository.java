@@ -18,4 +18,7 @@ public interface StudentIndeksRepository extends JpaRepository<StudentIndeks, Lo
 
     @Query("select si from StudentIndeks si JOIN si.prijaveIspita p WHERE p.ispit.id = :ispitId")
     List<StudentIndeks> findByIspitId(Long ispitId);
+
+    @Query("select si from StudentIndeks si WHERE si.broj = :broj AND si.godina = :godina AND si.studijskiProgram.oznaka = :smerOznaka")
+    StudentIndeks findStudentIndeksByBroj(int broj, int godina, String smerOznaka);
 }

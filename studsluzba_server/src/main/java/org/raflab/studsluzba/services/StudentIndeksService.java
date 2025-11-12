@@ -5,12 +5,15 @@ import org.raflab.studsluzba.model.StudentIndeks;
 import org.raflab.studsluzba.model.StudentPodaci;
 import org.raflab.studsluzba.model.StudijskiProgram;
 import org.raflab.studsluzba.repositories.StudentIndeksRepository;
+import org.raflab.studsluzba.utils.ParseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+
+import static java.lang.Integer.parseInt;
 
 @Service
 public class StudentIndeksService {
@@ -32,6 +35,18 @@ public class StudentIndeksService {
 
     public List<StudentIndeks> getAlStudentIndeksByIspitPrijava(Long ispitId){
         return studentIndeksRepository.findByIspitId(ispitId);
+    }
+
+    public StudentIndeks getStudentIndeksByBroj(String brojIndeksa){
+        List<String> parts = ParseUtils.parseIndeks(brojIndeksa);
+        if(parts == null) throw new IllegalArgumentException("Broj Indeksa id not valid");
+        int broj = parseInt(parts.get(0)), godina = parseInt(parts.get(1));
+        String smerOznaka = parts.get(2);
+        StudentIndeks studentIndeks = studentIndeksRepository.findStudentIndeksByBroj(broj, godina, smerOznaka);
+        if(studentIndeks == null)
+            throw new ResourceNotFoundException("[StudentIndeks] Not found");
+
+        return studentIndeks;
     }
 
     @Transactional

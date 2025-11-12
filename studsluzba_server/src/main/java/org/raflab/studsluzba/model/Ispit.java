@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -26,4 +27,16 @@ public class Ispit {
     private IspitniRok ispitniRok;
     @OneToMany(mappedBy = "ispit")
     private List<IspitPrijava> prijaveIspita;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Ispit ispit = (Ispit) o;
+        return Objects.equals(id, ispit.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

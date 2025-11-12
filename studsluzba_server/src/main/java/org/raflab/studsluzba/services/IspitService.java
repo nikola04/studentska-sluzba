@@ -47,7 +47,7 @@ public class IspitService {
         LocalDate today = LocalDate.now();
 
         Ispit existing = ispitRepository.findByIspitniRokIdAndPredmetId(ispitniRok.getId(), ispit.getPredmet().getId());
-        if(existing != null)
+        if(existing != null && !existing.equals(ispit))
             throw new ResourceAlreadyExistsException("[Ispit] You have already signed this ispit");
 
         // check if nastavnik DrziPredmet ???

@@ -1,8 +1,8 @@
 package org.raflab.studsluzba.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -36,9 +36,12 @@ public class StudentPodaci {
 	 private String adresaStanovanja;   // u toku studijaq
 
     @ManyToOne
+    @JsonIgnore
+    @ToString.Exclude
     private SrednjaSkola srednjaSkola;
     private Double uspehSrednjaSkola, uspehPrijemni;
 
     @ManyToOne
+    @ToString.Exclude
     private VisokoskolskaUstanova visokoskolskaUstanova;
 }
