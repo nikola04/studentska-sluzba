@@ -1,6 +1,9 @@
 package org.raflab.studsluzba.controllers;
 
+import org.raflab.studsluzba.controllers.request.SrednjaSkolaRequest;
+import org.raflab.studsluzba.controllers.response.SrednjaSkolaResponse;
 import org.raflab.studsluzba.controllers.response.StudentPodaciResponse;
+import org.raflab.studsluzba.mappers.SrednjaSkolaMapper;
 import org.raflab.studsluzba.mappers.StudentMapper;
 import org.raflab.studsluzba.model.SrednjaSkola;
 import org.raflab.studsluzba.services.SrednjaSkolaService;
@@ -22,20 +25,23 @@ public class SrednjaSkolaController {
 
     @Autowired
     private StudentMapper studentMapper;
+    @Autowired
+    private SrednjaSkolaMapper srednjaSkolaMapper;
 
     @PostMapping(path = "")
-    public Long addNewSrednjaSkola(@Valid @RequestBody SrednjaSkola srednjaSkola) {
-        return srednjaSkolaService.createSrednjaSkola(srednjaSkola).getId();
+    public Long addNewSrednjaSkola(@Valid @RequestBody SrednjaSkolaRequest srednjaSkolaRequest) {
+        SrednjaSkola srednjaSkola = srednjaSkolaMapper.toEntity(srednjaSkolaRequest);
+        return srednjaSkolaService.createSrednjaSkola(srednjaSkola, srednjaSkolaRequest.getTipSkoleId()).getId();
     }
 
     @GetMapping(path = "")
-    public List<SrednjaSkola> getAllSrednjaSkola() {
-        return srednjaSkolaService.getAllSrednjaSkola();
+    public List<SrednjaSkolaResponse> getAllSrednjaSkola() {
+        return srednjaSkolaMapper.toResponseList(srednjaSkolaService.getAllSrednjaSkola());
     }
 
     @GetMapping(path = "/{id}")
-    public SrednjaSkola getSrednjaSkolaById(@PathVariable Long id) {
-        return srednjaSkolaService.getSrednjaSkola(id);
+    public SrednjaSkolaResponse getSrednjaSkolaById(@PathVariable Long id) {
+        return srednjaSkolaMapper.toResponse(srednjaSkolaService.getSrednjaSkola(id));
     }
 
     @GetMapping(path = "/{id}/student")

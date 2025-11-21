@@ -16,6 +16,7 @@ public class StudentIndeks {
 	private Long id;
 	private Integer broj;
 	private Integer godina;
+    @ManyToOne
 	private NacinFinansiranja nacinFinansiranja;
 	private Boolean aktivan;
 	private LocalDate vaziOd;

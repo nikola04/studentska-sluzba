@@ -3,7 +3,6 @@ package org.raflab.studsluzba.controllers.request;
 import lombok.Data;
 import org.raflab.studsluzba.model.NacinFinansiranja;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -13,7 +12,7 @@ public class StudentIndeksRequest {
     @NotNull
     private Long studProgramId;
     @NotNull
-    private NacinFinansiranja nacinFinansiranja;
+    private Long nacinFinansiranjaId;
     @NotNull
     private Boolean aktivan;
     private LocalDate vaziOd; // set date if not provided

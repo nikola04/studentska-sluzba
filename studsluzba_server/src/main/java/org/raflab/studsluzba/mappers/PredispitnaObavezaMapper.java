@@ -17,7 +17,6 @@ public class PredispitnaObavezaMapper {
     public PredispitnaObaveza toEntity(PredispitnaObavezaRequest request) {
         PredispitnaObaveza predispitnaObaveza = new PredispitnaObaveza();
 
-        predispitnaObaveza.setVrsta(request.getVrsta());
         predispitnaObaveza.setMaxBrojPoena(request.getMaxBrojPoena());
 
         return predispitnaObaveza;

@@ -4,6 +4,7 @@ import org.raflab.studsluzba.controllers.request.StudentPodaciRequest;
 import org.raflab.studsluzba.controllers.response.PagedResponse;
 import org.raflab.studsluzba.controllers.response.StudentPodaciResponse;
 import org.raflab.studsluzba.model.StudentPodaci;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class StudentMapper {
+    @Autowired
+    private SrednjaSkolaMapper srednjaSkolaMapper;
+
     public StudentPodaci toEntity(StudentPodaciRequest request) {
         StudentPodaci student = new StudentPodaci();
 
@@ -42,35 +46,35 @@ public class StudentMapper {
     }
 
     public StudentPodaciResponse toResponse(StudentPodaci studentPodaci) {
-        StudentPodaciResponse student = new StudentPodaciResponse();
+        StudentPodaciResponse studentResponse = new StudentPodaciResponse();
 
-        student.setId(studentPodaci.getId());
-        student.setIme(studentPodaci.getIme());
-        student.setPrezime(studentPodaci.getPrezime());
-        student.setSrednjeIme(studentPodaci.getSrednjeIme());
-        student.setJmbg(studentPodaci.getJmbg());
-        student.setDatumRodjenja(studentPodaci.getDatumRodjenja());
-        student.setPol(studentPodaci.getPol());
-        student.setMestoRodjenja(studentPodaci.getMestoRodjenja());
-        student.setMestoPrebivalista(studentPodaci.getMestoPrebivalista());
-        student.setAdresa(studentPodaci.getAdresa());
-        student.setMestoStanovanja(studentPodaci.getMestoStanovanja());
-        student.setAdresaStanovanja(studentPodaci.getAdresaStanovanja());
-        student.setDrzavaRodjenja(studentPodaci.getDrzavaRodjenja());
-        student.setDrzavljanstvo(studentPodaci.getDrzavljanstvo());
-        student.setNacionalnost(studentPodaci.getNacionalnost());
-        student.setFakultetEmail(studentPodaci.getFakultetEmail());
-        student.setPrivatniEmail(studentPodaci.getPrivatniEmail());
-        student.setBrojTelefonaMobilni(studentPodaci.getBrojTelefonaMobilni());
-        student.setBrojTelefonaFiksni(studentPodaci.getBrojTelefonaFiksni());
-        student.setBrojLicneKarte(studentPodaci.getBrojLicneKarte());
-        student.setLicnuKartuIzdao(studentPodaci.getLicnuKartuIzdao());
-        student.setUspehPrijemni(studentPodaci.getUspehPrijemni());
-        student.setUspehSrednjaSkola(studentPodaci.getUspehSrednjaSkola());
-        student.setSrednjaSkola(studentPodaci.getSrednjaSkola());
-        student.setVisokoskolskaUstanova(studentPodaci.getVisokoskolskaUstanova());
+        studentResponse.setId(studentPodaci.getId());
+        studentResponse.setIme(studentPodaci.getIme());
+        studentResponse.setPrezime(studentPodaci.getPrezime());
+        studentResponse.setSrednjeIme(studentPodaci.getSrednjeIme());
+        studentResponse.setJmbg(studentPodaci.getJmbg());
+        studentResponse.setDatumRodjenja(studentPodaci.getDatumRodjenja());
+        studentResponse.setPol(studentPodaci.getPol());
+        studentResponse.setMestoRodjenja(studentPodaci.getMestoRodjenja());
+        studentResponse.setMestoPrebivalista(studentPodaci.getMestoPrebivalista());
+        studentResponse.setAdresa(studentPodaci.getAdresa());
+        studentResponse.setMestoStanovanja(studentPodaci.getMestoStanovanja());
+        studentResponse.setAdresaStanovanja(studentPodaci.getAdresaStanovanja());
+        studentResponse.setDrzavaRodjenja(studentPodaci.getDrzavaRodjenja());
+        studentResponse.setDrzavljanstvo(studentPodaci.getDrzavljanstvo());
+        studentResponse.setNacionalnost(studentPodaci.getNacionalnost());
+        studentResponse.setFakultetEmail(studentPodaci.getFakultetEmail());
+        studentResponse.setPrivatniEmail(studentPodaci.getPrivatniEmail());
+        studentResponse.setBrojTelefonaMobilni(studentPodaci.getBrojTelefonaMobilni());
+        studentResponse.setBrojTelefonaFiksni(studentPodaci.getBrojTelefonaFiksni());
+        studentResponse.setBrojLicneKarte(studentPodaci.getBrojLicneKarte());
+        studentResponse.setLicnuKartuIzdao(studentPodaci.getLicnuKartuIzdao());
+        studentResponse.setUspehPrijemni(studentPodaci.getUspehPrijemni());
+        studentResponse.setUspehSrednjaSkola(studentPodaci.getUspehSrednjaSkola());
+        studentResponse.setSrednjaSkola(srednjaSkolaMapper.toResponse(studentPodaci.getSrednjaSkola()));
+        studentResponse.setVisokoskolskaUstanova(studentPodaci.getVisokoskolskaUstanova());
 
-        return student;
+        return studentResponse;
     }
 
     public List<StudentPodaciResponse> toResponseList(List<StudentPodaci> studentPodaciList) {

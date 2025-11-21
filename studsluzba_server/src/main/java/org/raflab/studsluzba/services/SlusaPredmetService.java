@@ -75,7 +75,7 @@ public class SlusaPredmetService {
 
         Integer espb = slusaPredmetRepository.sumESPBForSlusaPredmetByStudentIdGodinaId(studentIndeksId, latestUpis.getSkolskaGodina().getId());
 
-        if(latestUpis.getSkolskaGodina().getId().equals(currentGodina.getId())) { // nije upisao godinu. Proveriti da li je obnovio. ukoliko nije ni obnovio ne dozvoliti da slusa
+        if(!latestUpis.getSkolskaGodina().getId().equals(currentGodina.getId())) { // nije upisao godinu. Proveriti da li je obnovio. ukoliko nije ni obnovio ne dozvoliti da slusa
             if(obnovaGodineRepository.findObnovaGodineByStudentIndeksIdGodinaId(studentIndeksId, currentGodina.getId()) == null)
                 throw new IllegalArgumentException("[PredmetSlusa] You have not signed this predmet");
             if (drziPredmet.getPredmet().getEspb() + espb > 60) {

@@ -9,10 +9,10 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class NacinFinansiranja {
+public class PredispitnaObavezaVrsta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nacin;
+    private String vrsta;
 }

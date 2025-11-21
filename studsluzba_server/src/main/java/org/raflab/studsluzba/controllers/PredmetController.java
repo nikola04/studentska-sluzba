@@ -96,14 +96,14 @@ public class PredmetController {
     public Long addNewPredispitnaObaveza(@PathVariable Long predmetId, @Valid @RequestBody PredispitnaObavezaRequest request) {
         PredispitnaObaveza predispitnaObaveza = predispitnaObavezaMapper.toEntity(request);
 
-        return predispitnaObavezaService.savePredispitnaObaveza(predispitnaObaveza, predmetId, request.getSkolskaGodinaId()).getId();
+        return predispitnaObavezaService.savePredispitnaObaveza(predispitnaObaveza, predmetId, request.getSkolskaGodinaId(), request.getPredispitnaObavezaVrstaId()).getId();
     }
 
     @PatchMapping(path = "/{predmetId}/predispitna/{id}")
     public PredispitnaObavezaResponse updatePredispitnaObaveza(@PathVariable Long id, @PathVariable Long predmetId, @Valid @RequestBody PredispitnaObavezaRequest request) {
         PredispitnaObaveza predispitnaObaveza = predispitnaObavezaMapper.toEntity(request);
 
-        return predispitnaObavezaMapper.toResponse(predispitnaObavezaService.updatePredispitnaObaveza(id, predmetId, request.getSkolskaGodinaId(), predispitnaObaveza));
+        return predispitnaObavezaMapper.toResponse(predispitnaObavezaService.updatePredispitnaObaveza(id, predmetId, request.getSkolskaGodinaId(), request.getPredispitnaObavezaVrstaId(), predispitnaObaveza));
     }
 
     @DeleteMapping(path = "/{predmetId}/predispitna/{predispitnaObavezaId}")

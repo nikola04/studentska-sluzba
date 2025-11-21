@@ -16,11 +16,9 @@ public class SrednjaSkola {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String naziv;
-    @NotBlank
     private String mesto;
-    @NotNull
+    @ManyToOne
     private TipSkole tipSkole;
 
     @OneToMany(mappedBy = "srednjaSkola")

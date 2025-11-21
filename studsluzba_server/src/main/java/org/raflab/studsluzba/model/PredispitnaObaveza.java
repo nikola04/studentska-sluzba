@@ -11,7 +11,8 @@ public class PredispitnaObaveza {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private PredispitneObavezeVrsta vrsta;
+    @ManyToOne
+    private PredispitnaObavezaVrsta vrsta;
     private Double maxBrojPoena;
 
     @ManyToOne

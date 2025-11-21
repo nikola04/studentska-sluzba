@@ -26,7 +26,6 @@ public class StudentIndeksMapper {
             int year = LocalDate.now().getYear();
             studentIndeks.setGodina(year);
         }
-        studentIndeks.setNacinFinansiranja(request.getNacinFinansiranja());
         studentIndeks.setAktivan(request.getAktivan());
         if(request.getVaziOd() != null)
             studentIndeks.setVaziOd(request.getVaziOd());

@@ -32,6 +32,6 @@ public class StudentPodaciResponse {
     private Double uspehPrijemni;
     private Double uspehSrednjaSkola;
     private Long srednjaSkolaId;
-    private SrednjaSkola srednjaSkola;
+    private SrednjaSkolaResponse srednjaSkola;
     private VisokoskolskaUstanova visokoskolskaUstanova;
 }

@@ -130,7 +130,7 @@ public class StudentController {
     @PostMapping(path = "/podaci/{studentId}/indeks")
     public Long addNewStudentIndeks(@PathVariable Long studentId, @Valid @RequestBody StudentIndeksRequest request) {
         StudentIndeks indeks = studentIndeksMapper.toEntity(request);
-        return studentIndeksService.saveStudentIndeks(indeks, studentId, request.getStudProgramId()).getId();
+        return studentIndeksService.saveStudentIndeks(indeks, studentId, request.getStudProgramId(), request.getNacinFinansiranjaId()).getId();
     }
 
 

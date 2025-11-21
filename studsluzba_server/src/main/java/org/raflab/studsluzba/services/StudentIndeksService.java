@@ -1,9 +1,11 @@
 package org.raflab.studsluzba.services;
 
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
+import org.raflab.studsluzba.model.NacinFinansiranja;
 import org.raflab.studsluzba.model.StudentIndeks;
 import org.raflab.studsluzba.model.StudentPodaci;
 import org.raflab.studsluzba.model.StudijskiProgram;
+import org.raflab.studsluzba.repositories.NacinFinansiranjaRepository;
 import org.raflab.studsluzba.repositories.StudentIndeksRepository;
 import org.raflab.studsluzba.utils.ParseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import static java.lang.Integer.parseInt;
 public class StudentIndeksService {
     @Autowired
     private StudentIndeksRepository studentIndeksRepository;
+    @Autowired
+    private NacinFinansiranjaRepository nacinFinansiranjaRepository;
 
     @Autowired
     private StudentService studentService;
@@ -50,13 +54,15 @@ public class StudentIndeksService {
     }
 
     @Transactional
-    public StudentIndeks saveStudentIndeks(StudentIndeks studentIndeks, Long studentId, Long studProgramId) {
+    public StudentIndeks saveStudentIndeks(StudentIndeks studentIndeks, Long studentId, Long studProgramId, Long nacinFinansiranjaId) {
         StudentPodaci studentPodaci = studentService.getStudentPodaci(studentId);
         StudijskiProgram sp = studijskiProgramService.getStudijskiProgram(studProgramId);
+        NacinFinansiranja nacinFinansiranja = nacinFinansiranjaRepository.findById(nacinFinansiranjaId).orElseThrow(() -> new ResourceNotFoundException("[NacinFinansiranja] Not found: " + nacinFinansiranjaId));
 
         studentIndeks.setBroj(this.findBroj(studentIndeks.getGodina(), sp.getId()));
         studentIndeks.setStudent(studentPodaci);
         studentIndeks.setStudijskiProgram(sp);
+        studentIndeks.setNacinFinansiranja(nacinFinansiranja);
 
         return studentIndeksRepository.save(studentIndeks);
     }
