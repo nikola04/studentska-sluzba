@@ -19,9 +19,12 @@ public class NastavnikZvanje {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private LocalDate datumIzbora;
-	private String naucnaOblast;  // sifarnik na klijentu - tabela u bazi bez veze
-	private String uzaNaucnaOblast;  // sifarnik na klijentu - tabela u bazi bez veze
-	private String zvanje;   // sifarnik na klijentu - tabela u bazi bez veze
+    @ManyToOne
+	private NaucnaOblast naucnaOblast;
+    @ManyToOne
+	private UzaNaucnaOblast uzaNaucnaOblast;
+    @ManyToOne
+	private Zvanje zvanje;
 	private boolean aktivno;
 	@ManyToOne
     @EqualsAndHashCode.Exclude

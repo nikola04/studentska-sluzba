@@ -14,9 +14,6 @@ public class NastavnikZvanjeMapper {
     public NastavnikZvanje toEntity(NastavnikZvanjeRequest request) {
         NastavnikZvanje zvanje = new NastavnikZvanje();
         zvanje.setDatumIzbora(request.getDatumIzbora());
-        zvanje.setNaucnaOblast(request.getNaucnaOblast());
-        zvanje.setUzaNaucnaOblast(request.getUzaNaucnaOblast());
-        zvanje.setZvanje(request.getZvanje());
         zvanje.setAktivno(request.getAktivno() != null ? request.getAktivno() : true); // default true
         return zvanje;
     }

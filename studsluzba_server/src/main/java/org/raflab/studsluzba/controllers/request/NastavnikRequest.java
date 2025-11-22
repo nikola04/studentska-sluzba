@@ -22,6 +22,7 @@ public class NastavnikRequest {
     private String brojTelefona;
     @NotBlank
     private String adresa;
+    @NotNull
     private Set<NastavnikZvanjeRequest> zvanja;
 
     @NotNull

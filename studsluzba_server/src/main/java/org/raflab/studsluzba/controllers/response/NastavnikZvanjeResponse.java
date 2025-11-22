@@ -1,6 +1,9 @@
 package org.raflab.studsluzba.controllers.response;
 
 import lombok.Data;
+import org.raflab.studsluzba.model.NaucnaOblast;
+import org.raflab.studsluzba.model.UzaNaucnaOblast;
+import org.raflab.studsluzba.model.Zvanje;
 
 import java.time.LocalDate;
 
@@ -8,8 +11,8 @@ import java.time.LocalDate;
 public class NastavnikZvanjeResponse {
     private Long id;
     private LocalDate datumIzbora;
-    private String naucnaOblast;
-    private String uzaNaucnaOblast;
-    private String zvanje;
+    private NaucnaOblast naucnaOblast;
+    private UzaNaucnaOblast uzaNaucnaOblast;
+    private Zvanje zvanje;
     private Boolean aktivno;
 }

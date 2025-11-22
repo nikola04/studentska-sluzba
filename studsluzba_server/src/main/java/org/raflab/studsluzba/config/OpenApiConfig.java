@@ -14,6 +14,6 @@ public class OpenApiConfig {
             .info(new Info()
                 .title("Studsluzba API")
                 .version("1.0")
-                .description("API za upravljanje studentima i ispitima"));
+                .description("API za upravljanje studentskim servisom"));
     }
 }
