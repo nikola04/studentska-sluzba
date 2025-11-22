@@ -9,6 +9,9 @@ import java.util.List;
 
 @Repository
 public interface UpisGodineRepository extends JpaRepository<UpisGodine, Long> {
+    @Query("select count(*) from UpisGodine u where u.studentIndeks.id = :id")
+    Integer countUpisGodineByStudentIndeksId(Long id);
+
     @Query("select u from UpisGodine u where u.studentIndeks.id = :id order by u.datumUpisa desc")
     UpisGodine findLatestUpisByStudentIndeksId(Long id);
 

@@ -4,6 +4,7 @@ import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
 import org.raflab.studsluzba.model.Iznos;
 import org.raflab.studsluzba.model.StudentIndeks;
 import org.raflab.studsluzba.model.Uplata;
+import org.raflab.studsluzba.repositories.UpisGodineRepository;
 import org.raflab.studsluzba.repositories.UplataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import java.util.List;
 public class UplataService {
     @Autowired
     private UplataRepository uplataRepository;
+    @Autowired
+    private UpisGodineRepository upisGodineRepository;
 
     @Autowired
     private StudentIndeksService studentIndeksService;
@@ -42,8 +45,10 @@ public class UplataService {
     }
 
     public Iznos getMissingAmount(Long studentId){
+        Integer upisGodineCount = upisGodineRepository.countUpisGodineByStudentIndeksId(studentId);
+
         Double kurs = exchangeService.getEuroRate();
-        double scholarshipEur = 3000;
+        double scholarshipEur = 3000 * upisGodineCount;
 
         double sumEur = 0;
         double sumRsd = 0;
