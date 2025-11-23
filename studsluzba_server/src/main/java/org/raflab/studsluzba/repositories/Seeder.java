@@ -1,10 +1,7 @@
 package org.raflab.studsluzba.repositories;
 
-import org.raflab.studsluzba.controllers.request.NastavnikObrazovanjeRequest;
 import org.raflab.studsluzba.model.*;
-import org.raflab.studsluzba.services.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.raflab.studsluzba.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,305 +13,425 @@ import java.util.*;
 @Component
 public class Seeder implements CommandLineRunner {
 
-    @Autowired private VrstaStudijaService vrstaStudijaService;
-    @Autowired private VisokoskolskaUstanovaService visokoskolskaUstanovaService;
-    @Autowired private SrednjaSkolaService srednjaSkolaService;
-    @Autowired private SkolskaGodinaService skolskaGodinaService;
-    @Autowired private StudijskiProgramService studijskiProgramService;
-    @Autowired private PredmetService predmetService;
-    @Autowired private NastavnikService nastavnikService;
-    @Autowired private StudentService studentService;
-    @Autowired private StudentIndeksService studentIndeksService;
-    @Autowired private DrziPredmetService drziPredmetService;
-    @Autowired private SlusaPredmetService slusaPredmetService;
-    @Autowired private VrstaStudijaRepository vrstaStudijaRepo;
-    @Autowired private DrziPredmetRepository drziPredmetRepo; // Potreban za dohvatanje posle save-a
-    @Autowired private GrupaRepository grupaRepository;
-    @Autowired private IspitniRokService ispitniRokService;
-    @Autowired private IspitService ispitService;
-    @Autowired private IspitPrijavaService ispitPrijavaService;
-    @Autowired private PredispitnaObavezaService predispitnaObavezaService;
-    @Autowired private UplataService uplataService;
+    @Autowired
+    private VrstaStudijaRepository vrstaStudijaRepository;
 
-    private VrstaStudija oas;
-    private VisokoskolskaUstanova fon;
-    private SrednjaSkola gim;
-    private SkolskaGodina sgAktivna;
-    private static final Logger logger = LoggerFactory.getLogger(Seeder.class);
+    @Autowired
+    private StudijskiProgramRepository studijskiProgramRepository;
+
+    @Autowired
+    private PredmetRepository predmetRepository;
+
+    @Autowired
+    private NastavnikRepository nastavnikRepository;
+
+    @Autowired
+    private StudentPodaciRepository studentPodaciRepository;
+
+    @Autowired
+    private NacinFinansiranjaRepository nacinFinansiranjaRepository;
+
+    @Autowired
+    private StudentIndeksRepository studentIndeksRepository;
+
+    @Autowired
+    private SkolskaGodinaRepository skolskaGodinaRepository;
+
+    @Autowired
+    private DrziPredmetRepository drziPredmetRepository;
+
+    @Autowired
+    private SlusaPredmetRepository slusaPredmetRepository;
+
+    @Autowired
+    private GrupaRepository grupaRepository;
+
+    @Autowired
+    private IspitniRokRepository ispitniRokRepository;
+
+    @Autowired
+    private IspitRepository ispitRepository;
+
+    @Autowired
+    private IspitPrijavaRepository ispitPrijavaRepository;
+
+    @Autowired
+    private ZvanjeRepository zvanjeRepository;
+
+    @Autowired
+    private NaucnaOblastRepository naucnaOblastRepository;
+
+    @Autowired
+    private UzaNaucnaOblastRepository uzaNaucnaOblastRepository;
+
+    @Autowired
+    private VisokoskolskaUstanovaRepository visokoskolskaUstanovaRepository;
+
+    @Autowired
+    private SrednjaSkolaRepository srednjaSkolaRepository;
+
+    @Autowired
+    private TipSkoleRepository tipSkoleRepository;
+
+    @Autowired
+    private PredispitneObavezeVrstaRepository predispitnaObavezaVrstaRepository;
+
+    @Autowired
+    private PredispitnaObavezaRepository predispitnaObavezaRepository;
+
     @Override
     public void run(String... args) throws Exception {
-        if (vrstaStudijaRepo.count() == 0) {
-            logger.info("Baza je prazna unosim podatke");
-            try {
-//                seedData();
-                logger.info("--- Seed uspesno zavrsen ---");
-            } catch (Exception e) {
-                logger.error("!!! Greska tokom seed-a ", e);
+        // Kreiranje osnovnih podataka
+        createVrsteStudija();
+        createStudijskePrograme();
+        createPredmete();
+        createNastavnike();
+        createStudente();
+        createSkolskeGodine();
+        createDrziPredmet();
+        createSlusaPredmet();
+        createGrupe();
+        createIspitniRokove();
+        createIspite();
+        createIspitPrijave();
+        createOstaliEntiteti();
+    }
+
+    private void createVrsteStudija() {
+        if (vrstaStudijaRepository.count() == 0) {
+            VrstaStudija vs1 = new VrstaStudija();
+            vs1.setNaziv("Osnovne akademske studije");
+            vs1.setOznaka("OAS");
+            vrstaStudijaRepository.save(vs1);
+
+            VrstaStudija vs2 = new VrstaStudija();
+            vs2.setNaziv("Master akademske studije");
+            vs2.setOznaka("MAS");
+            vrstaStudijaRepository.save(vs2);
+
+            VrstaStudija vs3 = new VrstaStudija();
+            vs3.setNaziv("Doktorske studije");
+            vs3.setOznaka("DS");
+            vrstaStudijaRepository.save(vs3);
+        }
+    }
+
+    private void createStudijskePrograme() {
+        if (studijskiProgramRepository.count() == 0) {
+            List<VrstaStudija> vrsteStudija = vrstaStudijaRepository.findAll();
+
+            for (int i = 1; i <= 3; i++) {
+                StudijskiProgram sp = new StudijskiProgram();
+                sp.setOznaka("SP" + i);
+                sp.setNaziv("Studijski program " + i);
+                sp.setGodinaAkreditacije(2020 + i);
+                sp.setZvanje("Diplomirani inženjer " + i);
+                sp.setTrajanjeGodina(4);
+                sp.setTrajanjeSemestara(8);
+                sp.setUkupnoEspb(240);
+                sp.setVrstaStudija(vrsteStudija.get(0));
+                studijskiProgramRepository.save(sp);
             }
-        } else {
-            logger.info("Baza ima podatke seeder se preskace");
+        }
+    }
+
+    private void createPredmete() {
+        if (predmetRepository.count() == 0) {
+            List<StudijskiProgram> studProgrami = studijskiProgramRepository.findAll();
+
+            for (int i = 1; i <= 10; i++) {
+                Predmet p = new Predmet();
+                p.setSifra("PR" + i);
+                p.setNaziv("Predmet " + i);
+                p.setOpis("Opis predmeta " + i);
+                p.setEspb(6);
+                p.setObavezan(i % 2 == 0);
+                p.setFondCasovaVezbe(30 + i);
+                p.setFondCasovaPredavanja(45 + i);
+                p.setSemestar((i % 6) + 1); // semestar od 1 do 6
+                p.setStudProgram(studProgrami.get((i - 1) % studProgrami.size()));
+                predmetRepository.save(p);
+            }
+        }
+    }
+
+    private void createNastavnike() {
+        if (nastavnikRepository.count() == 0) {
+            // Prvo kreiramo potrebne entitete za nastavnike
+            Zvanje zvanje = createZvanje();
+            NaucnaOblast naucnaOblast = createNaucnaOblast();
+            UzaNaucnaOblast uzaNaucnaOblast = createUzaNaucnaOblast();
+            VisokoskolskaUstanova visokoskolskaUstanova = createVisokoskolskaUstanova();
+            VrstaStudija vrstaStudija = vrstaStudijaRepository.findAll().get(0);
+
+            for (int i = 1; i <= 5; i++) {
+                Nastavnik n = new Nastavnik();
+                n.setIme("Nastavnik" + i);
+                n.setPrezime("Prezime" + i);
+                n.setSrednjeIme("Srednje" + i);
+                n.setEmail("nastavnik" + i + "@example.com");
+                n.setBrojTelefona("06012345" + i);
+                n.setAdresa("Adresa " + i);
+                n.setDatumRodjenja(LocalDate.of(1980 + i, i, i));
+                n.setPol(i % 2 == 0 ? 'M' : 'F');
+                n.setJmbg("80010123456" + i);
+
+                // Kreiranje obrazovanja
+                NastavnikObrazovanje obrazovanje = new NastavnikObrazovanje();
+                obrazovanje.setVisokoskolskaUstanova(visokoskolskaUstanova);
+                obrazovanje.setVrstaStudija(vrstaStudija);
+                obrazovanje.setNastavnik(n);
+
+                // Kreiranje zvanja
+                NastavnikZvanje nastavnikZvanje = new NastavnikZvanje();
+                nastavnikZvanje.setDatumIzbora(LocalDate.of(2020 + i, i, i));
+                nastavnikZvanje.setNaucnaOblast(naucnaOblast);
+                nastavnikZvanje.setUzaNaucnaOblast(uzaNaucnaOblast);
+                nastavnikZvanje.setZvanje(zvanje);
+                nastavnikZvanje.setAktivno(true);
+                nastavnikZvanje.setNastavnik(n);
+
+                n.setObrazovanja(Set.of(obrazovanje));
+                n.setZvanja(Set.of(nastavnikZvanje));
+
+                nastavnikRepository.save(n);
+            }
+        }
+    }
+
+    private void createStudente() {
+        if (studentPodaciRepository.count() == 0) {
+            // Kreiranje srednje škole i tipa škole
+            TipSkole tipSkole = createTipSkole();
+            SrednjaSkola srednjaSkola = createSrednjaSkola(tipSkole);
+            NacinFinansiranja nacinFinansiranja = createNacinFinansiranja();
+            List<StudijskiProgram> studProgrami = studijskiProgramRepository.findAll();
+
+            for (int i = 1; i <= 10; i++) {
+                // Kreiranje osnovnih podataka o studentu
+                StudentPodaci s = new StudentPodaci();
+                s.setIme("Student" + i);
+                s.setPrezime("Prezime" + i);
+                s.setSrednjeIme("Srednje" + i);
+                s.setJmbg("00101012345" + i);
+                s.setDatumRodjenja(LocalDate.of(2000 + i, i, i));
+                s.setMestoRodjenja("Mesto" + i);
+                s.setMestoPrebivalista("Prebivaliste" + i);
+                s.setDrzavaRodjenja("Srbija");
+                s.setDrzavljanstvo("Srbija");
+                s.setNacionalnost("Srpska");
+                s.setPol(i % 2 == 0 ? 'F' : 'M');
+                s.setAdresa("Adresa " + i);
+                s.setBrojTelefonaMobilni("06123456" + i);
+                s.setPrivatniEmail("student" + i + "@example.com");
+                s.setFakultetEmail("student" + i + "@raf.rs");
+                s.setSrednjaSkola(srednjaSkola);
+                s.setUspehSrednjaSkola(4.5 + (i * 0.1));
+                s.setUspehPrijemni(85.0 + i);
+
+                studentPodaciRepository.save(s);
+
+                // Kreiranje indeksa za studenta
+                StudentIndeks si = new StudentIndeks();
+                si.setBroj(i);
+                si.setGodina(2023);
+                si.setNacinFinansiranja(nacinFinansiranja);
+                si.setAktivan(true);
+                si.setVaziOd(LocalDate.of(2023, 10, i));
+                si.setOstvarenoEspb(0);
+                si.setStudent(s);
+                si.setStudijskiProgram(studProgrami.get((i - 1) % studProgrami.size()));
+
+                studentIndeksRepository.save(si);
+            }
+        }
+    }
+
+    private void createSkolskeGodine() {
+        if (skolskaGodinaRepository.count() == 0) {
+            for (int i = 2020; i <= 2024; i++) {
+                SkolskaGodina sg = new SkolskaGodina();
+                sg.setGodina(i);
+                sg.setAktivan(i == 2024); // samo poslednja je aktivna
+                skolskaGodinaRepository.save(sg);
+            }
+        }
+    }
+
+    private void createDrziPredmet() {
+        if (drziPredmetRepository.count() == 0) {
+            List<Nastavnik> nastavnici = nastavnikRepository.findAll();
+            List<Predmet> predmeti = predmetRepository.findAll();
+            List<SkolskaGodina> skolskeGodine = skolskaGodinaRepository.findAll();
+
+            for (int i = 0; i < Math.min(nastavnici.size(), predmeti.size()); i++) {
+                DrziPredmet dp = new DrziPredmet();
+                dp.setNastavnik(nastavnici.get(i));
+                dp.setPredmet(predmeti.get(i));
+                dp.setSkolskaGodina(skolskeGodine.get(skolskeGodine.size() - 1)); // poslednja aktivna godina
+                drziPredmetRepository.save(dp);
+            }
+        }
+    }
+
+    private void createSlusaPredmet() {
+        if (slusaPredmetRepository.count() == 0) {
+            List<StudentIndeks> indeksi = studentIndeksRepository.findAll();
+            List<DrziPredmet> drziPredmeti = drziPredmetRepository.findAll();
+
+            for (int i = 0; i < Math.min(indeksi.size(), drziPredmeti.size()); i++) {
+                PredmetSlusa ps = new PredmetSlusa();
+                ps.setStudentIndeks(indeksi.get(i));
+                ps.setDrziPredmet(drziPredmeti.get(i));
+                slusaPredmetRepository.save(ps);
+            }
+        }
+    }
+
+    private void createGrupe() {
+        if (grupaRepository.count() == 0) {
+            List<StudijskiProgram> studProgrami = studijskiProgramRepository.findAll();
+            List<Predmet> predmeti = predmetRepository.findAll();
+
+            for (int i = 0; i < Math.min(studProgrami.size(), predmeti.size()); i++) {
+                Grupa g = new Grupa();
+                g.setStudijskiProgram(studProgrami.get(i));
+                g.setPredmeti(List.of(predmeti.get(i)));
+                grupaRepository.save(g);
+            }
+        }
+    }
+
+    private void createIspitniRokove() {
+        if (ispitniRokRepository.count() == 0) {
+            List<SkolskaGodina> skolskeGodine = skolskaGodinaRepository.findAll();
+
+            String[] rokovi = {"Januarski", "Februarski", "Aprilski", "Junski", "Septembarski", "Oktobarski"};
+
+            for (SkolskaGodina sg : skolskeGodine) {
+                for (int i = 0; i < rokovi.length; i++) {
+                    IspitniRok ir = new IspitniRok();
+                    ir.setPocetak(LocalDate.of(sg.getGodina() + (i >= 4 ? 1 : 0), (i % 6) + 1, 1));
+                    ir.setKraj(LocalDate.of(sg.getGodina() + (i >= 4 ? 1 : 0), (i % 6) + 1, 15));
+                    ir.setSkolskaGodina(sg);
+                    ispitniRokRepository.save(ir);
+                }
+            }
+        }
+    }
+
+    private void createIspite() {
+        if (ispitRepository.count() == 0) {
+            List<Predmet> predmeti = predmetRepository.findAll();
+            List<Nastavnik> nastavnici = nastavnikRepository.findAll();
+            List<IspitniRok> ispitniRokovi = ispitniRokRepository.findAll();
+
+            for (int i = 0; i < Math.min(predmeti.size(), 5); i++) {
+                Ispit ispit = new Ispit();
+                ispit.setDatumOdrzavanja(LocalDate.of(2024, 1, 15 + i));
+                ispit.setVremePocetka(LocalTime.of(9, 0));
+                ispit.setZakljucen(false);
+                ispit.setPredmet(predmeti.get(i));
+                ispit.setNastavnik(nastavnici.get(i));
+                ispit.setIspitniRok(ispitniRokovi.get(i % ispitniRokovi.size()));
+
+                ispitRepository.save(ispit);
+            }
+        }
+    }
+
+    private void createIspitPrijave() {
+        if (ispitPrijavaRepository.count() == 0) {
+            List<StudentIndeks> studenti = studentIndeksRepository.findAll();
+            List<Ispit> ispiti = ispitRepository.findAll();
+
+            for (int i = 0; i < Math.min(studenti.size(), ispiti.size()); i++) {
+                IspitPrijava ip = new IspitPrijava();
+                ip.setDatumPrijave(LocalDate.now().minusDays(i));
+                ip.setIspit(ispiti.get(i));
+                ip.setStudentIndeks(studenti.get(i));
+
+                ispitPrijavaRepository.save(ip);
+            }
+        }
+    }
+
+    private void createOstaliEntiteti() {
+        // Kreiranje predispitnih obaveza
+        if (predispitnaObavezaVrstaRepository.count() == 0) {
+            String[] vrste = {"Kolokvijum 1", "Kolokvijum 2", "Seminarski rad", "Projekat", "Aktivnost"};
+
+            for (String vrsta : vrste) {
+                PredispitnaObavezaVrsta pov = new PredispitnaObavezaVrsta();
+                pov.setVrsta(vrsta);
+                predispitnaObavezaVrstaRepository.save(pov);
+            }
         }
 
+        // Kreiranje predispitnih obaveza
+        if (predispitnaObavezaRepository.count() == 0) {
+            List<Predmet> predmeti = predmetRepository.findAll();
+            List<SkolskaGodina> skolskeGodine = skolskaGodinaRepository.findAll();
+            List<PredispitnaObavezaVrsta> vrste = predispitnaObavezaVrstaRepository.findAll();
+
+            for (int i = 0; i < Math.min(predmeti.size(), 3); i++) {
+                PredispitnaObaveza po = new PredispitnaObaveza();
+                po.setVrsta(vrste.get(i % vrste.size()));
+                po.setMaxBrojPoena(20.0 + (i * 5));
+                po.setPredmet(predmeti.get(i));
+                po.setSkolskaGodina(skolskeGodine.get(skolskeGodine.size() - 1));
+
+                predispitnaObavezaRepository.save(po);
+            }
+        }
     }
 
-//    private void seedData() {
-//        logger.info("Seedujem prvi sloj podataka");
-//        VrstaStudija vOas = new VrstaStudija();
-//        vOas.setNaziv("Osnovne akademske studije");
-//        vOas.setOznaka("OAS");
-//        oas = vrstaStudijaService.createVrstaStudija(vOas);
-//        VisokoskolskaUstanova vFon = new VisokoskolskaUstanova();
-//        vFon.setNaziv("Univerzitet u Beogradu - Fakultet organizacionih nauka");
-//        fon = visokoskolskaUstanovaService.createVisokoskolskaUstanova(vFon);
-//        SrednjaSkola sGim = new SrednjaSkola();
-//        sGim.setNaziv("Gimnazija Smederevska Palanka");
-//        sGim.setMesto("Smederevska Palanka");
-//        gim = srednjaSkolaService.createSrednjaSkola(sG);
-//        SkolskaGodina sSg2023 = new SkolskaGodina();
-//        sSg2023.setGodina(2023);
-//        sSg2023.setAktivan(false);
-//        skolskaGodinaService.saveSkolskaGodina(sSg2023);
-//        SkolskaGodina sSg2024 = new SkolskaGodina();
-//        sSg2024.setGodina(2024);
-//        sSg2024.setAktivan(true);
-//        sgAktivna = skolskaGodinaService.saveSkolskaGodina(sSg2024);
-//
-//        logger.info("Seedujem drugi sloj.");
-//        List<StudijskiProgram> spList = new ArrayList<>();
-//        for (int i = 1; i <= 5; i++) {
-//            StudijskiProgram sp = new StudijskiProgram();
-//            sp.setOznaka("SP" + i);
-//            sp.setNaziv("Program " + i);
-//            sp.setGodinaAkreditacije(2020 + i);
-//            sp.setZvanje("Zvanje " + i);
-//            sp.setTrajanjeGodina(4);
-//            sp.setTrajanjeSemestara(8);
-//            sp.setUkupnoEspb(240);
-//            StudijskiProgram savedSp = studijskiProgramService.saveStudijskiProgram(sp, oas.getId());
-//            spList.add(savedSp);
-//        }
-//        logger.info("Seedujem treci sloj podataka");
-//        List<Predmet> predmetList = new ArrayList<>();
-//        for (int i = 1; i <= 5; i++) {
-//            Predmet p = new Predmet();
-//            p.setSifra("PR" + i);
-//            p.setNaziv("Predmet " + i);
-//            p.setOpis("Opis predmeta " + i);
-//            p.setEspb(6 + i);
-//            p.setObavezan(i % 2 == 0);
-//
-//
-//            Long spId = spList.get((i - 1) % spList.size()).getId();
-//            Predmet savedP = predmetService.savePredmet(p, spId);
-//            predmetList.add(savedP);
-//        }
-//        logger.info("Seedujem cetvrti sloj podataka");
-//        List<Nastavnik> nastavnikList = new ArrayList<>();
-//        for (int i = 1; i <= 5; i++) {
-//            Nastavnik n = new Nastavnik();
-//            n.setIme("Nastavnik" + i);
-//            n.setPrezime("Prezime" + i);
-//            n.setSrednjeIme("Srednje" + i);
-//            n.setEmail("nastavnik" + i + "@example.com");
-//            n.setBrojTelefona("06012345" + i);
-//            n.setAdresa("Adresa " + i);
-//            n.setDatumRodjenja(LocalDate.of(1980 + i, 1, i)); // Popravljen mesec (i ne može biti > 12)
-//            n.setPol(i % 2 == 0 ? 'M' : 'F');
-//            n.setJmbg("80010123456" + i);
-//
-//            // KLJUČNA IZMENA: Pripremamo Zvanje iz starog koda
-//            NastavnikZvanje nz = new NastavnikZvanje();
-//            nz.setDatumIzbora(LocalDate.of(2020 + i, 1, i)); // Popravljen mesec
-//            nz.setNaucnaOblast("Oblast " + i);
-//            nz.setUzaNaucnaOblast("Uza oblast " + i);
-//            nz.setZvanje("Zvanje " + i);
-//            nz.setAktivno(i % 2 == 0);
-//            Set<NastavnikZvanje> zvanja = new HashSet<>(Collections.singletonList(nz));
-//
-//            // KLJUČNA IZMENA: Pripremamo Obrazovanje (koje je nedostajalo) [cite: 156-158]
-//            NastavnikObrazovanjeRequest obr = new NastavnikObrazovanjeRequest();
-//            obr.setVisokoskolskaUstanovaId(fon.getId());
-//            obr.setVrstaStudijaId(oas.getId());
-//            Set<NastavnikObrazovanjeRequest> obrazovanja = new HashSet<>(Collections.singletonList(obr));
-//
-//            // KLJUČNA IZMENA: Servis čuva Nastavnika, Zvanja i Obrazovanja odjednom [cite: 159]
-//            Nastavnik savedN = nastavnikService.saveNastavnik(n, zvanja, obrazovanja);
-//            nastavnikList.add(savedN);
-//        }
-//        logger.info("Seedujem 5 sloj podataka");
-//        List<StudentPodaci> studentPodaciList = new ArrayList<>();
-//        for (int i = 1; i <= 5; i++) {
-//            StudentPodaci s = new StudentPodaci();
-//            s.setIme("Student" + i);
-//            s.setPrezime("Prezime" + i);
-//            s.setSrednjeIme("Srednje" + i);
-//            s.setJmbg("00101012345" + i);
-//            s.setDatumRodjenja(LocalDate.of(2000 + i, 1, i)); // Popravljen mesec
-//            s.setMestoRodjenja("Mesto" + i);
-//            s.setMestoPrebivalista("Prebivaliste" + i);
-//            s.setDrzavaRodjenja("Srbija");
-//            s.setDrzavljanstvo("Srbija");
-//            s.setNacionalnost("Srpska");
-//            s.setPol(i % 2 == 0 ? 'F' : 'M');
-//            s.setAdresa("Adresa " + i);
-//            s.setBrojTelefonaMobilni("06123456" + i);
-//            s.setPrivatniEmail("student" + i + "@example.com");
-//            s.setFakultetEmail("student" + i + "@fakultet.com");
-//
-//            // KLJUČNA IZMENA: Koristimo servis i prosleđujemo ID-jeve zavisnosti [cite: 266]
-//            // Koristimo 'gim' i 'fon' koje smo kreirali u Sloju 1
-//            StudentPodaci savedS = studentService.saveStudentPodaci(s, gim.getId(), fon.getId());
-//            studentPodaciList.add(savedS);
-//        }
-//
-//
-//        logger.info("Seedujem 6 sloj podataka");
-//        List<StudentIndeks> indeksList = new ArrayList<>();
-//        for (int i = 1; i <= 5; i++) {
-//            StudentIndeks si = new StudentIndeks();
-//
-//            si.setNacinFinansiranja(i % 2 == 0 ? NacinFinansiranja.BUDZET : NacinFinansiranja.SAMOFINANSIRANJE);
-//            si.setGodina(1); // Postavljamo da su svi brucoši (upisali 1. godinu)
-//            si.setAktivan(true);
-//            si.setVaziOd(LocalDate.of(2023, 10, i));
-//            si.setOstvarenoEspb(0);
-//
-//            Long studentId = studentPodaciList.get(i - 1).getId();
-//            Long spId = spList.get(i - 1).getId();
-//
-//            StudentIndeks savedSi = studentIndeksService.saveStudentIndeks(si, studentId, spId);
-//            indeksList.add(savedSi);
-//        }
-//
-//        logger.info("Seedujem 7 sloj podataka");
-//        List<DrziPredmet> drziPredmetList = new ArrayList<>();
-//        for (int i = 1; i <= 5; i++) {
-//            Long nastavnikId = nastavnikList.get(i - 1).getId();
-//            Long predmetId = predmetList.get(i - 1).getId();
-//
-//            Long skolaGodinaId = sgAktivna.getId();
-//
-//            drziPredmetService.saveDrziPredmet(nastavnikId, predmetId, skolaGodinaId);
-//
-//            DrziPredmet savedDp = drziPredmetRepo
-//                    .getDrziPredmetByPredmetIdNastavnikIdSkolskaGodinaId(predmetId, nastavnikId, skolaGodinaId);
-//
-//            if (savedDp != null) {
-//                drziPredmetList.add(savedDp);
-//            }
-//        }
-//
-//        logger.info("Seedujem  8 sloj podataka");
-//        for (int i = 1; i <= 5; i++) {
-//            Long studentIndeksId = indeksList.get(i - 1).getId();
-//            Long drziPredmetId = drziPredmetList.get(i - 1).getId();
-//
-//            PredmetSlusa savedSl = slusaPredmetService.saveSlusaPredmet(studentIndeksId, drziPredmetId);
-//            // slusaPredmetList.add(savedSl);
-//        }
-//
-//
-//        logger.info("Seeding Sloj 9: Grupa (preko repoa - nema servisa)...");
-//        for (int i = 1; i <= 5; i++) {
-//            Grupa g = new Grupa();
-//            g.setStudijskiProgram(spList.get(i - 1));
-//            g.setPredmeti(Collections.singletonList(predmetList.get(i - 1)));
-//            grupaRepository.save(g);
-//        }
-//        // SLOJ 10: ISPITNI ROK
-//        logger.info("Seedujem Sloj 10: IspitniRok...");
-//        List<IspitniRok> ispitniRokList = new ArrayList<>();
-//
-//        // AKTIVAN rok - TEKUĆA godina + BUDUĆI datumi
-//        int currentYear = LocalDate.now().getYear();
-//        int currentMonth = LocalDate.now().getMonthValue();
-//
-//        IspitniRok aktivniRok = new IspitniRok();
-//        // Postavite BUDUĆE datume koji sigurno nisu prošli
-//        if (currentMonth <= 6) {
-//            // Ako smo u prvoj polovini godine - Junski rok
-//            aktivniRok.setPocetak(LocalDate.of(currentYear, 6, 1));
-//            aktivniRok.setKraj(LocalDate.of(currentYear, 6, 30));
-//        } else {
-//            // Ako smo u drugoj polovini godine - Januarski rok sledeće godine
-//            aktivniRok.setPocetak(LocalDate.of(currentYear + 1, 1, 10));
-//            aktivniRok.setKraj(LocalDate.of(currentYear + 1, 1, 30));
-//        }
-//
-//        IspitniRok savedAktivni = ispitniRokService.saveIspitniRok(aktivniRok, sgAktivna.getId());
-//        ispitniRokList.add(savedAktivni);
-//
-//        logger.info("Seedujem Sloj 11: Ispit...");
-//        List<Ispit> ispitList = new ArrayList<>();
-//
-//        for (int i = 1; i <= 5; i++) {
-//            Ispit ispit = new Ispit();
-//
-//            // Postavite datum između početka i kraja aktivnog roka
-//            ispit.setDatumOdrzavanja(savedAktivni.getPocetak().plusDays(5 + i)); // 6-10 dan roka
-//            ispit.setVremePocetka(LocalTime.of(9, 0));
-//            ispit.setZakljucen(false);
-//
-//            Long predmetId = predmetList.get(i - 1).getId();
-//            Long nastavnikId = nastavnikList.get(i - 1).getId();
-//            Long ispitniRokId = savedAktivni.getId();
-//
-//            Ispit savedIspit = ispitService.saveIspit(ispit, predmetId, nastavnikId, ispitniRokId);
-//            ispitList.add(savedIspit);
-//        }
-//
-//        logger.info("Seedujem Sloj 12: IspitPrijava...");
-//        for (int i = 1; i <= 5; i++) {
-//            Long studentIndeksId = indeksList.get(i - 1).getId();
-//            Long ispitId = ispitList.get(i - 1).getId();
-//            ispitPrijavaService.saveIspitPrijava(ispitId, studentIndeksId);
-//        }
-//
-//        logger.info("Seedujem Sloj 13: PredispitnaObaveza...");
-//        for (int i = 1; i <= 5; i++) {
-//            PredispitnaObaveza po = new PredispitnaObaveza();
-//            po.setVrsta(i % 2 == 0 ? PredispitneObavezeVrsta.TEST : PredispitneObavezeVrsta.KOLOKVIJUM);
-//            po.setMaxBrojPoena(20.0 + i);
-//
-//            Long predmetId = predmetList.get(i - 1).getId();
-//            Long skolskaGodinaId = sgAktivna.getId();
-//
-//            predispitnaObavezaService.savePredispitnaObaveza(po, predmetId, skolskaGodinaId);
-//        }
-//
-////        logger.info("Seedujem Sloj 14: UpisGodine i ObnovaGodine...");
-////        for (int i = 1; i <= 5; i++) {
-////            // UpisGodine
-////            UpisGodine ug = new UpisGodine();
-////            ug.setDatumUpisa(LocalDate.of(2023, 10, 1));
-////            ug.setNapomena("Redovni upis " + i);
-////            ug.setStudentIndeks(indeksList.get(i - 1));
-////            ug.setSkolskaGodina(sgAktivna);
-////            ug.setPredmeti(Collections.singletonList(predmetList.get(i - 1)));
-////            upisGodineRepository.save(ug);
-////
-////            // ObnovaGodine (za neke studente)
-////            if (i % 2 == 0) {
-////                ObnovaGodine og = new ObnovaGodine();
-////                og.setDatumObnove(LocalDate.of(2024, 2, 1));
-////                og.setNapomena("Obnova godine " + i);
-////                og.setStudentIndeks(indeksList.get(i - 1));
-////                og.setSkolskaGodina(sgAktivna);
-////                og.setPredmeti(Collections.singletonList(predmetList.get(i - 1)));
-////                obnovaGodineRepository.save(og);
-////            }
-////     }
-//        logger.info("Seedujem Sloj 15: Uplata...");
-//        for (int i = 1; i <= 5; i++) {
-//            if (indeksList.get(i - 1).getNacinFinansiranja() == NacinFinansiranja.SAMOFINANSIRANJE) {
-//                Uplata uplata = new Uplata();
-//                uplata.setIznosDinari(50000.0 + (i * 10000));
-//
-//                uplataService.saveUplata(uplata, indeksList.get(i - 1).getId());
-//            }
-//
-//        }
-
-
+    // Pomoćne metode za kreiranje osnovnih entiteta
+    private Zvanje createZvanje() {
+        Zvanje zvanje = new Zvanje();
+        zvanje.setZvanje("Docent");
+        return zvanjeRepository.save(zvanje);
     }
-//}
+
+    private NaucnaOblast createNaucnaOblast() {
+        NaucnaOblast no = new NaucnaOblast();
+        no.setNaucnaOblast("Računarstvo i informatika");
+        return naucnaOblastRepository.save(no);
+    }
+
+    private UzaNaucnaOblast createUzaNaucnaOblast() {
+        UzaNaucnaOblast uno = new UzaNaucnaOblast();
+        uno.setUzaNaucnaOblast("Softversko inženjerstvo");
+        return uzaNaucnaOblastRepository.save(uno);
+    }
+
+    private VisokoskolskaUstanova createVisokoskolskaUstanova() {
+        VisokoskolskaUstanova vu = new VisokoskolskaUstanova();
+        vu.setNaziv("Univerzitet u Beogradu");
+        return visokoskolskaUstanovaRepository.save(vu);
+    }
+
+    private TipSkole createTipSkole() {
+        TipSkole ts = new TipSkole();
+        ts.setTip("Gimnazija");
+        return tipSkoleRepository.save(ts);
+    }
+
+    private SrednjaSkola createSrednjaSkola(TipSkole tipSkole) {
+        SrednjaSkola ss = new SrednjaSkola();
+        ss.setNaziv("Prva beogradska gimnazija");
+        ss.setMesto("Beograd");
+        ss.setTipSkole(tipSkole);
+        return srednjaSkolaRepository.save(ss);
+    }
+
+    private NacinFinansiranja createNacinFinansiranja() {
+        NacinFinansiranja nf1 = new NacinFinansiranja();
+        nf1.setNacin("Budžet");
+        nacinFinansiranjaRepository.save(nf1);
+
+        NacinFinansiranja nf2 = new NacinFinansiranja();
+        nf2.setNacin("Samofinansiranje");
+        return nacinFinansiranjaRepository.save(nf2);
+    }
+}
