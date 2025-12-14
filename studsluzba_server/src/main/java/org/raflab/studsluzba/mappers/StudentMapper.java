@@ -23,6 +23,7 @@ public class StudentMapper {
         student.setPrezime(request.getPrezime());
         student.setSrednjeIme(request.getSrednjeIme());
         student.setJmbg(request.getJmbg());
+        student.setGodinaUpisa(request.getGodinaUpisa());
         student.setDatumRodjenja(request.getDatumRodjenja());
         student.setPol(request.getPol());
         student.setMestoRodjenja(request.getMestoRodjenja());
@@ -53,6 +54,7 @@ public class StudentMapper {
         studentResponse.setPrezime(studentPodaci.getPrezime());
         studentResponse.setSrednjeIme(studentPodaci.getSrednjeIme());
         studentResponse.setJmbg(studentPodaci.getJmbg());
+        studentResponse.setGodinaUpisa(studentPodaci.getGodinaUpisa());
         studentResponse.setDatumRodjenja(studentPodaci.getDatumRodjenja());
         studentResponse.setPol(studentPodaci.getPol());
         studentResponse.setMestoRodjenja(studentPodaci.getMestoRodjenja());

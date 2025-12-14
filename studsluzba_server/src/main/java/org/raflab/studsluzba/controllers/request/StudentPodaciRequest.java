@@ -3,10 +3,7 @@ package org.raflab.studsluzba.controllers.request;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
@@ -21,6 +18,8 @@ public class StudentPodaciRequest {
     @NotBlank
     @Length(min = 13, max = 13)
     private String jmbg;
+    @NotNull
+    private Integer godinaUpisa;
     @NotNull
     private LocalDate datumRodjenja;  // not null
     @NotBlank

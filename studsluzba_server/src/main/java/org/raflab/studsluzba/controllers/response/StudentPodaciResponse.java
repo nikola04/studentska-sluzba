@@ -13,6 +13,7 @@ public class StudentPodaciResponse {
     private String prezime;  // not null
     private String srednjeIme;   // not null
     private String jmbg;
+    private Integer godinaUpisa;
     private LocalDate datumRodjenja;  // not null
     private String mestoRodjenja;
     private String mestoPrebivalista;  // not null
