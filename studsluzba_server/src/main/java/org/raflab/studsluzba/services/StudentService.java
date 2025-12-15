@@ -41,8 +41,8 @@ public class StudentService {
         return studentPodaciRepo.save(StudentPodaci);
     }
 
-    public List<StudentPodaci> getAllStudentPodaci() {
-        return studentPodaciRepo.findAll();
+    public Page<StudentPodaci> getAllStudentPodaci(Pageable pageable) {
+        return studentPodaciRepo.findAll(pageable);
     }
 
     public Page<StudentPodaci> searchStudentPodaci(String name, String lastName, Pageable pageable){

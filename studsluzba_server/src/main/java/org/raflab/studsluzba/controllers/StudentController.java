@@ -75,8 +75,14 @@ public class StudentController {
 	}
 
     @GetMapping(path="/podaci")
-    public List<StudentPodaciResponse> getAllStudentPodaci() {
-        return studentMapper.toResponseList(studentService.getAllStudentPodaci());
+    public PagedResponse<StudentPodaciResponse> getAllStudentPodaci(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "prezime") String sortBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        return studentMapper.toPagedResponse(studentService.getAllStudentPodaci(pageable));
     }
 
     @GetMapping(path="/podaci/search")
