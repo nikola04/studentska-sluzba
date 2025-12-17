@@ -16,14 +16,13 @@ public interface PolozenPredmetRepository extends JpaRepository<PolozenPredmet, 
     @Query("select p from PolozenPredmet p where p.studentIndeks.id = :studentIndeksId and p.predmet.id = :predmetId")
     PolozenPredmet findByStudentIndeksIdPredmetId(Long studentIndeksId, Long predmetId);
 
+    @Query("select avg(p.ocena) from PolozenPredmet p where p.studentIndeks.id = :studentIndeksId")
+    Double findAverageOcenaByStudentIndeks(Long studentIndeksId);
+
     @Query("select avg(p.ocena) from PolozenPredmet p join p.ispitIzlazak ipz join ipz.ispitPrijava ip where p.predmet.id = :predmetId and (:fromYear is null or :fromYear <= function('year', ip.datumPrijave)) and (:toYear is null or :toYear >= function('year', ip.datumPrijave))")
     Double findPredmetAverageGradeFromToYear(
             @Param("predmetId") Long predmetId,
             @Param("fromYear") Integer fromYear,
             @Param("toYear") Integer toYear
     );
-
-    @Query("select sum(pp.predmet.espb) from PolozenPredmet pp where pp.studentIndeks = :studentIndeksId and pp.ispitIzlazak.ispitPrijava.ispit.ispitniRok.skolskaGodina.id = :skolskaGodinaId")
-    Integer sumESPBForStudentIndeksIdBySkolskaGodinaId(Long studentIndeksId, Long skolskaGodinaId);
-
 }

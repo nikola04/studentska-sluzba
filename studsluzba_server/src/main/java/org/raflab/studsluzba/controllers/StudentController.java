@@ -294,6 +294,12 @@ public class StudentController {
         return polozenPredmetMapper.toResponseList(polozenPredmetService.getAllPolozenPredmet(studentId));
     }
 
+    @GetMapping(path = "/indeks/{studentId}/predmet/polozen/average-ocena")
+    public Double getStudentAverageOcena(@PathVariable Long studentId) {
+        Double avg = polozenPredmetService.getStudentAverageOcena(studentId);
+        return avg == null ? 0 : avg;
+    }
+
     @PostMapping(path = "/indeks/{studentId}/predmet/{predmetId}/polozen")
     public Long newStudentPolozenPredmet(@PathVariable Long studentId, @PathVariable Long predmetId, @Valid @RequestBody PolozenPredmetRequest request) {
         PolozenPredmet polozenPredmet = polozenPredmetMapper.toEntity(request);

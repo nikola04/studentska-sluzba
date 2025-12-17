@@ -83,4 +83,8 @@ public class PolozenPredmetService {
         predmet.setIspitIzlazak(null);
         polozenPredmetRepository.delete(predmet);
     }
+
+    public Double getStudentAverageOcena(Long studentId) {
+        return polozenPredmetRepository.findAverageOcenaByStudentIndeks(studentId);
+    }
 }
