@@ -92,8 +92,11 @@ public class NastavnikService {
         return nastavnikRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("[Nastavnik] Not found: " + id));
     }
 
-    public List<Nastavnik> findByImeAndPrezime(String ime, String prezime) {
-        return nastavnikRepository.findByImeAndPrezime(ime, prezime);
+    public List<Nastavnik> findByImeAndPrezime(String name, String lastName) {
+        String nameParam = (name != null && !name.isEmpty()) ? "%" + name.toLowerCase() + "%" : null;
+        String lastNameParam = (lastName != null && !lastName.isEmpty()) ? "%" + lastName.toLowerCase() + "%" : null;
+
+        return nastavnikRepository.findByImeAndPrezime(nameParam, lastNameParam);
     }
 
     @Transactional
