@@ -105,6 +105,12 @@ public class StudentController {
         return studentMapper.toResponse(studentService.getStudentPodaci(id));
     }
 
+    @GetMapping(path = "/podaci/indeks/{studentIndeksBroj}")
+    public StudentPodaciResponse getStudentPodaciByIndeks(@PathVariable String studentIndeksBroj) {
+        StudentIndeks studentIndeks = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj);
+        return studentMapper.toResponse(studentIndeks.getStudent());
+    }
+
     @DeleteMapping(path = "/podaci/{id}")
     public boolean deleteStudentPodaci(@PathVariable Long id) {
         studentService.deleteStudentPodaci(id);

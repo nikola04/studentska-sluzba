@@ -41,6 +41,7 @@ public class StudentIndeksService {
         return studentIndeksRepository.findByIspitId(ispitId);
     }
 
+    @Transactional
     public StudentIndeks getStudentIndeksByBroj(String brojIndeksa){
         List<String> parts = ParseUtils.parseIndeks(brojIndeksa);
         if(parts == null) throw new IllegalArgumentException("Broj Indeksa id not valid");

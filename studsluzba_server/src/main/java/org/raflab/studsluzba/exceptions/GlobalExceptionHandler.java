@@ -46,13 +46,18 @@ public class GlobalExceptionHandler {
                     DefaultMessageSourceResolvable::getDefaultMessage
             ));
 
-        ex.getBindingResult().getGlobalErrors().forEach(error -> {
-            fieldErrors.put(error.getObjectName(), error.getDefaultMessage());
-        });
+        ex.getBindingResult().getGlobalErrors().forEach(error -> fieldErrors.put(error.getObjectName(), error.getDefaultMessage()));
 
         Map<String, Object> body = new HashMap<>();
         body.put("errors", fieldErrors);
 
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("errors", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
