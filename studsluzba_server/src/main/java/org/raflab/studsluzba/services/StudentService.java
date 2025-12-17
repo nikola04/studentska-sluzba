@@ -45,11 +45,12 @@ public class StudentService {
         return studentPodaciRepo.findAll(pageable);
     }
 
-    public Page<StudentPodaci> searchStudentPodaci(String name, String lastName, Pageable pageable){
+    public Page<StudentPodaci> searchStudentPodaci(String name, String lastName, String highSchoolName, Pageable pageable){
         String nameParam = (name != null && !name.isEmpty()) ? "%" + name.toLowerCase() + "%" : null;
         String lastNameParam = (lastName != null && !lastName.isEmpty()) ? "%" + lastName.toLowerCase() + "%" : null;
+        String highSchoolParam = (highSchoolName != null && !highSchoolName.isEmpty()) ? "%" + highSchoolName.toLowerCase() + "%" : null;
 
-        return studentPodaciRepo.findStudent(nameParam, lastNameParam, pageable);
+        return studentPodaciRepo.findStudent(nameParam, lastNameParam, highSchoolParam, pageable);
     }
 
     public List<StudentPodaci> getStudentPodaciBySrednjaSkola(Long srednjaSkolaId){

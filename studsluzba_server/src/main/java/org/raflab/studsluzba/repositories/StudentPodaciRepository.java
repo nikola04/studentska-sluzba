@@ -14,8 +14,9 @@ import org.springframework.stereotype.Repository;
 public interface StudentPodaciRepository extends JpaRepository<StudentPodaci, Long> {
 	@Query("select sp from StudentPodaci sp where "
 			+ "(:ime is null or lower(sp.ime) like :ime) and "
-			+ "(:prezime is null or lower(sp.prezime) like :prezime)")
-	Page<StudentPodaci> findStudent(String ime, String prezime, Pageable pageable);
+			+ "(:prezime is null or lower(sp.prezime) like :prezime) and"
+			+ "(:srednjaSkola is null or lower(sp.srednjaSkola.naziv) like :srednjaSkola)")
+	Page<StudentPodaci> findStudent(String ime, String prezime, String srednjaSkola, Pageable pageable);
 
     @Query("select sp from StudentPodaci sp where sp.srednjaSkola.id = :srednjaSkola")
     List<StudentPodaci> findBySrednjaSkola(@Param("srednjaSkola") Long srednjaSkolaId);

@@ -89,13 +89,14 @@ public class StudentController {
     public PagedResponse<StudentPodaciResponse> getAllStudentPodaciSearch(
         @RequestParam(required = false) String name,
         @RequestParam(required = false) String lastName,
+        @RequestParam(required = false) String highSchoolName,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "prezime") String sortBy
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
 
-        Page<StudentPodaci> studentPodaciPage = studentService.searchStudentPodaci(name, lastName, pageable);
+        Page<StudentPodaci> studentPodaciPage = studentService.searchStudentPodaci(name, lastName, highSchoolName, pageable);
 
         return studentMapper.toPagedResponse(studentPodaciPage);
     }
