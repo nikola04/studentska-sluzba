@@ -8,10 +8,10 @@ import java.time.LocalTime;
 @Data
 public class IspitResponse {
     private Long id;
-    private Long predmetId;
-    private Long nastavnikId;
     private LocalDate datumOdrzavanja;
     private LocalTime vremePocetka;
     private Boolean zakljucen;
+    private PredmetResponse predmet;
+    private NastavnikResponse nastavnik;
     private IspitniRokResponse ispitniRok;
 }

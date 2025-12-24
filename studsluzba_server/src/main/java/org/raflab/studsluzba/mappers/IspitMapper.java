@@ -15,6 +15,11 @@ import java.util.stream.Collectors;
 public class IspitMapper {
     @Autowired
     private IspitniRokMapper ispitniRokMapper;
+    @Autowired
+    private PredmetMapper predmetMapper;
+    @Autowired
+    private NastavnikMapper nastavnikMapper;
+
     public Ispit toEntity(IspitRequest request){
         Ispit ispit = new Ispit();
 
@@ -29,8 +34,8 @@ public class IspitMapper {
         IspitResponse response = new IspitResponse();
 
         response.setId(entity.getId());
-        response.setPredmetId(entity.getPredmet().getId());
-        response.setNastavnikId(entity.getNastavnik().getId());
+        response.setPredmet(predmetMapper.toResponse(entity.getPredmet()));
+        response.setNastavnik(nastavnikMapper.toResponse(entity.getNastavnik()));
         response.setDatumOdrzavanja(entity.getDatumOdrzavanja());
         response.setVremePocetka(entity.getVremePocetka());
         response.setZakljucen(entity.getZakljucen());

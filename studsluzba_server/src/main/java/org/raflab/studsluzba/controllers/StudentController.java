@@ -198,26 +198,24 @@ public class StudentController {
     }
 
     /* Ispit */
-    @GetMapping(path = "/indeks/{studentIndeksBroj}/ispit/nepolozen")
-    public PagedResponse<IspitResponse> getAllIspitNepolozen(@PathVariable String studentIndeksBroj,
+    @GetMapping(path = "/indeks/{studentId}/ispit/nepolozen")
+    public PagedResponse<IspitResponse> getAllIspitNepolozen(@PathVariable Long studentId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "id") String sortBy
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
-        return ispitMapper.toPagedResponse(ispitService.getNepolozeniPageByStudentId(studentIndeksId, pageable));
+        return ispitMapper.toPagedResponse(ispitService.getNepolozeniPageByStudentId(studentId, pageable));
     }
 
-    @GetMapping(path = "/indeks/{studentIndeksBroj}/ispit/polozen")
-    public PagedResponse<IspitResponse> getAllIspitPolozen(@PathVariable String studentIndeksBroj,
+    @GetMapping(path = "/indeks/{studentId}/ispit/polozen")
+    public PagedResponse<IspitResponse> getAllIspitPolozen(@PathVariable Long studentId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "id") String sortBy
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
-        return ispitMapper.toPagedResponse(ispitService.getPolozeniPageByStudentId(studentIndeksId, pageable));
+        return ispitMapper.toPagedResponse(ispitService.getPolozeniPageByStudentId(studentId, pageable));
     }
 
     /* IspitPrijava */

@@ -26,6 +26,7 @@ public class IspitniRokMapper {
     public IspitniRokResponse toResponse(IspitniRok entity){
         IspitniRokResponse response = new IspitniRokResponse();
 
+        response.setId(entity.getId());
         response.setPocetak(entity.getPocetak());
         response.setKraj(entity.getKraj());
         response.setSkolskaGodina(skolskaGodinaMapper.toResponse(entity.getSkolskaGodina()));
