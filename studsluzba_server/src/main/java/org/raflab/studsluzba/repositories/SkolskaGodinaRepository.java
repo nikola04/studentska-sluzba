@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 public interface SkolskaGodinaRepository extends JpaRepository<SkolskaGodina, Long> {
 
@@ -20,4 +22,7 @@ public interface SkolskaGodinaRepository extends JpaRepository<SkolskaGodina, Lo
 
     @Query("select s from SkolskaGodina s WHERE s.aktivan = :aktivan order by s.godina desc")
     SkolskaGodina findByAktivan(boolean aktivan);
+
+    @Query("select s from SkolskaGodina s WHERE s.aktivan = true")
+    Optional<SkolskaGodina> findAktivna();
 }

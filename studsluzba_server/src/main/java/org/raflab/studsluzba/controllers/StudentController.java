@@ -154,28 +154,28 @@ public class StudentController {
     }
 
     /* UpisGodine */
-    @PostMapping(path = "/indeks/{studentIndeksBroj}/upis/godina/{skolskaGodinaId}")
-    public Long addNewUpisGodine(@PathVariable String studentIndeksBroj, @PathVariable Long skolskaGodinaId, @RequestParam(defaultValue = "") String napomena){
-        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+    @PostMapping(path = "/indeks/{studentIndeksId}/upis/godina/{skolskaGodinaId}")
+    public Long addNewUpisGodine(@PathVariable Long studentIndeksId, @PathVariable Long skolskaGodinaId, @RequestParam(defaultValue = "") String napomena){
+//        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
         return upisGodineService.saveUpisGodine(studentIndeksId, skolskaGodinaId, napomena).getId();
     }
 
-    @GetMapping(path = "/indeks/{studentIndeksBroj}/upis")
-    public List<UpisGodineResponse> getUpisGodine(@PathVariable String studentIndeksBroj){
-        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+    @GetMapping(path = "/indeks/{studentIndeksId}/upis")
+    public List<UpisGodineResponse> getUpisGodine(@PathVariable Long studentIndeksId){
+//        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
         return upisGodineMapper.toResponseList(upisGodineService.getAllUpisGodineByStudentIndeksId(studentIndeksId));
     }
 
     /* ObnovaGodine */
-    @PostMapping(path = "/indeks/{studentIndeksBroj}/obnova/godina/{skolskaGodinaId}")
-    public Long addNewObnovaGodine(@PathVariable String studentIndeksBroj, @PathVariable Long skolskaGodinaId, @RequestParam(defaultValue = "") String napomena){
-        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+    @PostMapping(path = "/indeks/{studentIndeksId}/obnova/godina/{skolskaGodinaId}")
+    public Long addNewObnovaGodine(@PathVariable Long studentIndeksId, @PathVariable Long skolskaGodinaId, @RequestParam(defaultValue = "") String napomena){
+//        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
         return obnovaGodineService.saveObnovaGodine(studentIndeksId, skolskaGodinaId, napomena).getId();
     }
 
-    @GetMapping(path = "/indeks/{studentIndeksBroj}/obnova")
-    public List<ObnovaGodineResponse> getObnovaGodine(@PathVariable String studentIndeksBroj){
-        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
+    @GetMapping(path = "/indeks/{studentIndeksId}/obnova")
+    public List<ObnovaGodineResponse> getObnovaGodine(@PathVariable Long studentIndeksId){
+//        Long studentIndeksId = studentIndeksService.getStudentIndeksByBroj(studentIndeksBroj).getId();
         return obnovaGodineMapper.toResponseList(obnovaGodineService.getAllObnovljenaGodinaByStudentIndeks(studentIndeksId));
     }
 

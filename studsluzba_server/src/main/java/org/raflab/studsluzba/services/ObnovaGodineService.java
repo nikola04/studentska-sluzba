@@ -52,7 +52,7 @@ public class ObnovaGodineService {
         if(latestObnova != null && latestObnova.getSkolskaGodina().getGodina() > latestGodina)
             latestGodina = latestObnova.getSkolskaGodina().getGodina();
 
-        if(currentGodina != null && latestUpis.getSkolskaGodina().getId().equals(currentGodina.getId()))
+        if(latestUpis.getSkolskaGodina().getId().equals(skolskaGodina.getId()))
             throw new IllegalArgumentException("[ObnovaGodine] Student already signed in this year");
 
         if(latestGodina >= skolskaGodina.getGodina())

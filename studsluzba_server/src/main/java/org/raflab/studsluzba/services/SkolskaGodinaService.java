@@ -38,6 +38,10 @@ public class SkolskaGodinaService {
         return skolskaGodinaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("[SkolskaGodina] Not found: " + id));
     }
 
+    public SkolskaGodina getAktvinaSkolskaGodina(){
+        return skolskaGodinaRepo.findAktivna().orElseThrow(() -> new ResourceNotFoundException("[SkolskaGodina] Not found"));
+    }
+
     @Transactional
     public void deleteSkolskaGodina(Long id){
         SkolskaGodina existing = this.getSkolskaGodina(id);

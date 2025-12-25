@@ -37,6 +37,11 @@ public class SkolskaGodinaController {
         return skolskaGodinaMapper.toResponse(skolskaGodinaService.getSkolskaGodina(id));
     }
 
+    @GetMapping(path = "/aktivna")
+    public SkolskaGodinaResponse getAktivnaSkolskaGodina(){
+        return skolskaGodinaMapper.toResponse(skolskaGodinaService.getAktvinaSkolskaGodina());
+    }
+
     @DeleteMapping(path = "/{id}")
     public boolean deleteSkolskaGodina(@PathVariable Long id){
         skolskaGodinaService.deleteSkolskaGodina(id);
