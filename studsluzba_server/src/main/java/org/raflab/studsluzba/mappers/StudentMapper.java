@@ -27,8 +27,8 @@ public class StudentMapper {
         student.setDatumRodjenja(request.getDatumRodjenja());
         student.setPol(request.getPol());
         student.setMestoRodjenja(request.getMestoRodjenja());
-        student.setMestoPrebivalista(request.getMestoPrebivalista());
-        student.setAdresa(request.getAdresa());
+//        student.setMestoPrebivalista(request.getMestoPrebivalista());
+//        student.setAdresa(request.getAdresa());
         student.setMestoStanovanja(request.getMestoStanovanja());
         student.setAdresaStanovanja(request.getAdresaStanovanja());
         student.setDrzavaRodjenja(request.getDrzavaRodjenja());
@@ -37,9 +37,7 @@ public class StudentMapper {
         student.setFakultetEmail(request.getFakultetEmail());
         student.setPrivatniEmail(request.getPrivatniEmail());
         student.setBrojTelefonaMobilni(request.getBrojTelefonaMobilni());
-        student.setBrojTelefonaFiksni(request.getBrojTelefonaFiksni());
         student.setBrojLicneKarte(request.getBrojLicneKarte());
-        student.setLicnuKartuIzdao(request.getLicnuKartuIzdao());
         student.setUspehPrijemni(request.getUspehPrijemni());
         student.setUspehSrednjaSkola(request.getUspehSrednjaSkola());
 
@@ -58,8 +56,6 @@ public class StudentMapper {
         studentResponse.setDatumRodjenja(studentPodaci.getDatumRodjenja());
         studentResponse.setPol(studentPodaci.getPol());
         studentResponse.setMestoRodjenja(studentPodaci.getMestoRodjenja());
-        studentResponse.setMestoPrebivalista(studentPodaci.getMestoPrebivalista());
-        studentResponse.setAdresa(studentPodaci.getAdresa());
         studentResponse.setMestoStanovanja(studentPodaci.getMestoStanovanja());
         studentResponse.setAdresaStanovanja(studentPodaci.getAdresaStanovanja());
         studentResponse.setDrzavaRodjenja(studentPodaci.getDrzavaRodjenja());
@@ -68,7 +64,6 @@ public class StudentMapper {
         studentResponse.setFakultetEmail(studentPodaci.getFakultetEmail());
         studentResponse.setPrivatniEmail(studentPodaci.getPrivatniEmail());
         studentResponse.setBrojTelefonaMobilni(studentPodaci.getBrojTelefonaMobilni());
-        studentResponse.setBrojTelefonaFiksni(studentPodaci.getBrojTelefonaFiksni());
         studentResponse.setBrojLicneKarte(studentPodaci.getBrojLicneKarte());
         studentResponse.setLicnuKartuIzdao(studentPodaci.getLicnuKartuIzdao());
         studentResponse.setUspehPrijemni(studentPodaci.getUspehPrijemni());

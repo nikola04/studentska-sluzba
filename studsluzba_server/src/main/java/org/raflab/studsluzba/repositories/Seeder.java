@@ -1,7 +1,6 @@
 package org.raflab.studsluzba.repositories;
 
 import org.raflab.studsluzba.model.*;
-import org.raflab.studsluzba.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,8 +79,7 @@ public class Seeder implements CommandLineRunner {
     private PredispitnaObavezaRepository predispitnaObavezaRepository;
 
     @Override
-    public void run(String... args) throws Exception {
-        // Kreiranje osnovnih podataka
+    public void run(String... args) {
         createVrsteStudija();
         createStudijskePrograme();
         createPredmete();
@@ -216,12 +214,12 @@ public class Seeder implements CommandLineRunner {
                 s.setJmbg("00101012345" + i);
                 s.setDatumRodjenja(LocalDate.of(2000 + i, i, i));
                 s.setMestoRodjenja("Mesto" + i);
-                s.setMestoPrebivalista("Prebivaliste" + i);
+//                s.setMestoPrebivalista("Prebivaliste" + i);
                 s.setDrzavaRodjenja("Srbija");
                 s.setDrzavljanstvo("Srbija");
                 s.setNacionalnost("Srpska");
                 s.setPol(i % 2 == 0 ? 'F' : 'M');
-                s.setAdresa("Adresa " + i);
+//                s.setAdresa("Adresa " + i);
                 s.setBrojTelefonaMobilni("06123456" + i);
                 s.setPrivatniEmail("student" + i + "@example.com");
                 s.setFakultetEmail("student" + i + "@raf.rs");

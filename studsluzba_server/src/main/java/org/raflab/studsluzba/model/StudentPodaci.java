@@ -21,14 +21,11 @@ public class StudentPodaci {
 	private Integer godinaUpisa;
 	private LocalDate datumRodjenja;  // not null
 	private String mestoRodjenja; 
-	private String mestoPrebivalista;  // not null
-	private String drzavaRodjenja;   
+	private String drzavaRodjenja;
 	private String drzavljanstvo;   // not null
 	private String nacionalnost;   // samoizjasnjavanje, moze bilo sta  
 	private Character pol;    // not null
-	private String adresa;  // not null
-	private String brojTelefonaMobilni;  
-	private String brojTelefonaFiksni;
+	private String brojTelefonaMobilni;
 	private String privatniEmail;
 	private String fakultetEmail;
 	private String brojLicneKarte;

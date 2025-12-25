@@ -25,8 +25,6 @@ public class StudentPodaciRequest {
     @NotBlank
     private String mestoRodjenja;
     @NotBlank
-    private String mestoPrebivalista;  // not null
-    @NotBlank
     private String drzavaRodjenja;
     @NotBlank
     private String drzavljanstvo;   // not null
@@ -34,13 +32,8 @@ public class StudentPodaciRequest {
     @NotNull
     private Character pol;    // not null
     @NotBlank
-    private String adresa;  // not null
-    @NotBlank
     @Pattern(regexp = "^\\+\\d+$", message = "Field 'brojTelefonaMobilni' must start with '+' and contain only digits")
     private String brojTelefonaMobilni;
-    @NotBlank
-    @Pattern(regexp = "^\\+\\d+$", message = "Field 'brojTelefonaMobilni' must start with '+' and contain only digits")
-    private String brojTelefonaFiksni;
     @NotBlank
     @Email(message = "Field 'fakultetEmail' must be valid Email")
     private String fakultetEmail;
@@ -49,8 +42,6 @@ public class StudentPodaciRequest {
     private String privatniEmail;
     @NotBlank
     private String brojLicneKarte;
-    @NotBlank
-    private String licnuKartuIzdao;
     @NotBlank
     private String mestoStanovanja;
     @NotBlank

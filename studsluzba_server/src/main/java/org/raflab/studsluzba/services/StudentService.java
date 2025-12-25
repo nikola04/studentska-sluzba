@@ -36,9 +36,9 @@ public class StudentService {
     }
 
     @Transactional
-    public StudentPodaci saveStudentPodaci(StudentPodaci StudentPodaci, Long srednjaSkolaId, Long visokoskolskaUstanovaId) {
-        this.fetchBeforeSave(StudentPodaci, srednjaSkolaId, visokoskolskaUstanovaId);
-        return studentPodaciRepo.save(StudentPodaci);
+    public StudentPodaci saveStudentPodaci(StudentPodaci studentPodaci, Long srednjaSkolaId, Long visokoskolskaUstanovaId) {
+        this.fetchBeforeSave(studentPodaci, srednjaSkolaId, visokoskolskaUstanovaId);
+        return studentPodaciRepo.save(studentPodaci);
     }
 
     public Page<StudentPodaci> getAllStudentPodaci(Pageable pageable) {
@@ -81,8 +81,6 @@ public class StudentService {
         existing.setPol(studentPodaci.getPol());
 
         existing.setMestoRodjenja(studentPodaci.getMestoRodjenja());
-        existing.setMestoPrebivalista(studentPodaci.getMestoPrebivalista());
-        existing.setAdresa(studentPodaci.getAdresa());
         existing.setMestoStanovanja(studentPodaci.getMestoStanovanja());
         existing.setAdresaStanovanja(studentPodaci.getAdresaStanovanja());
 
@@ -93,7 +91,6 @@ public class StudentService {
         existing.setFakultetEmail(studentPodaci.getFakultetEmail());
         existing.setPrivatniEmail(studentPodaci.getPrivatniEmail());
         existing.setBrojTelefonaMobilni(studentPodaci.getBrojTelefonaMobilni());
-        existing.setBrojTelefonaFiksni(studentPodaci.getBrojTelefonaFiksni());
 
         existing.setBrojLicneKarte(studentPodaci.getBrojLicneKarte());
         existing.setLicnuKartuIzdao(studentPodaci.getLicnuKartuIzdao());
