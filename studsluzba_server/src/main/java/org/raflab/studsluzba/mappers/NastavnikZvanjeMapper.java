@@ -3,6 +3,9 @@ package org.raflab.studsluzba.mappers;
 import org.raflab.studsluzba.controllers.request.NastavnikZvanjeRequest;
 import org.raflab.studsluzba.controllers.response.NastavnikZvanjeResponse;
 import org.raflab.studsluzba.model.NastavnikZvanje;
+import org.raflab.studsluzba.model.NaucnaOblast;
+import org.raflab.studsluzba.model.UzaNaucnaOblast;
+import org.raflab.studsluzba.model.Zvanje;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -12,10 +15,23 @@ import java.util.stream.Collectors;
 public class NastavnikZvanjeMapper {
 
     public NastavnikZvanje toEntity(NastavnikZvanjeRequest request) {
-        NastavnikZvanje zvanje = new NastavnikZvanje();
-        zvanje.setDatumIzbora(request.getDatumIzbora());
-        zvanje.setAktivno(request.getAktivno() != null ? request.getAktivno() : true); // default true
-        return zvanje;
+        NastavnikZvanje nastavnikZvanje = new NastavnikZvanje();
+
+        Zvanje zvanje = new Zvanje();
+        zvanje.setId(request.getZvanjeId());
+        nastavnikZvanje.setZvanje(zvanje);
+
+        NaucnaOblast naucnaOblast = new NaucnaOblast();
+        naucnaOblast.setId(request.getNaucnaOblastId());
+        nastavnikZvanje.setNaucnaOblast(naucnaOblast);
+
+        UzaNaucnaOblast uzaNaucnaOblast = new UzaNaucnaOblast();
+        uzaNaucnaOblast.setId(request.getUzaNaucnaOblastId());
+        nastavnikZvanje.setUzaNaucnaOblast(uzaNaucnaOblast);
+
+        nastavnikZvanje.setDatumIzbora(request.getDatumIzbora());
+        nastavnikZvanje.setAktivno(request.getAktivno() != null ? request.getAktivno() : true); // default true
+        return nastavnikZvanje;
     }
 
     public Set<NastavnikZvanje> toEntitySet(Set<NastavnikZvanjeRequest> requests) {

@@ -38,7 +38,7 @@ public class NastavnikController {
 	@PostMapping(path = "/")
 	public Long addNewNastavnik(@Valid @RequestBody NastavnikRequest nastavnikRequest) {
         Set<NastavnikZvanje> zvanja = nastavnikZvanjeMapper.toEntitySet(nastavnikRequest.getZvanja());
-        Nastavnik nastavnik = nastavnikService.saveNastavnik(nastavnikMapper.toEntity(nastavnikRequest), zvanja, nastavnikRequest.getObrazovanje(), nastavnikRequest.getZvanja());
+        Nastavnik nastavnik = nastavnikService.saveNastavnik(nastavnikMapper.toEntity(nastavnikRequest), zvanja, nastavnikRequest.getObrazovanje());
 
 		return nastavnik.getId();
 	}
@@ -60,16 +60,18 @@ public class NastavnikController {
         return true;
     }
 
-    @PatchMapping(path = "/{id}")
+    @PutMapping(path = "/{id}")
     public NastavnikResponse updateNastavnik(@PathVariable Long id, @Valid @RequestBody NastavnikRequest request){
         Nastavnik nastavnik = nastavnikMapper.toEntity(request);
         Set<NastavnikZvanje> zvanja = nastavnikZvanjeMapper.toEntitySet(request.getZvanja());
-        Nastavnik updated = nastavnikService.updateNastavnik(id, nastavnik, zvanja, request.getObrazovanje(), request.getZvanja());
+        Nastavnik updated = nastavnikService.updateNastavnik(id, nastavnik, zvanja, request.getObrazovanje());
         return nastavnikMapper.toResponse(updated);
     }
 	
 	@GetMapping(path = "/search")
-	public List<NastavnikResponse> search(@RequestParam(required = false) String ime, @RequestParam(required = false) String prezime){
+	public List<NastavnikResponse> search(
+            @RequestParam(required = false) String ime,
+            @RequestParam(required = false) String prezime){
         return nastavnikMapper.toResponseList(nastavnikService.findByImeAndPrezime(ime, prezime));
 	}
 

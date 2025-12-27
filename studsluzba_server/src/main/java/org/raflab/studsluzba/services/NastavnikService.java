@@ -1,7 +1,6 @@
 package org.raflab.studsluzba.services;
 
 import org.raflab.studsluzba.controllers.request.NastavnikObrazovanjeRequest;
-import org.raflab.studsluzba.controllers.request.NastavnikZvanjeRequest;
 import org.raflab.studsluzba.exceptions.ResourceNotFoundException;
 import org.raflab.studsluzba.model.*;
 import org.raflab.studsluzba.repositories.NastavnikRepository;
@@ -50,36 +49,24 @@ public class NastavnikService {
         return obrazovanja;
     }
 
-    private void fetchZvanja(Nastavnik nastavnik, Set<NastavnikZvanjeRequest> requests){
-        if(requests == null) {
-            nastavnik.setZvanja(new HashSet<>());
-            return;
-        }
-
-        for(NastavnikZvanjeRequest request : requests) {
-            Zvanje zvanje = zvanjeRepository.findById(request.getZvanjeId()).orElseThrow(() -> new ResourceNotFoundException("[Zvanje] Not found: " + request.getZvanjeId()));
-            NaucnaOblast naucnaOblast = naucnaOblastRepository.findById(request.getNaucnaOblastId()).orElseThrow(() -> new ResourceNotFoundException("[NaucnaOblast] Not found: " + request.getNaucnaOblastId()));
-            UzaNaucnaOblast uzaNaucnaOblast = uzaNaucnaOblastRepository.findById(request.getUzaNaucnaOblastId()).orElseThrow(() -> new ResourceNotFoundException("[UzaNaucnaOblast] Not found: " + request.getUzaNaucnaOblastId()));
-
-            // find Zvanje & Set properties
-            NastavnikZvanje nastavnikZvanje = nastavnik.getZvanja().stream().filter(z -> z.getDatumIzbora().equals(request.getDatumIzbora())).findFirst().orElseThrow(() -> new ResourceNotFoundException("Nema zvanja sa datumom: " + request.getDatumIzbora()));
+    private Set<NastavnikZvanje> fetchZvanja(Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja){
+        for(NastavnikZvanje nastavnikZvanje : nastavnikZvanja) {
+            Zvanje zvanje = zvanjeRepository.findById(nastavnikZvanje.getZvanje().getId()).orElseThrow(() -> new ResourceNotFoundException("[Zvanje] Not found: " + nastavnikZvanje.getZvanje().getId()));
+            NaucnaOblast naucnaOblast = naucnaOblastRepository.findById(nastavnikZvanje.getNaucnaOblast().getId()).orElseThrow(() -> new ResourceNotFoundException("[NaucnaOblast] Not found: " + nastavnikZvanje.getNaucnaOblast().getId()));
+            UzaNaucnaOblast uzaNaucnaOblast = uzaNaucnaOblastRepository.findById(nastavnikZvanje.getUzaNaucnaOblast().getId()).orElseThrow(() -> new ResourceNotFoundException("[UzaNaucnaOblast] Not found: " + nastavnikZvanje.getUzaNaucnaOblast().getId()));
 
             nastavnikZvanje.setZvanje(zvanje);
             nastavnikZvanje.setNaucnaOblast(naucnaOblast);
             nastavnikZvanje.setUzaNaucnaOblast(uzaNaucnaOblast);
             nastavnikZvanje.setNastavnik(nastavnik);
         }
+        return nastavnikZvanja;
     }
 
     @Transactional
-    public Nastavnik saveNastavnik(Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja, Set<NastavnikObrazovanjeRequest> obrazovanjeRequest, Set<NastavnikZvanjeRequest> zvanjaRequest) {
-        if (nastavnikZvanja != null && !nastavnikZvanja.isEmpty()) {
-            nastavnikZvanja.forEach(zvanje -> zvanje.setNastavnik(nastavnik));
-            nastavnik.setZvanja(nastavnikZvanja);
-        }
-
+    public Nastavnik saveNastavnik(Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja, Set<NastavnikObrazovanjeRequest> obrazovanjeRequest) {
         nastavnik.setObrazovanja(this.fetchObrazovanja(nastavnik, obrazovanjeRequest));
-        this.fetchZvanja(nastavnik, zvanjaRequest);
+        nastavnik.setZvanja(this.fetchZvanja(nastavnik, nastavnikZvanja));
 
         return nastavnikRepository.save(nastavnik);
     }
@@ -106,14 +93,19 @@ public class NastavnikService {
     }
 
     @Transactional
-    public Nastavnik updateNastavnik(Long id, Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja, Set<NastavnikObrazovanjeRequest> obrazovanjeRequest, Set<NastavnikZvanjeRequest> zvanjaRequest){
+    public Nastavnik updateNastavnik(Long id, Nastavnik nastavnik, Set<NastavnikZvanje> nastavnikZvanja, Set<NastavnikObrazovanjeRequest> obrazovanjeRequest){
         Nastavnik existing = this.getNastavnik(id);
 
-        if(obrazovanjeRequest != null) {
-            Set<NastavnikObrazovanje> obrazovanja = this.fetchObrazovanja(existing, obrazovanjeRequest);
-            existing.getObrazovanja().removeIf(obrazovanje -> !obrazovanja.contains(obrazovanje));
-            existing.getObrazovanja().addAll(obrazovanja);
-        }
+        if (existing.getObrazovanja() == null) existing.setObrazovanja(new HashSet<>());
+
+        Set<NastavnikObrazovanje> newObrazovanja = this.fetchObrazovanja(existing, obrazovanjeRequest);
+        Set<NastavnikZvanje> newZvanja = this.fetchZvanja(existing, nastavnikZvanja);
+
+        existing.getObrazovanja().removeIf(obrazovanje -> !newObrazovanja.contains(obrazovanje));
+        existing.getZvanja().removeIf(zvanje -> !newZvanja.contains(zvanje));
+
+        existing.getObrazovanja().addAll(newObrazovanja);
+        existing.getZvanja().addAll(newZvanja);
 
         existing.setIme(nastavnik.getIme());
         existing.setPrezime(nastavnik.getPrezime());
@@ -125,16 +117,6 @@ public class NastavnikService {
         existing.setPol(nastavnik.getPol());
         existing.setJmbg(nastavnik.getJmbg());
 
-        if (nastavnikZvanja != null) {
-            existing.getZvanja().removeIf(zvanje -> !nastavnikZvanja.contains(zvanje));
-
-            nastavnikZvanja.forEach(zvanje -> {
-                zvanje.setNastavnik(existing);
-                existing.getZvanja().add(zvanje);
-            });
-
-            this.fetchZvanja(existing, zvanjaRequest);
-        }
         return nastavnikRepository.save(existing);
     }
 }
