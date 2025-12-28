@@ -95,6 +95,10 @@ public class StudentService {
         existing.setBrojLicneKarte(studentPodaci.getBrojLicneKarte());
         existing.setLicnuKartuIzdao(studentPodaci.getLicnuKartuIzdao());
 
+        existing.setUspehPrijemni(studentPodaci.getUspehPrijemni());
+        existing.setUspehSrednjaSkola(studentPodaci.getUspehSrednjaSkola());
+        existing.setGodinaUpisa(studentPodaci.getGodinaUpisa());
+
         return studentPodaciRepo.save(existing);
     }
 }

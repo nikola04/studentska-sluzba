@@ -118,7 +118,7 @@ public class StudentController {
         return true;
     }
 
-    @PatchMapping(path = "/podaci/{id}")
+    @PutMapping(path = "/podaci/{id}")
     public StudentPodaciResponse updateStudentPodaci(@PathVariable Long id, @Valid @RequestBody StudentPodaciRequest request) {
         StudentPodaci studentPodaci = studentMapper.toEntity(request);
         StudentPodaci updated = studentService.updateStudentPodaci(id, studentPodaci, request.getSrednjaSkolaId(), request.getVisokoskolskaUstanovaId());
