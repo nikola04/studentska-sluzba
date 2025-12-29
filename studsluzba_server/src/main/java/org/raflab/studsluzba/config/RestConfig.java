@@ -13,6 +13,6 @@ public class RestConfig implements RepositoryRestConfigurer {
         config.setDefaultMediaType(MediaType.APPLICATION_JSON);
         config.useHalAsDefaultJsonMediaType(false);
 
-        config.exposeIdsFor(TipSkole.class, NaucnaOblast.class, UzaNaucnaOblast.class, PredispitnaObavezaVrsta.class, Zvanje.class);
+        config.exposeIdsFor(TipSkole.class, NaucnaOblast.class, UzaNaucnaOblast.class, PredispitnaObavezaVrsta.class, Zvanje.class, NacinFinansiranja.class);
     }
 }
