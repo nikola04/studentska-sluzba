@@ -44,7 +44,7 @@ public class DrziPredmetService {
 
 
     @Transactional
-    public void saveDrziPredmet(Long nastavnikId, Long predmetId, Long skolskaGodinaId) {
+    public DrziPredmet saveDrziPredmet(Long nastavnikId, Long predmetId, Long skolskaGodinaId) {
         if (drziPredmetRepository.getDrziPredmetByPredmetIdNastavnikIdSkolskaGodinaId(predmetId, nastavnikId, skolskaGodinaId) != null)
             throw new ResourceAlreadyExistsException("[DrziPredmet] Already exists: " + predmetId + " " + nastavnikId + " " + skolskaGodinaId);
 
@@ -57,7 +57,7 @@ public class DrziPredmetService {
         drziPredmet.setPredmet(predmet);
         drziPredmet.setSkolskaGodina(skolskaGodina);
 
-        drziPredmetRepository.save(drziPredmet);
+        return drziPredmetRepository.save(drziPredmet);
     }
 
     @Transactional

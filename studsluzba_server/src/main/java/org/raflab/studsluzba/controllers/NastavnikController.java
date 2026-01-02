@@ -83,9 +83,8 @@ public class NastavnikController {
     }
 
     @PostMapping(path = "/{nastavnikId}/predmet/{predmetId}")
-    public boolean addNewNastavnikPredmet(@PathVariable Long nastavnikId, @PathVariable Long predmetId, @Valid @RequestBody DrziPredmetRequest request){
-        drziPredmetService.saveDrziPredmet(nastavnikId, predmetId, request.getSkolskaGodinaId());
-        return true;
+    public Long addNewNastavnikPredmet(@PathVariable Long nastavnikId, @PathVariable Long predmetId, @Valid @RequestBody DrziPredmetRequest request){
+        return drziPredmetService.saveDrziPredmet(nastavnikId, predmetId, request.getSkolskaGodinaId()).getId();
     }
 
     @DeleteMapping(path = "/{nastavnikId}/predmet/{predmetId}/godina/{godinaId}")
