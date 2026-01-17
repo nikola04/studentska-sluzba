@@ -3,10 +3,14 @@ package org.raflab.studsluzba.mappers;
 import org.raflab.studsluzba.controllers.request.IspitIzlazakRequest;
 import org.raflab.studsluzba.controllers.response.IspitIzlazakResponse;
 import org.raflab.studsluzba.model.IspitIzlazak;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class IspitIzlazakMapper {
+    @Autowired
+    private IspitPrijavaMapper ispitPrijavaMapper;
+
     public IspitIzlazak toEntity(IspitIzlazakRequest request) {
         IspitIzlazak entity = new IspitIzlazak();
 
@@ -25,6 +29,7 @@ public class IspitIzlazakMapper {
         response.setBrojPoena(entity.getBrojPoena());
         response.setPonisten(entity.getPonisten());
         response.setNapomena(entity.getNapomena());
+        response.setIspitPrijava(ispitPrijavaMapper.toResponse(entity.getIspitPrijava(), false));
 
         return response;
     }

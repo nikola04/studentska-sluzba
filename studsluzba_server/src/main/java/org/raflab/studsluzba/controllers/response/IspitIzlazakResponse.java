@@ -8,4 +8,5 @@ public class IspitIzlazakResponse {
     private Double brojPoena;
     private String napomena;
     private Boolean ponisten;
+    private IspitPrijavaResponse ispitPrijava;
 }
