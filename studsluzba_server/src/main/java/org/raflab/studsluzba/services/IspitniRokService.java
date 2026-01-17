@@ -26,7 +26,7 @@ public class IspitniRokService {
     }
 
     public List<IspitniRok> getAllIspitniRok() {
-        return ispitniRokRepository.findAll();
+        return ispitniRokRepository.findAllSorted();
     }
 
     public IspitniRok getIspitniRok(Long id) {

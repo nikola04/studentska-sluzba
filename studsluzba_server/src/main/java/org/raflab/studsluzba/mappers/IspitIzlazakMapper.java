@@ -6,6 +6,9 @@ import org.raflab.studsluzba.model.IspitIzlazak;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class IspitIzlazakMapper {
     @Autowired
@@ -32,5 +35,9 @@ public class IspitIzlazakMapper {
         response.setIspitPrijava(ispitPrijavaMapper.toResponse(entity.getIspitPrijava(), false));
 
         return response;
+    }
+
+    public List<IspitIzlazakResponse> toResponseList(List<IspitIzlazak> entityList) {
+        return entityList.stream().map(this::toResponse).collect(Collectors.toList());
     }
 }

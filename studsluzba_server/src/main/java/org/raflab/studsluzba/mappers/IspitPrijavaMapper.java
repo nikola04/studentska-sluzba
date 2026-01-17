@@ -13,12 +13,14 @@ public class IspitPrijavaMapper {
     private IspitMapper ispitMapper;
     @Autowired
     private IspitIzlazakMapper ispitIzlazakMapper;
+    @Autowired
+    private StudentIndeksMapper studentIndeksMapper;
 
     public IspitPrijavaResponse toResponse(IspitPrijava ispitPrijava, boolean ispitIzlazak) {
         IspitPrijavaResponse response = new IspitPrijavaResponse();
 
         response.setId(ispitPrijava.getId());
-        response.setStudentIndeksId(ispitPrijava.getStudentIndeks().getId());
+        response.setStudentIndeks(studentIndeksMapper.toResponse(ispitPrijava.getStudentIndeks()));
         response.setDatumPrijave(ispitPrijava.getDatumPrijave());
         response.setIspit(ispitMapper.toResponse(ispitPrijava.getIspit()));
         if (ispitIzlazak)

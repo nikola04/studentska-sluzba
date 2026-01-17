@@ -14,4 +14,7 @@ public interface IspitPrijavaRepository extends JpaRepository<IspitPrijava, Long
 
     @Query("select ip from IspitPrijava ip where ip.studentIndeks.id = :indeksId")
     List<IspitPrijava> findByStudentIndeksId(Long indeksId);
+
+    @Query("select ip from IspitPrijava ip where ip.ispit.id = :ispitId")
+    List<IspitPrijava> findByIspitId(Long ispitId);
 }

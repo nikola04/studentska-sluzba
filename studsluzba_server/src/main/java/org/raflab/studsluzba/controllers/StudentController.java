@@ -230,8 +230,9 @@ public class StudentController {
     }
 
 
-    @PostMapping(path = "/indeks/{studentId}/ispit/{ispitId}/prijava")
-    public IspitPrijavaResponse saveIspitPrijava(@PathVariable Long studentId, @PathVariable Long ispitId) {
+    @PostMapping(path = "/indeks/{studentIndeks}/ispit/{ispitId}/prijava")
+    public IspitPrijavaResponse saveIspitPrijava(@PathVariable String studentIndeks, @PathVariable Long ispitId) {
+        Long studentId = studentIndeksService.getStudentIndeksByBroj(studentIndeks).getId();
         return ispitPrijavaMapper.toResponse(ispitPrijavaService.saveIspitPrijava(ispitId, studentId));
     }
 
@@ -247,15 +248,16 @@ public class StudentController {
     }
 
     /* IspitIzlazak */
-    @PostMapping(path = "/indeks/{studentId}/ispit/{ispitId}/izlazak")
-    public Long saveIspitIzlazak(@PathVariable Long studentId, @PathVariable Long ispitId, @Valid @RequestBody IspitIzlazakRequest request) {
+    @PostMapping(path = "/indeks/{studentIndeks}/ispit/{ispitId}/izlazak")
+    public IspitIzlazakResponse saveIspitIzlazak(@PathVariable String studentIndeks, @PathVariable Long ispitId, @Valid @RequestBody IspitIzlazakRequest request) {
+        Long studentId = studentIndeksService.getStudentIndeksByBroj(studentIndeks).getId();
         IspitIzlazak ispitIzlazak = ispitIzlazakMapper.toEntity(request);
-        return ispitIzlazakService.saveIspitIzlazak(ispitIzlazak, studentId, ispitId).getId();
+        return ispitIzlazakMapper.toResponse(ispitIzlazakService.saveIspitIzlazak(ispitIzlazak, studentId, ispitId));
     }
 
     @DeleteMapping(path = "/indeks/{studentId}/ispit/{ispitId}/izlazak")
     public boolean deleteIspitIzlazak(@PathVariable Long studentId, @PathVariable Long ispitId) {
-        ispitIzlazakService.deleteIspitIzlazak(ispitId, studentId);
+        ispitIzlazakService.deleteIspitIzlazak(studentId, ispitId);
         return true;
     }
 

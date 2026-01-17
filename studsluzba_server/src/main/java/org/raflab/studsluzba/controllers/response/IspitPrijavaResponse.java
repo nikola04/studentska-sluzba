@@ -7,8 +7,8 @@ import java.time.LocalDate;
 @Data
 public class IspitPrijavaResponse {
     private Long id;
-    private Long studentIndeksId;
     private LocalDate datumPrijave;
     private IspitResponse ispit;
+    private StudentIndeksResponse studentIndeks;
     private IspitIzlazakResponse ispitIzlazak;
 }

@@ -106,10 +106,13 @@ public class IspitService {
             Ispit ispit = izlazak.getIspitPrijava().getIspit();
             Double predispitniPoeni = predispitnaObavezaService.getPoeniForStudentIndeksByPredmetId(studentIndeks.getId(), ispit.getPredmet().getId(), ispit.getIspitniRok().getSkolskaGodina().getId());
 
-            response.setBrojPoenaIspit(izlazak.getBrojPoena());
+            double safePredispitni = (predispitniPoeni != null) ? predispitniPoeni : 0.0;
+            double safeIspit = (izlazak.getBrojPoena() != null) ? izlazak.getBrojPoena() : 0.0;
+
+            response.setBrojPoenaIspit(safeIspit);
             response.setStudentIndeks(studentIndeksMapper.toResponse(studentIndeks));
-            response.setBrojPoenaPredispitne(predispitniPoeni);
-            response.setBrojPoenaUkupno(izlazak.getBrojPoena() + predispitniPoeni);
+            response.setBrojPoenaPredispitne(safePredispitni);
+            response.setBrojPoenaUkupno(safeIspit + safePredispitni);
 
             return response;
         }).collect(Collectors.toList());
@@ -134,5 +137,4 @@ public class IspitService {
 
         return ispitRepository.save(existing);
     }
-
 }

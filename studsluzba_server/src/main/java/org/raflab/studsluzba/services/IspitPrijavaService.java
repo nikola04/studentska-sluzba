@@ -69,4 +69,8 @@ public class IspitPrijavaService {
         IspitPrijava existing = this.getIspitPrijavaByStudentIndeksIdAndIspitId(indeksId, ispitId);
         ispitPrijavaRepository.delete(existing);
     }
+
+    public List<IspitPrijava> getIspitPrijavaByIspitId(Long id) {
+        return ispitPrijavaRepository.findByIspitId(id);
+    }
 }
